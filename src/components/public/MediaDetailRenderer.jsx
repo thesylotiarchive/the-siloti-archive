@@ -96,16 +96,16 @@ export function MediaDetailRenderer({ media }) {
       case "PDF":
         return (
           <div className="my-6 w-full">
-            {pages.length > 0 ? (
-              <>
-                <div className="w-full h-[60vh] md:h-[75vh] rounded border overflow-hidden">
+            <div className="w-full h-[60vh] md:h-[75vh] rounded border overflow-hidden">
                   <iframe
                     src={url}
                     title="PDF Viewer"
                     className="w-full h-full"
                     frameBorder="0"
                   />
-                </div>
+            </div>
+            {/* {pages.length > 0 ? (
+              <>
 
                 <div className="text-center mt-4">
                   <button
@@ -125,7 +125,7 @@ export function MediaDetailRenderer({ media }) {
               </>
             ) : (
               <p className="text-muted-foreground text-sm">Loading PDF pages...</p>
-            )}
+            )} */}
           </div>
         );
 
