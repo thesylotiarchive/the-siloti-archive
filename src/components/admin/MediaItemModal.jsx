@@ -101,8 +101,8 @@ export default function MediaItemModal({ isOpen, onClose, mediaItem = null, onSu
           <option value="AUDIO">Audio</option>
           <option value="VIDEO">Video</option>
           <option value="IMAGE">Image</option>
-          <option value="BOOK">Book</option>
-          <option value="DOCUMENT">Document</option>
+          <option value="PDF">Pdf</option>
+          {/* <option value="DOCUMENT">Document</option> */}
           <option value="LINK">Link</option>
         </select>
 

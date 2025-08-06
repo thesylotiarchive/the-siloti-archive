@@ -75,8 +75,17 @@ export function MediaCard({ mediaItem, onShare }) {
           <h3 className="text-base font-semibold mb-1 line-clamp-2">
             {title}
           </h3>
-          <div className="text-sm text-muted-foreground capitalize">
-            {mediaType.toLowerCase()}
+          <div className="flex items-center justify-between">
+            <div className="text-sm text-muted-foreground capitalize">
+              {mediaType.toLowerCase()}
+            </div>
+            {/* <button
+              onClick={() => onShare(shareUrl)}
+              className="flex items-center gap-2 text-sm font-medium text-primary bg-primary/10 hover:bg-primary/20 px-2 py-1.5 rounded-lg transition"
+            >
+              <Share2 size={16} />
+              <span>Share</span>
+            </button> */}
           </div>
 
           <div className="mt-2 flex items-center gap-4 text-xs text-muted-foreground">
@@ -90,10 +99,14 @@ export function MediaCard({ mediaItem, onShare }) {
       {/* ✅ Share button with modal */}
       <div className="absolute top-2 right-2 z-20">
         <button
-          onClick={() => onShare(shareUrl)}
-          className="p-2 rounded-full bg-white shadow hover:bg-muted transition"
+          onClick={(e) => {
+            e.stopPropagation(); // prevent click bubbling to Link
+            onShare(shareUrl);
+          }}
+          className="flex items-center gap-1 text-sm font-medium text-white bg-black/60 hover:bg-black/80 px-3 py-1.5 rounded-full shadow transition"
         >
-          <Share2 size={18} />
+          <Share2 size={16} />
+          <span>Share</span>
         </button>
       </div>
 

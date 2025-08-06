@@ -28,6 +28,8 @@ export default function CollectionManagerClient() {
   const [selectedMediaItem, setSelectedMediaItem] = useState(null);
 
   const [movingMediaId, setMovingMediaId] = useState(null);
+  const [draggingMediaId, setDraggingMediaId] = useState(null);
+
 
 
   const fetchFolderData = async () => {
@@ -149,7 +151,7 @@ export default function CollectionManagerClient() {
     <div>
 
       {movingMediaId && (
-        <div className="fixed inset-0 bg-black/30 z-50 flex items-center justify-center">
+        <div className="fixed inset-0 bg-black/30 z-10 flex items-center justify-center">
           <div className="w-16 h-16 border-4 border-white border-t-transparent rounded-full animate-spin"></div>
         </div>
       )}
@@ -207,7 +209,7 @@ export default function CollectionManagerClient() {
             <p className="text-xs mt-1">You can add a subfolder or media item to get started.</p>
         </div>
         ) : (
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
+        <div className="relative z-0 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
             {subfolders.map((folder) => (
             <FolderCard
                 key={folder.id}

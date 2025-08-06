@@ -1,4 +1,5 @@
 import { MediaDetailRenderer } from "@/components/public/MediaDetailRenderer";
+import Image from "next/image";
 import Link from "next/link";
 
 export default async function MediaDetailPage({ params }) {
@@ -33,9 +34,10 @@ export default async function MediaDetailPage({ params }) {
             }}
           />
           <div className="relative z-10 flex items-center justify-center h-full">
-            <img
+            <Image
               src={media.image}
               alt={media.title}
+              fill
               className="max-h-full max-w-full object-contain rounded-md shadow-xl"
             />
           </div>
