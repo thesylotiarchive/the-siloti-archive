@@ -28,16 +28,16 @@ function RoleBadge({ role }) {
 
 export default function AdminUsersManager({ initialMe, initialAdmins, canManageSuperadmin }) {
   const [me, setMe] = useState(initialMe || { id: "", username: "", email: "", role: "ADMIN" });
-  const [admins, setAdmins] = useState(initialAdmins || []);
+  const [admins, setAdmins] = useState(Array.isArray(initialAdmins) ? initialAdmins : []);
   const [q, setQ] = useState("");
   const [loading, setLoading] = useState(false);
 
   const filtered = useMemo(() => {
-    if (!admins) return [];
+    if (!Array.isArray(admins)) return [];
     const s = q.trim().toLowerCase();
     if (!s) return admins;
     return admins.filter(u =>
-      [u.username, u.email, u.name].filter(Boolean).some(v => v.toLowerCase().includes(s))
+      u && [u.username, u.email, u.name].filter(Boolean).some(v => v.toLowerCase().includes(s))
     );
   }, [q, admins]);
 
@@ -114,7 +114,7 @@ export default function AdminUsersManager({ initialMe, initialAdmins, canManageS
                   <RoleBadge role={me?.role} />
                 </CardTitle>
                 <div className="text-sm text-muted-foreground truncate">
-                  {me?.email} • {me?.username}
+                  {me?.email || ""} • {me?.username || ""}
                 </div>
               </div>
               <div className="flex items-center gap-2 flex-wrap mt-2 sm:mt-0">
@@ -145,17 +145,17 @@ export default function AdminUsersManager({ initialMe, initialAdmins, canManageS
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
         {filtered
           .filter(u => u?.id && u.id !== me?.id)
-          .map((u) => (
+          .map(u => (
             <Card key={u.id} className="shadow-sm">
               <CardHeader className="flex flex-row items-center gap-4">
-                <AvatarCircle text={u.name || u.username} />
+                <AvatarCircle text={u?.name || u?.username || ""} />
                 <div className="flex-1">
                   <div className="flex items-center gap-2">
-                    <span className="font-semibold">{u.name || u.username}</span>
-                    <RoleBadge role={u.role} />
+                    <span className="font-semibold">{u?.name || u?.username || ""}</span>
+                    <RoleBadge role={u?.role || ""} />
                   </div>
                   <div className="text-sm text-muted-foreground">
-                    {u.email} • {u.username}
+                    {u?.email || ""} • {u?.username || ""}
                   </div>
                 </div>
               </CardHeader>
