@@ -14,7 +14,8 @@ async function verifyAdmin(req) {
       new TextEncoder().encode(process.env.JWT_SECRET)
     );
 
-    return payload?.role === "ADMIN" ? payload : null;
+    const role = payload?.role;
+    return role === "ADMIN" || role === "SUPERADMIN" ? payload : null;
   } catch {
     return null;
   }

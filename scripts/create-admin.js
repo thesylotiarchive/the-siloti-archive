@@ -39,7 +39,7 @@ async function main() {
         username,
         email,
         password: hashedPassword,
-        role: 'ADMIN',
+        role: 'SUPERADMIN',
       },
     });
 

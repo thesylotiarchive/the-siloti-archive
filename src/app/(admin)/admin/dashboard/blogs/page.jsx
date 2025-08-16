@@ -105,76 +105,73 @@ export default function BlogListPage() {
   );
 
   return (
-    <main className="max-w-6xl mx-auto p-6">
-      <div className="flex justify-between items-center mb-6">
+    <main className="max-w-6xl mx-auto p-4 sm:p-6">
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-6 gap-4">
         <h1 className="text-2xl font-bold">Blogs</h1>
         <Link href="/admin/dashboard/blogs/new">
           <Button>➕ New Blog</Button>
         </Link>
       </div>
 
-      <div className="space-y-4">
+      <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {blogs.map((blog, i) => (
-            <Card
-                key={blog.id}
-                ref={i === blogs.length - 1 ? lastBlogRef : null}
-                className="flex flex-row border p-4 shadow-sm bg-white items-start gap-4"
-            >
-                {/* Left: Image */}
-                {blog.bannerUrl ? (
-                <img
-                    src={blog.bannerUrl}
-                    alt={blog.title}
-                    className="w-32 h-24 object-cover rounded-md shrink-0"
-                />
-                ) : (
-                <div className="w-32 h-24 bg-muted rounded-md shrink-0" />
-                )}
-            
-                {/* Right: Content */}
-                <div className="flex-1 flex flex-col justify-between">
-                <div>
-                    <h2 className="text-lg font-semibold line-clamp-2">{blog.title}</h2>
-                    <p className="text-sm text-muted-foreground">
-                    {blog.author || "Unknown Author"} ·{" "}
-                    {blog.published ? "✅ Published" : "⏳ Draft"} ·{" "}
-                    {format(new Date(blog.createdAt), "PPP")}
-                    </p>
-                    <p className="text-sm text-muted-foreground mt-1 line-clamp-2">
-                    {blog.content?.replace(/[#_*>\n]/g, "").slice(0, 140) ||
-                        "No preview available..."}
-                    </p>
-                </div>
-            
-                {/* Action Buttons */}
-                <div className="mt-4 flex gap-2 justify-center">
-                    <Link href={`/admin/dashboard/blogs/${blog.id}/view`}>
-                    <Button variant="secondary" size="sm">View</Button>
-                    </Link>
-                    <Link href={`/admin/dashboard/blogs/${blog.id}/edit`}>
-                    <Button variant="outline" size="sm">Edit</Button>
-                    </Link>
-                    <Button
-                    variant="destructive"
-                    size="sm"
-                    onClick={() => handleDelete(blog.id)}
-                    >
-                    Delete
-                    </Button>
-                </div>
-                </div>
-            </Card>
+          <Card
+            key={blog.id}
+            ref={i === blogs.length - 1 ? lastBlogRef : null}
+            className="flex flex-col sm:flex-col md:flex-col lg:flex-col border p-4 shadow-sm bg-white"
+          >
+            {/* Image */}
+            {blog.bannerUrl ? (
+              <img
+                src={blog.bannerUrl}
+                alt={blog.title}
+                className="w-full h-48 sm:h-48 md:h-40 lg:h-36 object-cover rounded-md mb-4"
+              />
+            ) : (
+              <div className="w-full h-48 sm:h-48 md:h-40 lg:h-36 bg-muted rounded-md mb-4" />
+            )}
+
+            {/* Content */}
+            <div className="flex flex-col flex-1">
+              <h2 className="text-lg font-semibold line-clamp-2">{blog.title}</h2>
+              <p className="text-sm text-muted-foreground mt-1">
+                {blog.author || "Unknown Author"} ·{" "}
+                {blog.published ? "✅ Published" : "⏳ Draft"} ·{" "}
+                {format(new Date(blog.createdAt), "PPP")}
+              </p>
+              <p className="text-sm text-muted-foreground mt-2 line-clamp-3">
+                {blog.content?.replace(/[#_*>\n]/g, "").slice(0, 140) ||
+                  "No preview available..."}
+              </p>
+
+              {/* Actions */}
+              <div className="mt-4 flex flex-wrap gap-2 justify-start">
+                <Link href={`/admin/dashboard/blogs/${blog.id}/view`}>
+                  <Button variant="secondary" size="sm">View</Button>
+                </Link>
+                <Link href={`/admin/dashboard/blogs/${blog.id}/edit`}>
+                  <Button variant="outline" size="sm">Edit</Button>
+                </Link>
+                <Button
+                  variant="destructive"
+                  size="sm"
+                  onClick={() => handleDelete(blog.id)}
+                >
+                  Delete
+                </Button>
+              </div>
+            </div>
+          </Card>
         ))}
 
         {loading &&
-            Array.from({ length: 3 }).map((_, i) => (
-            <BlogCardSkeleton key={i} />
-            ))}
-        </div>
+          Array.from({ length: 3 }).map((_, i) => <BlogCardSkeleton key={i} />)}
+      </div>
 
       {!hasMore && !loading && blogs.length === 0 && (
         <p className="text-muted-foreground text-center mt-10">No blogs found.</p>
       )}
     </main>
+
   );
 }

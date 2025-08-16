@@ -28,7 +28,7 @@ export async function GET(request) {
 // POST /api/admin/blogs
 export async function POST(request) {
   const user = await getUserFromRequest(request);
-  if (!user || user.role !== "ADMIN") {
+  if (!user || (user.role !== 'ADMIN' && user.role !== 'SUPERADMIN')) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 

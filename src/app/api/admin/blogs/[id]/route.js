@@ -23,7 +23,7 @@ export async function GET(request, { params }) {
 // PUT /api/admin/blogs/:id
 export async function PUT(request, { params }) {
   const user = await getUserFromRequest(request);
-  if (!user || user.role !== "ADMIN") {
+  if (!user || (user.role !== 'ADMIN' && user.role !== 'SUPERADMIN')) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
@@ -60,7 +60,7 @@ export async function PUT(request, { params }) {
 // DELETE /api/admin/blogs/:id
 export async function DELETE(request, { params }) {
   const user = await getUserFromRequest(request);
-  if (!user || user.role !== "ADMIN") {
+  if (!user || (user.role !== 'ADMIN' && user.role !== 'SUPERADMIN')) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 

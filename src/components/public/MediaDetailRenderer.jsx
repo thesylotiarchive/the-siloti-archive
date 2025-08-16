@@ -11,10 +11,12 @@ import {
   Download,
 } from "lucide-react";
 import { getPdfPagesAsImages } from "@/utils/pdfToImages";
+// import PdfReader from "./PdfReader";
 
 // Dynamically import viewers to avoid SSR issues
 const FlipbookViewer = dynamic(() => import('@/components/public/FlipbookViewer'), { ssr: false });
 const FlipbookModalViewer = dynamic(() => import('@/components/public/FlipbookModalViewer'), { ssr: false });
+const PdfReader = dynamic(() => import('@/components/public/PdfReader'), { ssr: false });
 
 export function MediaDetailRenderer({ media }) {
   const {
@@ -97,35 +99,29 @@ export function MediaDetailRenderer({ media }) {
         return (
           <div className="my-6 w-full">
             <div className="w-full h-[60vh] md:h-[75vh] rounded border overflow-hidden">
-                  <iframe
-                    src={url}
-                    title="PDF Viewer"
-                    className="w-full h-full"
-                    frameBorder="0"
-                  />
+              {/* <iframe
+                src={url}
+                title="PDF Preview"
+                className="w-full h-full"
+                frameBorder="0"
+              /> */}
+
+              <iframe
+                src={`${process.env.NEXT_PUBLIC_SITE_URL}/pdf-viewer?fileUrl=${encodeURIComponent(url)}`}
+                title="PDF Preview"
+                className="w-full h-full"
+                frameBorder="0"
+              />
             </div>
-            {/* {pages.length > 0 ? (
-              <>
-
-                <div className="text-center mt-4">
-                  <button
-                    onClick={() => setShowModal(true)}
-                    className="inline-flex items-center gap-2 bg-[#74C043] text-white px-4 py-2 rounded shadow hover:bg-[#0A65A8] transition"
-                  >
-                    🖥 Fullscreen View
-                  </button>
-                </div>
-
-                {showModal && (
-                  <FlipbookModalViewer
-                    pages={pages}
-                    onClose={() => setShowModal(false)}
-                  />
-                )}
-              </>
-            ) : (
-              <p className="text-muted-foreground text-sm">Loading PDF pages...</p>
-            )} */}
+      
+            <div className="mt-4 flex justify-center">
+              <Link
+                href={`/pdf-viewer?fileUrl=${encodeURIComponent(url)}`}
+                className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
+              >
+                Full Screen View
+              </Link>
+            </div>
           </div>
         );
 
