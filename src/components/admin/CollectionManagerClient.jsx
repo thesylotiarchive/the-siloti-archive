@@ -168,26 +168,29 @@ export default function CollectionManagerClient() {
         ))}
       </div>
 
-      <div className="flex justify-between items-center mb-4">
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4 gap-2">
+        {/* Title */}
         <h1 className="text-xl font-bold">Collection Manager</h1>
-        <div className="flex gap-2">
-            <button
-            onClick={() => setFolderModalOpen(true)}
-            className="bg-primary text-primary-foreground px-4 py-2 rounded-md"
-            >
-            + Add Folder
-            </button>
 
-            {folderId && (
+        {/* Buttons */}
+        <div className="flex flex-col sm:flex-row sm:gap-2 gap-2 w-full sm:w-auto">
+          <button
+            onClick={() => setFolderModalOpen(true)}
+            className="bg-primary text-primary-foreground px-4 py-2 rounded-md w-full sm:w-auto text-center"
+          >
+            + Add Folder
+          </button>
+
+          {folderId && (
             <button
-                onClick={() => setMediaModalOpen(true)}
-                className="bg-secondary text-secondary-foreground px-4 py-2 rounded-md"
+              onClick={() => setMediaModalOpen(true)}
+              className="bg-secondary text-secondary-foreground px-4 py-2 rounded-md w-full sm:w-auto text-center"
             >
-                + Add Media
+              + Add Media
             </button>
-            )}
+          )}
         </div>
-     </div>
+      </div>
 
 
      {loading ? (

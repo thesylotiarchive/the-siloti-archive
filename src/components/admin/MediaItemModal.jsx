@@ -69,7 +69,7 @@ export default function MediaItemModal({ isOpen, onClose, mediaItem = null, onSu
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
       <form
         onSubmit={handleSubmit}
-        className="bg-card p-6 rounded-xl w-full max-w-md space-y-4 shadow-lg"
+        className="bg-card p-6 rounded-xl w-[90%] max-w-md space-y-4 shadow-lg"
       >
         <h2 className="text-lg font-semibold">
           {isEdit ? "Edit Media Item" : "Add Media Item"}

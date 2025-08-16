@@ -69,7 +69,7 @@ export function FolderModal({ isOpen, onClose, onSuccess, folders = [], folder =
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
       <form
         onSubmit={handleSubmit}
-        className="bg-card p-6 rounded-xl shadow-xl w-full max-w-md space-y-4"
+        className="bg-card p-6 rounded-xl shadow-xl w-[90%] max-w-md space-y-4"
       >
         <h2 className="text-lg font-semibold">
           {isEdit ? "Edit Folder" : "Create New Folder"}

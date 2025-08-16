@@ -16,26 +16,27 @@ export function FolderCard({ folder, onEdit, onDelete, activeMenuId, setActiveMe
 
   return (
     <div
-        className="relative flex flex-col items-center border rounded-lg p-4 hover:bg-muted transition"
-        onDrop={onDrop}
-        onDragOver={onDragOver}
+      className="relative flex flex-col items-center border rounded-lg p-4 hover:bg-muted transition"
+      onDrop={onDrop}
+      onDragOver={onDragOver}
     >
+      {/* Full clickable link but allow menu clicks */}
       <Link
         href={`/admin/dashboard/collection-manager?folderId=${folder.id}`}
-        className="absolute inset-0 z-0"
+        className="absolute inset-0 pointer-events-auto z-0"
       >
         <span className="sr-only">Open folder</span>
       </Link>
 
       {/* 3-dot menu */}
-      <div className="absolute top-2 right-2 z-10" ref={menuRef}>
+      <div className="absolute top-2 right-2 z-50" ref={menuRef}>
         <button
           onClick={(e) => {
             e.stopPropagation();
             e.preventDefault();
             setActiveMenuId(activeMenuId === folder.id ? null : folder.id);
           }}
-          className="text-muted-foreground hover:text-foreground"
+          className="text-muted-foreground hover:text-foreground z-50"
         >
           <MoreVertical className="w-5 h-5" />
         </button>
@@ -68,6 +69,7 @@ export function FolderCard({ folder, onEdit, onDelete, activeMenuId, setActiveMe
         )}
       </div>
 
+      {/* Thumbnail */}
       <div className="w-16 h-16 bg-muted rounded-md mb-2 z-10">
         {folder.image ? (
           <img

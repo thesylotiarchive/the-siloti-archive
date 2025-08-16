@@ -20,7 +20,7 @@ export async function POST(req) {
       where: { email },
     });
 
-    if (!user || user.role !== 'ADMIN') {
+    if (!user || (user.role !== 'ADMIN' && user.role !== 'SUPERADMIN')) {
       return new Response(JSON.stringify({ error: 'Access denied' }), {
         status: 403,
       });
