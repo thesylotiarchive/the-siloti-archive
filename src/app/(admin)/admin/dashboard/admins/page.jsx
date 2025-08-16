@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import AdminUsersManager from "@/components/admin/AdminUsersManager";
 
 export default function AdminUsersPage() {
-  const [me, setMe] = useState(null);
+  const [me, setMe] = useState({ id: "", username: "", email: "", role: "ADMIN" });
   const [admins, setAdmins] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -14,26 +14,17 @@ export default function AdminUsersPage() {
       try {
         // fetch current user
         const meRes = await fetch("/api/admin/users/me", { credentials: "include" });
-        if (!meRes.ok) {
-          const errText = await meRes.text();
-          console.error("ME route error:", meRes.status, errText);
-          throw new Error("Failed to load current user");
-        }
-        const { me } = await meRes.json();
+        const meData = meRes.ok ? await meRes.json() : null;
 
         // fetch admins
         const listRes = await fetch("/api/admin/users", { credentials: "include" });
-        if (!listRes.ok) {
-          const errText = await listRes.text();
-          console.error("USERS route error:", listRes.status, errText);
-          throw new Error("Failed to load admin list");
-        }
-        const { admins } = await listRes.json();
+        const listData = listRes.ok ? await listRes.json() : null;
 
-        setMe(me);
-        setAdmins(admins);
+        setMe(meData?.me || { id: "", username: "", email: "", role: "ADMIN" });
+        setAdmins(Array.isArray(listData?.admins) ? listData.admins : []);
       } catch (err) {
-        setError(err.message);
+        console.error(err);
+        setError("Failed to load admin data");
       } finally {
         setLoading(false);
       }
