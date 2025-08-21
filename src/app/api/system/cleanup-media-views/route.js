@@ -1,7 +1,7 @@
 // src/app/api/system/cleanup-media-views/route.js
 
 import { NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
+import prisma from "@/lib/prisma";
 
 // POST /api/system/cleanup-media-views
 export async function POST() {

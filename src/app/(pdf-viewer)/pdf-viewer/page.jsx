@@ -2,10 +2,11 @@
 
 import { useSearchParams } from "next/navigation";
 import dynamic from "next/dynamic";
+import { Suspense } from "react";
 
 const PdfReader = dynamic(() => import("@/components/public/PdfReader"), { ssr: false });
 
-export default function PdfViewerPage() {
+function PdfViewerInner() {
   const searchParams = useSearchParams();
   const fileUrl = searchParams.get("fileUrl");
 
@@ -20,4 +21,10 @@ export default function PdfViewerPage() {
   );
 }
 
-
+export default function PdfViewerPage() {
+  return (
+    <Suspense fallback={<div className="p-4">Loading PDF Viewer...</div>}>
+      <PdfViewerInner />
+    </Suspense>
+  );
+}
