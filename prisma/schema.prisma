@@ -104,6 +104,20 @@ model MediaItem {
   tags           Tag[]        @relation("MediaItemTags")
   collections    Collection[] @relation("CollectionItems")
   createdAt      DateTime     @default(now())
+
+  views          Int          @default(0)
+}
+
+model MediaView {
+  id        String   @id @default(cuid())
+  mediaId   String
+  ipHash    String   // hashed IP (privacy-friendly)
+  dateDay   String   // 'YYYY-MM-DD' in UTC
+  createdAt DateTime @default(now())
+
+  @@unique([mediaId, ipHash, dateDay])
+  @@index([mediaId, dateDay])
+  @@index([ipHash, dateDay])
 }
 
 model Tag {

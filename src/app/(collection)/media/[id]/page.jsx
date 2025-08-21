@@ -1,4 +1,5 @@
 import { MediaDetailRenderer } from "@/components/public/MediaDetailRenderer";
+import MediaViewPing from "@/components/public/MediaViewPing";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -12,6 +13,8 @@ export default async function MediaDetailPage({ params }) {
 
   return (
     <main className="w-full max-w-5xl px-4 sm:px-6 md:px-8 py-10 sm:py-12 md:py-16 mx-auto">
+      {/* Count a view on mount */}
+      <MediaViewPing mediaId={media.id} />
 
       <div className="mb-6">
         <Link

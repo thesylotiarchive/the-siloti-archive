@@ -16,7 +16,7 @@ import { getPdfPagesAsImages } from "@/utils/pdfToImages";
 // Dynamically import viewers to avoid SSR issues
 const FlipbookViewer = dynamic(() => import('@/components/public/FlipbookViewer'), { ssr: false });
 const FlipbookModalViewer = dynamic(() => import('@/components/public/FlipbookModalViewer'), { ssr: false });
-// const PdfReader = dynamic(() => import('@/components/public/PdfReader'), { ssr: false });
+const PdfReader = dynamic(() => import('@/components/public/PdfReader'), { ssr: false });
 
 export function MediaDetailRenderer({ media }) {
   const {
@@ -24,7 +24,7 @@ export function MediaDetailRenderer({ media }) {
     fileUrl,
     externalLink,
     mediaType,
-    viewCount = 42,
+    views,
     likeCount = 5,
     commentCount = 2,
   } = media;
@@ -45,7 +45,7 @@ export function MediaDetailRenderer({ media }) {
   const renderStats = () => (
     <div className="flex flex-wrap items-center gap-4 sm:gap-6 text-muted-foreground text-sm mt-6">
       <div className="flex items-center gap-1">
-        <Eye className="w-4 h-4" /> {viewCount}
+        <Eye className="w-4 h-4" /> {views}
       </div>
       <div className="flex items-center gap-1">
         <ThumbsUp className="w-4 h-4" /> {likeCount}
