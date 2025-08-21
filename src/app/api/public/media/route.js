@@ -24,6 +24,7 @@ export async function GET(req) {
         mediaType: true,
         fileUrl: true,
         externalLink: true,
+        views: true
       },
     });
 

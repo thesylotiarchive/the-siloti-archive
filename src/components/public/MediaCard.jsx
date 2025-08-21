@@ -3,7 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
-import { Share2 } from "lucide-react";
+import { Share2, Eye, Heart, MessageCircle } from "lucide-react";
 import ShareModal from "./ShareModal";
 
 export function MediaCard({ mediaItem, onShare }) {
@@ -15,6 +15,7 @@ export function MediaCard({ mediaItem, onShare }) {
     externalLink,
     image,
     description,
+    views,
   } = mediaItem;
 
   const [hovered, setHovered] = useState(false);
@@ -72,7 +73,7 @@ export function MediaCard({ mediaItem, onShare }) {
         </div>
 
         <div className="p-4">
-          <h3 className="text-base font-semibold mb-1 line-clamp-2">
+          <h3 className="text-base font-semibold mb-1 line-clamp-1">
             {title}
           </h3>
           <div className="flex items-center justify-between">
@@ -89,10 +90,20 @@ export function MediaCard({ mediaItem, onShare }) {
           </div>
 
           <div className="mt-2 flex items-center gap-4 text-xs text-muted-foreground">
-            <div>👁️ 0</div>
-            <div>❤️ 0</div>
-            <div>💬 0</div>
+            <div className="flex items-center gap-1">
+              <Eye className="w-4 h-4" />
+              {views}
+            </div>
+            <div className="flex items-center gap-1">
+              <Heart className="w-4 h-4" />
+              0
+            </div>
+            <div className="flex items-center gap-1">
+              <MessageCircle className="w-4 h-4" />
+              0
+            </div>
           </div>
+
         </div>
       </Link>
 
