@@ -7,7 +7,7 @@ import { useState, useRef } from "react";
 
 export function CollectionCard({ collection }) {
   const [hovered, setHovered] = useState(false);
-  const [position, setPosition] = useState('top');
+  const [position, setPosition] = useState("top");
   const cardRef = useRef(null);
 
   const handleMouseEnter = () => {
@@ -16,13 +16,11 @@ export function CollectionCard({ collection }) {
       const spaceAbove = rect.top;
       const spaceBelow = window.innerHeight - rect.bottom;
 
-      // Prefer top, but if not enough space, use bottom
       if (spaceAbove < 200 && spaceBelow > spaceAbove) {
-        setPosition('bottom');
+        setPosition("bottom");
       } else {
-        setPosition('top');
+        setPosition("top");
       }
-
       setHovered(true);
     }
   };
@@ -36,37 +34,48 @@ export function CollectionCard({ collection }) {
     >
       <Link
         href={`/collection/${collection.id}`}
-        className="block bg-card border border-border rounded-2xl overflow-hidden shadow transition-transform hover:shadow-xl hover:-translate-y-1 
-          sm:rounded-xl sm:text-sm" // smaller radius/text on small screens
+        className="block border border-border rounded-2xl overflow-hidden shadow transition-transform hover:shadow-xl hover:-translate-y-1 sm:rounded-xl sm:text-sm relative"
       >
-        {collection.imageUrl ? (
-          <div className="relative w-full aspect-[4/3] bg-muted sm:aspect-[5/4]">
-            <Image
-              src={collection.imageUrl}
-              alt={collection.name}
-              fill
-              className="object-cover"
-            />
-          </div>
-        ) : (
-          <div className="w-full aspect-[4/3] bg-muted flex items-center justify-center text-4xl sm:text-2xl">
-            📁
-          </div>
-        )}
+        {/* Background image */}
+        <div className="relative w-full aspect-[4/3] sm:aspect-[5/4] flex flex-col items-center justify-center">
+          <Image
+            src="/collection_card_bg.png"
+            alt="Card background"
+            fill
+            className="object-cover absolute inset-0"
+          />
 
-        <div className="p-4 pb-3 flex sm:p-2 sm:pb-1">
-          <h3 className="text-base font-semibold mb-1 line-clamp-1 sm:text-sm">
-            {collection.name}
-          </h3>
+          {/* Centered thumbnail */}
+          {collection.imageUrl ? (
+            <div className="relative z-10 flex flex-col items-center">
+              <div className="w-20 h-20 sm:w-16 sm:h-16 rounded-full overflow-hidden border-2 border-black shadow-md">
+                <Image
+                  src={collection.imageUrl}
+                  alt={collection.name}
+                  width={80}
+                  height={80}
+                  className="object-cover"
+                />
+              </div>
+
+              {/* Title below thumbnail */}
+              <h3 className="mt-2 text-lg sm:text-sm font-bold text-black text-center line-clamp-1">
+                {collection.name}
+              </h3>
+            </div>
+          ) : (
+            <div className="relative z-10 text-black font-semibold">No Image</div>
+          )}
         </div>
 
+        {/* Bottom bar with item count */}
         <div className="flex items-center gap-2 text-sm text-white px-4 py-2 bg-gray-800 border-t border-gray-700 sm:px-2 sm:py-1 sm:text-xs">
           <Boxes className="w-4 h-4 opacity-80 sm:w-3 sm:h-3" />
           <span className="font-medium">
-            {collection.itemCount ?? 0} {collection.itemCount === 1 ? "item" : "items"}
+            {collection.itemCount ?? 0}{" "}
+            {collection.itemCount === 1 ? "item" : "items"}
           </span>
         </div>
-
       </Link>
 
       {/* Hover Preview */}
@@ -74,7 +83,7 @@ export function CollectionCard({ collection }) {
         <div
           className={`
             absolute z-50 w-64 sm:w-56 bg-white border border-gray-300 rounded-xl shadow-xl p-4
-            ${position === 'top' ? '-top-2 -translate-y-full' : 'top-full mt-2'}
+            ${position === "top" ? "-top-2 -translate-y-full" : "top-full mt-2"}
             left-1/2 -translate-x-1/2
           `}
         >
@@ -82,9 +91,11 @@ export function CollectionCard({ collection }) {
           <div
             className={`
               absolute left-1/2 -translate-x-1/2 w-0 h-0
-              ${position === 'top'
-                ? 'top-full border-l-8 border-r-8 border-t-8 border-transparent border-t-white'
-                : '-top-2 border-l-8 border-r-8 border-b-8 border-transparent border-b-white'}
+              ${
+                position === "top"
+                  ? "top-full border-l-8 border-r-8 border-t-8 border-transparent border-t-white"
+                  : "-top-2 border-l-8 border-r-8 border-b-8 border-transparent border-b-white"
+              }
               shadow-sm
             `}
           />
