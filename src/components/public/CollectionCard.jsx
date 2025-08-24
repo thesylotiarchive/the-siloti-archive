@@ -48,15 +48,15 @@ export function CollectionCard({ collection }) {
           {/* Centered thumbnail */}
           {collection.imageUrl ? (
             <div className="relative z-10 flex flex-col items-center">
-              <div className="w-20 h-20 sm:w-16 sm:h-16 rounded-full overflow-hidden border-2 border-black shadow-md">
-                <Image
-                  src={collection.imageUrl}
-                  alt={collection.name}
-                  width={80}
-                  height={80}
-                  className="object-cover"
-                />
-              </div>
+             <div className="w-22 h-22 sm:w-24 sm:h-24 rounded-full overflow-hidden border-2 border-black shadow-md mx-auto">
+              <Image
+                src={collection.imageUrl}
+                alt={collection.name}
+                width={96}   // closer to w-24
+                height={96}
+                className="object-cover"
+              />
+            </div>
 
               {/* Title below thumbnail */}
               <h3 className="mt-2 text-lg sm:text-sm font-bold text-black text-center line-clamp-1">
@@ -101,7 +101,7 @@ export function CollectionCard({ collection }) {
           />
 
           {collection.imageUrl ? (
-            <div className="relative w-full aspect-video mb-2 rounded-lg overflow-hidden">
+            <div className="relative w-24 h-24 mx-auto mb-2 rounded-full overflow-hidden border-2 border-black shadow-md">
               <Image
                 src={collection.imageUrl}
                 alt={collection.name}
@@ -110,16 +110,20 @@ export function CollectionCard({ collection }) {
               />
             </div>
           ) : (
-            <div className="w-full aspect-video mb-2 bg-muted flex items-center justify-center text-4xl rounded-lg">
+            <div className="w-24 h-24 mx-auto mb-2 rounded-full bg-muted flex items-center justify-center text-4xl border-2 border-black shadow-md">
               📁
             </div>
           )}
 
-          <div className="text-sm font-semibold mb-1">{collection.name}</div>
-          <div className="text-xs text-muted-foreground">
+          <div className="text-sm font-semibold text-center mb-1">
+            {collection.name}
+          </div>
+          <div className="text-xs text-muted-foreground text-center">
             {collection.itemCount ?? 0}{" "}
             {collection.itemCount === 1 ? "item" : "items"}
           </div>
+
+          
         </div>
       )}
     </div>
