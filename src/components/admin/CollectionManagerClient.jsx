@@ -41,6 +41,8 @@ export default function CollectionManagerClient() {
       setCurrentFolder(data.folder);
       setSubfolders(data.subfolders || []); // safety
       setMediaItems(data.mediaItems || []); // safety
+
+      console.log("folderId: ", folderId)
     } catch (err) {
       console.error("Failed to load folder data", err);
     } finally {
@@ -74,13 +76,7 @@ export default function CollectionManagerClient() {
       });
   
       if (res.ok) {
-        // Refetch after deletion
-        const updated = await fetch(`/api/admin/folders/${folderId || "root"}`);
-        const data = await updated.json();
-  
-        setCurrentFolder(data.folder);
-        setSubfolders(data.subfolders);
-        setMediaItems(data.mediaItems);
+        fetchFolderData();
       } else {
         console.error("Failed to delete folder");
       }
