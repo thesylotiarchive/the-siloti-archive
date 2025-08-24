@@ -2,8 +2,17 @@
 
 import { useRef } from "react";
 import { useOutsideClick } from "@/lib/hooks/useOutsideClick";
+import { MoreVertical } from "lucide-react";
 
-export function MediaCard({ mediaItem, isActive, isDragging, setActiveMenuId, onEdit, onDelete, ...props })  {
+export function MediaCard({
+  mediaItem,
+  isActive,
+  isDragging,
+  setActiveMenuId,
+  onEdit,
+  onDelete,
+  ...props
+}) {
   const menuRef = useRef(null);
 
   useOutsideClick(menuRef, () => {
@@ -14,36 +23,28 @@ export function MediaCard({ mediaItem, isActive, isDragging, setActiveMenuId, on
 
   return (
     <div
-        {...props}
-        draggable
-        onDragStart={(e) => {
-            if (props.onDragStart) props.onDragStart(e);
-        }}
-        className={`relative flex flex-col items-center border rounded-lg p-4 bg-card hover:bg-muted transition ${
-          isDragging ? "opacity-50 scale-95 cursor-grab active:cursor-grabbing" : ""
-        }`}
+      {...props}
+      draggable
+      onDragStart={(e) => {
+        if (props.onDragStart) props.onDragStart(e);
+      }}
+      className={`relative flex flex-col items-center border rounded-lg p-4 bg-card hover:bg-muted transition ${
+        isDragging ? "opacity-50 scale-95 cursor-grab active:cursor-grabbing" : ""
+      }`}
     >
-        {/* Make this area visibly draggable */}
-        <div className="" draggable={false}>
-            {/* <img
-            src={mediaItem.imageUrl || "/placeholder.png"}
-            alt={mediaItem.title}
-            className="w-full h-full object-cover pointer-events-none"
-            /> */}
-        </div>
-      {/* 3-dot menu */}
+      {/* Floating action button (replacing 3-dot) */}
       <div className="absolute top-2 right-2 z-10" ref={menuRef}>
         <button
           onClick={() => setActiveMenuId(isActive ? null : mediaItem.id)}
-          className="text-muted-foreground hover:text-foreground"
+          className="w-8 h-8 flex items-center justify-center rounded-full bg-black text-white hover:bg-gray-800 transition"
         >
-          ⋮
+          <MoreVertical className="w-5 h-5" />
         </button>
 
         {isActive && (
           <div
             className="absolute right-0 top-full mt-2 w-28 bg-popover text-popover-foreground rounded-md shadow-lg border z-50"
-            style={{ zIndex: 9999 }} // Optional: ensure it's highest
+            style={{ zIndex: 9999 }}
           >
             <button
               onClick={() => {
@@ -65,8 +66,6 @@ export function MediaCard({ mediaItem, isActive, isDragging, setActiveMenuId, on
             </button>
           </div>
         )}
-
-
       </div>
 
       {/* Thumbnail */}

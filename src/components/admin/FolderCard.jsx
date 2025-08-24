@@ -5,7 +5,15 @@ import Link from "next/link";
 import { MoreVertical } from "lucide-react";
 import { useOutsideClick } from "@/lib/hooks/useOutsideClick";
 
-export function FolderCard({ folder, onEdit, onDelete, activeMenuId, setActiveMenuId, onDrop, onDragOver }) {
+export function FolderCard({
+  folder,
+  onEdit,
+  onDelete,
+  activeMenuId,
+  setActiveMenuId,
+  onDrop,
+  onDragOver,
+}) {
   const menuRef = useRef(null);
 
   useOutsideClick(menuRef, () => {
@@ -16,27 +24,30 @@ export function FolderCard({ folder, onEdit, onDelete, activeMenuId, setActiveMe
 
   return (
     <div
-      className="relative flex flex-col items-center border rounded-lg p-4 hover:bg-muted transition"
+      className="relative flex flex-col items-center border rounded-lg p-4 hover:bg-muted transition cursor-pointer"
       onDrop={onDrop}
       onDragOver={onDragOver}
     >
-      {/* Full clickable link but allow menu clicks */}
+      {/* Full clickable link */}
       <Link
         href={`/admin/dashboard/collection-manager?folderId=${folder.id}`}
-        className="absolute inset-0 pointer-events-auto z-0"
+        className="absolute inset-0 z-10"
       >
         <span className="sr-only">Open folder</span>
       </Link>
 
-      {/* 3-dot menu */}
-      <div className="absolute top-2 right-2 z-50" ref={menuRef}>
+      {/* Floating 3-dot menu */}
+      <div
+        className="absolute top-2 right-2 z-50"
+        ref={menuRef}
+        onClick={(e) => e.stopPropagation()} // prevent link trigger
+      >
         <button
           onClick={(e) => {
-            e.stopPropagation();
             e.preventDefault();
             setActiveMenuId(activeMenuId === folder.id ? null : folder.id);
           }}
-          className="text-muted-foreground hover:text-foreground z-50"
+          className="w-8 h-8 flex items-center justify-center rounded-full bg-black text-white hover:bg-gray-800 transition"
         >
           <MoreVertical className="w-5 h-5" />
         </button>
@@ -45,7 +56,6 @@ export function FolderCard({ folder, onEdit, onDelete, activeMenuId, setActiveMe
           <div className="absolute right-0 mt-2 w-28 bg-popover text-popover-foreground rounded-md shadow-lg border z-50">
             <button
               onClick={(e) => {
-                e.stopPropagation();
                 e.preventDefault();
                 onEdit(folder);
                 setActiveMenuId(null);
@@ -56,7 +66,6 @@ export function FolderCard({ folder, onEdit, onDelete, activeMenuId, setActiveMe
             </button>
             <button
               onClick={(e) => {
-                e.stopPropagation();
                 e.preventDefault();
                 onDelete(folder.id);
                 setActiveMenuId(null);
@@ -70,7 +79,7 @@ export function FolderCard({ folder, onEdit, onDelete, activeMenuId, setActiveMe
       </div>
 
       {/* Thumbnail */}
-      <div className="w-16 h-16 bg-muted rounded-md mb-2 z-10">
+      <div className="w-16 h-16 bg-muted rounded-md mb-2 z-1">
         {folder.image ? (
           <img
             src={folder.image}
@@ -81,7 +90,7 @@ export function FolderCard({ folder, onEdit, onDelete, activeMenuId, setActiveMe
           <div className="flex items-center justify-center h-full">📁</div>
         )}
       </div>
-      <span className="text-sm text-center z-10">{folder.name}</span>
+      <span className="text-sm text-center z-1">{folder.name}</span>
     </div>
   );
 }
