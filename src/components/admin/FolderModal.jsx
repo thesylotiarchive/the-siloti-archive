@@ -5,24 +5,24 @@ import ImageUploaderWithToggle from "../ImageUploaderWithToggle";
 
 export function FolderModal({ isOpen, onClose, onSuccess, folders = [], folder = null, parentId = null }) {
   const isEdit = !!folder;
-  const [form, setForm] = useState({ name: "", description: "", image: "", parentId: "" });
-
+  const [isUploading, setIsUploading] = useState(false);
+  const [form, setForm] = useState({ name: "", description: "", image: "" });
+  
   useEffect(() => {
     if (isEdit) {
       setForm({
         name: folder.name || "",
         description: folder.description || "",
         image: folder.image || "",
-        parentId: folder.parentId || "",
       });
     } else {
       setForm({
         name: "",
         description: "",
         image: "",
-        parentId: parentId || "",
       });
     }
+    console.log("ParentId: ", parentId);
   }, [folder, parentId]);
 
   const handleChange = (e) => {
@@ -31,6 +31,14 @@ export function FolderModal({ isOpen, onClose, onSuccess, folders = [], folder =
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log("ParentId: ", parentId);
+
+    // Explicitly attach parentId here
+    const body = {
+      ...form,
+      parentId,
+    };
+
     const endpoint = isEdit
       ? `/api/admin/folders/${folder.id}`
       : `/api/admin/folders`;
@@ -40,17 +48,16 @@ export function FolderModal({ isOpen, onClose, onSuccess, folders = [], folder =
     const res = await fetch(endpoint, {
       method,
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(form),
+      body: JSON.stringify(body),
     });
 
     if (res.ok) {
       onSuccess();
-      onClose?.();          
-      setForm({             
+      onClose?.();
+      setForm({
         name: "",
         description: "",
         image: "",
-        parentId: "",
       });
     } else {
       alert("Failed to save folder.");
@@ -101,6 +108,7 @@ export function FolderModal({ isOpen, onClose, onSuccess, folders = [], folder =
           <label className="block text-sm font-medium mb-1">Folder Thumbnail</label>
           <ImageUploaderWithToggle
             value={form.image}
+            setIsUploading={setIsUploading}
             onChange={(url) => setForm({ ...form, image: url })}
           />
         </div>
