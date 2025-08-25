@@ -21,6 +21,14 @@ export function MediaCard({
     }
   });
 
+  // ✅ Determine thumbnail source
+  let thumbnailSrc = null;
+  if (mediaItem.mediaType === "IMAGE") {
+    thumbnailSrc = mediaItem.image || mediaItem.fileUrl || null;
+  }else {
+    thumbnailSrc = mediaItem.image
+  }
+
   return (
     <div
       {...props}
@@ -32,7 +40,7 @@ export function MediaCard({
         isDragging ? "opacity-50 scale-95 cursor-grab active:cursor-grabbing" : ""
       }`}
     >
-      {/* Floating action button (replacing 3-dot) */}
+      {/* Floating action button */}
       <div className="absolute top-2 right-2 z-10" ref={menuRef}>
         <button
           onClick={() => setActiveMenuId(isActive ? null : mediaItem.id)}
@@ -69,15 +77,15 @@ export function MediaCard({
       </div>
 
       {/* Thumbnail */}
-      <div className="w-16 h-16 bg-muted rounded-md mb-2">
-        {mediaItem.image ? (
+      <div className="w-16 h-16 bg-muted rounded-md mb-2 overflow-hidden flex items-center justify-center">
+        {thumbnailSrc ? (
           <img
-            src={mediaItem.image}
+            src={thumbnailSrc}
             alt={mediaItem.title}
             className="w-full h-full object-cover rounded-md z-0"
           />
         ) : (
-          <div className="flex items-center justify-center h-full">🖼️</div>
+          <div className="text-xl">🖼️</div>
         )}
       </div>
 

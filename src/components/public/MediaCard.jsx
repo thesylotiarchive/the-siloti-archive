@@ -39,6 +39,13 @@ export function MediaCard({ mediaItem, onShare }) {
     OTHER: "❓",
   };
 
+  let thumbnailSrc = null;
+  if (mediaItem.mediaType === "IMAGE") {
+    thumbnailSrc = mediaItem.image || mediaItem.fileUrl || null;
+  }else {
+    thumbnailSrc = mediaItem.image
+  }
+
   useEffect(() => {
     if (hovered && cardRef.current) {
       const rect = cardRef.current.getBoundingClientRect();
@@ -58,9 +65,9 @@ export function MediaCard({ mediaItem, onShare }) {
       {/* ✅ Main clickable content */}
       <Link href={`/media/${id}`} className="block">
         <div className="relative w-full aspect-video bg-muted">
-          {image ? (
+          {thumbnailSrc ? (
             <Image
-              src={image}
+              src={thumbnailSrc}
               alt={title}
               fill
               className="object-cover rounded-t-xl"
@@ -135,9 +142,9 @@ export function MediaCard({ mediaItem, onShare }) {
                 : "-top-2 border-b-8 border-transparent border-b-white"
             } shadow-md`}
           />
-          {image && (
+          {thumbnailSrc && (
             <div className="relative w-full aspect-video mb-2 rounded-lg overflow-hidden">
-              <Image src={image} alt={title} fill className="object-cover" />
+              <Image src={thumbnailSrc} alt={title} fill className="object-cover" />
             </div>
           )}
           <div className="text-sm font-semibold mb-1">{title}</div>

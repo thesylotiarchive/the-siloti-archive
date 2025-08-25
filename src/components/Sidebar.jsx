@@ -18,7 +18,7 @@ const navLinks = [
   { href: "/admin/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { href: "/admin/dashboard/collection-manager", label: "Collection Manager", icon: FolderTree },
   { href: "/admin/dashboard/blogs", label: "Blogs", icon: Newspaper },
-  // { href: "/admin/dashboard/admins", label: "Admins", icon: ShieldCheck },
+  { href: "/admin/dashboard/admins", label: "Admins", icon: ShieldCheck },
 ];
 
 export function Sidebar({ open, setOpen }) {

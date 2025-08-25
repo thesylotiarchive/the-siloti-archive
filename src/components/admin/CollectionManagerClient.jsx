@@ -11,6 +11,7 @@ import { FolderModal } from "@/components/admin/FolderModal";
 import { MoreVertical } from "lucide-react";
 import { MediaCard } from "@/components/admin/MediaCard";
 import { FolderCard } from "@/components/admin/FolderCard";
+import BulkMediaModal from "./BulkMediaModal";
 
 
 export default function CollectionManagerClient() {
@@ -23,6 +24,7 @@ export default function CollectionManagerClient() {
   const [loading, setLoading] = useState(true);
   const [folderModalOpen, setFolderModalOpen] = useState(false);
   const [mediaModalOpen, setMediaModalOpen] = useState(false);
+  const [bulkModalOpen, setBulkModalOpen] = useState(false);
   const [activeMenuId, setActiveMenuId] = useState(null);
   const [selectedFolder, setSelectedFolder] = useState(null);
   const [selectedMediaItem, setSelectedMediaItem] = useState(null);
@@ -164,6 +166,8 @@ export default function CollectionManagerClient() {
         ))}
       </div>
 
+
+
       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4 gap-2">
         {/* Title */}
         <h1 className="text-xl font-bold">Collection Manager</h1>
@@ -178,12 +182,23 @@ export default function CollectionManagerClient() {
           </button>
 
           {folderId && (
-            <button
-              onClick={() => setMediaModalOpen(true)}
-              className="bg-secondary text-secondary-foreground px-4 py-2 rounded-md w-full sm:w-auto text-center"
-            >
-              + Add Media
-            </button>
+            <>
+              <button
+                onClick={() => setMediaModalOpen(true)}
+                className="bg-secondary text-secondary-foreground px-4 py-2 rounded-md w-full sm:w-auto text-center"
+              >
+                + Add Media
+              </button>
+
+              <button
+                onClick={() => setBulkModalOpen(true)}
+                className="bg-secondary text-secondary-foreground px-4 py-2 rounded-md w-full sm:w-auto text-center"
+              >
+                + Bulk Action
+              </button>
+
+            </>
+            
           )}
         </div>
       </div>
@@ -258,6 +273,17 @@ export default function CollectionManagerClient() {
                 }}
             />
         )}
+
+        <BulkMediaModal
+          isOpen={bulkModalOpen}
+          onClose={() => setBulkModalOpen(false)}
+          onSuccess={() => {
+            setBulkModalOpen(false);
+            // Re-fetch updated folder/media data
+
+            fetchFolderData();
+            }}
+        />
 
         <FolderModal
             isOpen={folderModalOpen}

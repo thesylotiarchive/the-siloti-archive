@@ -10,17 +10,32 @@ export default function ImageUploaderWithToggle({
   endpoint = "folderImageUploader",
   placeholder = "Enter image URL",
   initialMode = "upload",
+  groupKey, // NEW: unique per instance (e.g., `thumb-${item.id}`)
 }) {
   const [mode, setMode] = useState(initialMode);
+  const radioName = `${groupKey || endpoint}-mode`;
 
+  useEffect(() => {
+    if (initialMode) setMode(initialMode);
+  }, [initialMode]);
 
+  const isUploadThingUrl = (url) =>
+    typeof url === "string" && (url.includes("uploadthing") || url.includes("utfs.io"));
 
-
-    useEffect(() => {
-        if (initialMode) {
-        setMode(initialMode);
-        }
-    }, []);
+  const handleDelete = async () => {
+    if (isUploadThingUrl(value)) {
+      try {
+        await fetch("/api/admin/uploadthing/delete", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ url: value }),
+        });
+      } catch (err) {
+        console.error("Delete failed:", err);
+      }
+    }
+    onChange("");
+  };
 
   return (
     <div className="space-y-2">
@@ -29,7 +44,7 @@ export default function ImageUploaderWithToggle({
         <label className="flex items-center gap-1">
           <input
             type="radio"
-            name={endpoint + "-mode"} // unique name per field
+            name={radioName}
             value="upload"
             checked={mode === "upload"}
             onChange={() => setMode("upload")}
@@ -39,7 +54,7 @@ export default function ImageUploaderWithToggle({
         <label className="flex items-center gap-1">
           <input
             type="radio"
-            name={endpoint + "-mode"}
+            name={radioName}
             value="link"
             checked={mode === "link"}
             onChange={() => setMode("link")}
@@ -52,23 +67,33 @@ export default function ImageUploaderWithToggle({
       {value && (
         <div className="border rounded-md p-2 bg-muted text-sm">
           {mode === "link" ? (
-            <div className="border rounded-md p-2 bg-muted text-sm">
-                🔗{" "}
-                <a
+            <div className="mb-2">
+              <a
                 href={value}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-blue-600 underline break-all block"
-                >
+                className="underline break-all block"
+              >
                 {value}
-                </a>
+              </a>
             </div>
           ) : (
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 mb-2">
               <img src={value} alt="Preview" className="h-12 w-12 object-cover rounded" />
-              <span className="text-xs text-muted-foreground truncate">{value.split("/").pop()}</span>
+              <span className="text-xs text-muted-foreground truncate">
+                {value.split("/").pop()}
+              </span>
             </div>
           )}
+          <div className="flex justify-end">
+            <button
+              type="button"
+              onClick={handleDelete}
+              className="text-xs text-red-500 hover:underline"
+            >
+              Delete
+            </button>
+          </div>
         </div>
       )}
 
@@ -89,17 +114,25 @@ export default function ImageUploaderWithToggle({
               "bg-primary text-primary-foreground px-4 py-2 rounded-md text-sm font-medium hover:bg-primary/90 transition-colors",
             allowedContent: "text-xs text-muted-foreground mt-1",
           }}
-          onUploadBegin={() => setIsUploading(true)}
-          onClientUploadComplete={(res) => {
+          onUploadBegin={() => setIsUploading?.(true)}
+          onClientUploadComplete={async (res) => {
             if (res && res.length > 0) {
+              // delete old file if exists
+              if (isUploadThingUrl(value)) {
+                await fetch("/api/admin/uploadthing/delete", {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({ url: value }),
+                }).catch(() => {});
+              }
               onChange(res[0].url);
             }
-            setIsUploading(false);
+            setIsUploading?.(false);
           }}
           onUploadError={(error) => {
             alert("Upload failed.");
             console.error(error);
-            setIsUploading(false);
+            setIsUploading?.(false);
           }}
         />
       )}

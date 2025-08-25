@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useSearchParams } from "next/navigation";
 import ImageUploaderWithToggle from "../ImageUploaderWithToggle";
 
@@ -10,6 +10,11 @@ export default function MediaItemModal({ isOpen, onClose, mediaItem = null, onSu
   const [isUploadingMedia, setIsUploadingMedia] = useState(false);
 
   const isLink = (url) => url?.startsWith("http") && !url.includes("uploadthing");
+  const isUploadThingUrl = (url) => url?.includes("uploadthing");
+
+  // store the "original" values (so we only delete new uploads if cancel)
+  const originalImage = mediaItem?.image || "";
+  const originalMedia = mediaItem?.fileUrl || mediaItem?.externalLink || "";
 
   const [form, setForm] = useState({
     title: "",
@@ -33,6 +38,39 @@ export default function MediaItemModal({ isOpen, onClose, mediaItem = null, onSu
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const cleanupUploads = async () => {
+    const deletes = [];
+
+    if (form.image && isUploadThingUrl(form.image) && form.image !== originalImage) {
+      deletes.push(form.image);
+    }
+    if (form.mediaUrl && isUploadThingUrl(form.mediaUrl) && form.mediaUrl !== originalMedia) {
+      deletes.push(form.mediaUrl);
+    }
+
+    if (deletes.length > 0) {
+      await fetch("/api/admin/uploadthing/delete", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ url: deletes[0] }), // single file
+      });
+
+      // if multiple, send in loop
+      for (let i = 1; i < deletes.length; i++) {
+        await fetch("/api/admin/uploadthing/delete", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ url: deletes[i] }),
+        });
+      }
+    }
+  };
+
+  const handleClose = async () => {
+    await cleanupUploads();
+    onClose();
   };
 
   const handleSubmit = async (e) => {
@@ -60,6 +98,8 @@ export default function MediaItemModal({ isOpen, onClose, mediaItem = null, onSu
       onClose();
     } else {
       alert("Failed to save media item.");
+      // cleanup to avoid leaks if save fails
+      await cleanupUploads();
     }
   };
 
@@ -102,7 +142,6 @@ export default function MediaItemModal({ isOpen, onClose, mediaItem = null, onSu
           <option value="VIDEO">Video</option>
           <option value="IMAGE">Image</option>
           <option value="PDF">Pdf</option>
-          {/* <option value="DOCUMENT">Document</option> */}
           <option value="LINK">Link</option>
         </select>
 
@@ -114,7 +153,7 @@ export default function MediaItemModal({ isOpen, onClose, mediaItem = null, onSu
             onChange={(url) => setForm({ ...form, image: url })}
             setIsUploading={setIsUploadingImage}
             endpoint="folderImageUploader"
-            initialMode={isLink(form.image) ? "link" : "upload"}
+            // initialMode={isLink(form.image) ? "link" : "upload"}
           />
         </div>
 
@@ -127,14 +166,14 @@ export default function MediaItemModal({ isOpen, onClose, mediaItem = null, onSu
             setIsUploading={setIsUploadingMedia}
             endpoint="mediaFileUploader"
             placeholder="PDF, audio, image, etc."
-            initialMode={isLink(form.mediaUrl) ? "link" : "upload"}
+            // initialMode={isLink(form.mediaUrl) ? "link" : "upload"}
           />
         </div>
 
         <div className="flex justify-end gap-2">
           <button
             type="button"
-            onClick={onClose}
+            onClick={handleClose}
             className="text-sm text-muted-foreground"
           >
             Cancel

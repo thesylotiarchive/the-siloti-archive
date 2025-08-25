@@ -62,7 +62,7 @@ export function Navbar() {
         </Menu.Button>
 
         <Menu.Items className="absolute right-0 mt-2 w-48 bg-background border rounded-md shadow-lg focus:outline-none z-50">
-          {/* <Menu.Item>
+          <Menu.Item>
             {({ active }) => (
               <button
                 onClick={() => router.push("/admin/dashboard/admins")}
@@ -73,7 +73,7 @@ export function Navbar() {
                 Admins
               </button>
             )}
-          </Menu.Item> */}
+          </Menu.Item>
           <Menu.Item>
             {({ active }) => (
               <button

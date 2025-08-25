@@ -46,9 +46,10 @@ export function CollectionCard({ collection }) {
           />
 
           {/* Centered thumbnail */}
-          {collection.imageUrl ? (
-            <div className="relative z-10 flex flex-col items-center">
-             <div className="w-22 h-22 sm:w-24 sm:h-24 rounded-full overflow-hidden border-2 border-black shadow-md mx-auto">
+          <div className="relative z-10 flex flex-col items-center">
+            <>
+            {collection.imageUrl && (
+              <div className="w-22 h-22 sm:w-24 sm:h-24 rounded-full overflow-hidden border-2 border-black shadow-md mx-auto">
               <Image
                 src={collection.imageUrl}
                 alt={collection.name}
@@ -57,15 +58,18 @@ export function CollectionCard({ collection }) {
                 className="object-cover"
               />
             </div>
+            )}
+             
 
               {/* Title below thumbnail */}
               <h3 className="mt-2 text-lg sm:text-sm font-bold text-black text-center line-clamp-1">
                 {collection.name}
               </h3>
-            </div>
-          ) : (
-            <div className="relative z-10 text-black font-semibold">No Image</div>
-          )}
+            </>
+            
+          </div>
+
+          
         </div>
 
         {/* Bottom bar with item count */}
