@@ -1,8 +1,7 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
-// import { UploadDropzone } from "@uploadthing/react";
 import ImageUploaderWithToggle from "../ImageUploaderWithToggle";
 import { UploadDropzone } from "@/lib/uploadthing";
 
@@ -10,16 +9,21 @@ export default function BulkMediaModal({ isOpen, onClose, onSuccess }) {
   const searchParams = useSearchParams();
   const folderId = searchParams.get("folderId");
 
-  const [items, setItems] = useState([]); // [{id, fileUrl, title, description, mediaType, image, language, isNew:true}]
+  const [items, setItems] = useState([]);
   const [isUploadingAny, setIsUploadingAny] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
 
+  // 🔹 New: common fields
+  const [common, setCommon] = useState({ title: "", description: "", image: "" });
+
   const isUploadThingUrl = (url) =>
-    typeof url === "string" && (url.includes("uploadthing") || url.includes("utfs.io"));
+    typeof url === "string" &&
+    (url.includes("uploadthing") || url.includes("utfs.io"));
 
   useEffect(() => {
     if (!isOpen) {
       setItems([]);
+      setCommon({ title: "", description: "", image: "" });
     }
   }, [isOpen]);
 
@@ -28,9 +32,16 @@ export default function BulkMediaModal({ isOpen, onClose, onSuccess }) {
       const u = new URL(url);
       const name = u.pathname.split("/").pop() || "";
       const ext = name.split(".").pop()?.toLowerCase() || "";
-      if (["mp3", "wav", "m4a", "aac", "flac", "oga", "ogg"].includes(ext)) return "AUDIO";
-      if (["mp4", "mov", "mkv", "webm", "avi", "m4v"].includes(ext)) return "VIDEO";
-      if (["jpg", "jpeg", "png", "webp", "gif", "bmp", "tiff", "avif"].includes(ext)) return "IMAGE";
+      if (["mp3", "wav", "m4a", "aac", "flac", "oga", "ogg"].includes(ext))
+        return "AUDIO";
+      if (["mp4", "mov", "mkv", "webm", "avi", "m4v"].includes(ext))
+        return "VIDEO";
+      if (
+        ["jpg", "jpeg", "png", "webp", "gif", "bmp", "tiff", "avif"].includes(
+          ext
+        )
+      )
+        return "IMAGE";
       if (ext === "pdf") return "PDF";
       return "LINK";
     } catch {
@@ -42,22 +53,21 @@ export default function BulkMediaModal({ isOpen, onClose, onSuccess }) {
     const newItems = uploaded.map((f) => {
       const url = f?.url;
       const name = f?.name || (url ? url.split("/").pop() : "Untitled");
-  
-      // Prefer mime type, fallback to file extension
+
       let mediaType = "LINK";
       if (f.type?.startsWith("image/")) mediaType = "IMAGE";
       else if (f.type?.startsWith("audio/")) mediaType = "AUDIO";
       else if (f.type?.startsWith("video/")) mediaType = "VIDEO";
       else if (f.type === "application/pdf") mediaType = "PDF";
       else mediaType = deriveMediaType(url);
-  
+
       return {
         id: crypto.randomUUID(),
         fileUrl: url,
-        title: (name || "Untitled").replace(/\.[^.]+$/, ""),
-        description: "",
+        title: common.title || (name || "Untitled").replace(/\.[^.]+$/, ""),
+        description: common.description || "",
         mediaType,
-        image: "",
+        image: common.image || "",
         language: "",
         isNew: true,
       };
@@ -68,10 +78,11 @@ export default function BulkMediaModal({ isOpen, onClose, onSuccess }) {
   const handleRemoveItem = async (id) => {
     const item = items.find((x) => x.id === id);
     setItems((prev) => prev.filter((x) => x.id !== id));
-    // best-effort cleanup
     const urlsToDelete = [];
-    if (item?.fileUrl && isUploadThingUrl(item.fileUrl)) urlsToDelete.push(item.fileUrl);
-    if (item?.image && isUploadThingUrl(item.image)) urlsToDelete.push(item.image);
+    if (item?.fileUrl && isUploadThingUrl(item.fileUrl))
+      urlsToDelete.push(item.fileUrl);
+    if (item?.image && isUploadThingUrl(item.image))
+      urlsToDelete.push(item.image);
     if (urlsToDelete.length) {
       await fetch("/api/admin/uploadthing/delete-many", {
         method: "POST",
@@ -129,7 +140,6 @@ export default function BulkMediaModal({ isOpen, onClose, onSuccess }) {
       });
 
       if (!res.ok) {
-        // on failure, clean up uploads to avoid leaks
         await cleanupAllUploads();
         alert("Failed to save media items.");
         return;
@@ -149,12 +159,13 @@ export default function BulkMediaModal({ isOpen, onClose, onSuccess }) {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-start md:items-center justify-center bg-black/50 p-4 overflow-y-auto">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
       <form
         onSubmit={handleSubmit}
-        className="bg-card p-4 md:p-6 rounded-xl w-full max-w-3xl space-y-4 shadow-lg"
+        className="bg-card p-4 md:p-6 rounded-xl w-full max-w-3xl shadow-lg flex flex-col max-h-[90vh]" // limit modal height
       >
-        <div className="flex items-center justify-between">
+        {/* Sticky Header */}
+        <div className="flex items-center justify-between p-4 border-b bg-card sticky top-0 z-10">
           <h2 className="text-lg font-semibold">Add Media Items (Bulk)</h2>
           <button
             type="button"
@@ -164,41 +175,90 @@ export default function BulkMediaModal({ isOpen, onClose, onSuccess }) {
             Close
           </button>
         </div>
-
-        {/* Dropzone for multiple files */}
-        <div className="rounded-lg border border-dashed">
-        <UploadDropzone
-            endpoint="mediaFileUploader"
-            appearance={{
+  
+        {/* Scrollable content */}
+        <div className="p-4 space-y-4 overflow-y-auto flex-1">
+          {/* 🔹 Common fields */}
+          <div className="p-3 border rounded-md bg-muted/20 space-y-3">
+            <h3 className="text-sm font-medium">Common Details (applied to all)</h3>
+            <input
+              value={common.title}
+              onChange={(e) =>
+                setCommon((prev) => ({ ...prev, title: e.target.value }))
+              }
+              placeholder="Common Title"
+              className="w-full p-2 border rounded-md"
+            />
+            <textarea
+              value={common.description}
+              onChange={(e) =>
+                setCommon((prev) => ({ ...prev, description: e.target.value }))
+              }
+              placeholder="Common Description"
+              className="w-full p-2 border rounded-md"
+            />
+            <ImageUploaderWithToggle
+              value={common.image}
+              onChange={(url) =>
+                setCommon((prev) => ({ ...prev, image: url }))
+              }
+              setIsUploading={(v) => setIsUploadingAny(v)}
+              endpoint="folderImageUploader"
+              groupKey="common-thumb"
+              initialMode="upload"
+            />
+  
+            {items.length > 0 && (
+              <button
+                type="button"
+                className="text-xs text-blue-600 underline"
+                onClick={() =>
+                  setItems((prev) =>
+                    prev.map((x) => ({
+                      ...x,
+                      title: common.title || x.title,
+                      description: common.description || x.description,
+                      image: common.image || x.image,
+                    }))
+                  )
+                }
+              >
+                Apply to all items
+              </button>
+            )}
+          </div>
+  
+          {/* Dropzone */}
+          <div className="rounded-lg border border-dashed">
+            <UploadDropzone
+              endpoint="mediaFileUploader"
+              appearance={{
                 container:
                   "p-4 border border-dashed border-gray-300 rounded-lg min-h-[200px] flex flex-col items-center justify-center space-y-2",
                 uploadIcon: "w-10 h-10 text-gray-500",
                 label: "text-sm text-gray-600",
-                button: "px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700",
+                button:
+                  "px-3 py-1 bg-gray-950 hover:bg-gray-800 cursor-pointer text-white rounded",
               }}
-            onUploadBegin={() => setIsUploadingAny(true)}
-            onClientUploadComplete={(res) => {
-                console.log("✅ Upload complete (client):", res);
+              onUploadBegin={() => setIsUploadingAny(true)}
+              onClientUploadComplete={(res) => {
                 if (res && res.length) addUploadedFiles(res);
                 setIsUploadingAny(false);
-            }}
-            onUploadError={(err) => {
+              }}
+              onUploadError={(err) => {
                 console.error("❌ Upload error:", err);
                 setIsUploadingAny(false);
                 alert("Upload failed.");
-            }}
-        />
-        </div>
-
-        {!items.length ? (
-          <p className="text-sm text-muted-foreground">
-            Drop multiple files above to start building your bulk list.
-          </p>
-        ) : null}
-
-        {/* Items editor */}
-        {!!items.length && (
+              }}
+            />
+          </div>
+  
+          {/* Items editor */}
+          {!!items.length && (
             <div className="max-h-[300px] overflow-y-auto space-y-4 pr-1">
+              <h4 className="text-center font-bold">
+                Item List
+              </h4>
                 {items.map((it) => (
                 <div
                     key={it.id}
@@ -216,7 +276,7 @@ export default function BulkMediaModal({ isOpen, onClose, onSuccess }) {
                         Remove item
                     </button>
                     </div>
-
+    
                     {/* Preview */}
                     {it.fileUrl && (
                     <div className="mb-3">
@@ -235,11 +295,7 @@ export default function BulkMediaModal({ isOpen, onClose, onSuccess }) {
                         />
                         )}
                         {it.mediaType === "AUDIO" && (
-                        <audio
-                            src={it.fileUrl}
-                            controls
-                            className="w-full"
-                        />
+                        <audio src={it.fileUrl} controls className="w-full" />
                         )}
                         {it.mediaType === "PDF" && (
                         <iframe
@@ -259,7 +315,7 @@ export default function BulkMediaModal({ isOpen, onClose, onSuccess }) {
                         )}
                     </div>
                     )}
-
+    
                     {/* Editable fields */}
                     <div className="grid md:grid-cols-2 gap-3">
                     <div className="space-y-2">
@@ -268,7 +324,9 @@ export default function BulkMediaModal({ isOpen, onClose, onSuccess }) {
                         onChange={(e) =>
                             setItems((prev) =>
                             prev.map((x) =>
-                                x.id === it.id ? { ...x, title: e.target.value } : x
+                                x.id === it.id
+                                ? { ...x, title: e.target.value }
+                                : x
                             )
                             )
                         }
@@ -289,7 +347,6 @@ export default function BulkMediaModal({ isOpen, onClose, onSuccess }) {
                         placeholder="Description"
                         className="w-full p-2 border rounded-md"
                         />
-
                         <select
                         value={it.mediaType}
                         onChange={(e) =>
@@ -310,7 +367,7 @@ export default function BulkMediaModal({ isOpen, onClose, onSuccess }) {
                         <option value="LINK">Link</option>
                         </select>
                     </div>
-
+    
                     {/* Thumbnail per item */}
                     <div className="space-y-2">
                         <label className="block text-sm font-medium">
@@ -327,7 +384,7 @@ export default function BulkMediaModal({ isOpen, onClose, onSuccess }) {
                         }
                         setIsUploading={(v) => setIsUploadingAny(v)}
                         endpoint="folderImageUploader"
-                        groupKey={`thumb-${it.id}`} // avoid collisions
+                        groupKey={`thumb-${it.id}`}
                         initialMode={"upload"}
                         />
                     </div>
@@ -335,9 +392,11 @@ export default function BulkMediaModal({ isOpen, onClose, onSuccess }) {
                 </div>
                 ))}
             </div>
-        )}
-
-        <div className="flex items-center justify-between pt-2">
+          )}
+        </div>
+  
+        {/* Sticky Footer */}
+        <div className="flex items-center justify-between p-4 border-t bg-card sticky bottom-0 z-10">
           <div className="text-xs text-muted-foreground">
             {items.length} item{items.length === 1 ? "" : "s"} ready
             {isUploadingAny ? " • uploading…" : ""}
@@ -353,14 +412,17 @@ export default function BulkMediaModal({ isOpen, onClose, onSuccess }) {
             <button
               type="submit"
               disabled={isUploadingAny || isSaving || !items.length}
-              className={`bg-primary text-primary-foreground px-4 py-2 rounded-md ${
-                isUploadingAny || isSaving || !items.length ? "opacity-50 cursor-not-allowed" : ""
+              className={`bg-gray-950 hover:bg-gray-800 cursor-pointer text-primary-foreground px-4 py-2 rounded-md   ${
+                isUploadingAny || isSaving || !items.length
+                  ? "opacity-50 cursor-not-allowed"
+                  : ""
               }`}
             >
               {isSaving ? "Saving…" : "Create All"}
             </button>
           </div>
         </div>
+
       </form>
     </div>
   );
