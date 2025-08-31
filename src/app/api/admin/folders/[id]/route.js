@@ -6,23 +6,34 @@ import { getUserFromRequest } from "@/lib/auth-helpers";
 export async function PATCH(req, { params }) {
   try {
     const user = await getUserFromRequest(req);
-    if (!user || (user.role !== 'ADMIN' && user.role !== 'SUPERADMIN')) {
+    if (!user || (user.role !== "ADMIN" && user.role !== "SUPERADMIN" && user.role !== "CONTRIBUTOR")) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const { name, description, image } = await req.json();
+    const body = await req.json();
+    let status = body.status;
+
+    if (user.role === "CONTRIBUTOR") {
+      status = "DRAFT"; // contributors always force draft
+    }
 
     const updated = await prisma.folder.update({
       where: { id: params.id },
-      data: { name, description, image },
+      data: {
+        name: body.name,
+        description: body.description,
+        image: body.image,
+        status,
+      },
     });
 
     return NextResponse.json(updated);
   } catch (err) {
-    console.error("PATCH /folders/:id error", err);
+    console.error("PATCH /admin/folders/[id] error", err);
     return NextResponse.json({ error: "Failed to update folder" }, { status: 500 });
   }
 }
+
 
 // GET /api/admin/folders/[id] => Get folder and its contents
 export async function GET(req, { params }) {

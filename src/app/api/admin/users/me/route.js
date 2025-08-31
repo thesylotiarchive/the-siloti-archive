@@ -7,7 +7,7 @@ export async function GET(request) {
   try {
     const user = await getUserFromRequest(request);
 
-    if (!user || (user.role !== "ADMIN" && user.role !== "SUPERADMIN")) {
+    if (!user || (user.role !== "ADMIN" && user.role !== "SUPERADMIN" && user.role !== "CONTRIBUTOR")) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 

@@ -1,13 +1,16 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import ImageUploaderWithToggle from "../ImageUploaderWithToggle";
+import { Switch } from "../ui/switch";
 
-export default function MediaItemModal({ isOpen, onClose, mediaItem = null, onSuccess }) {
+export default function MediaItemModal({ isOpen, onClose, mediaItem = null, onSuccess, me }) {
   const isEdit = !!mediaItem;
   const searchParams = useSearchParams();
   const folderId = searchParams.get("folderId");
+
   const [isUploadingImage, setIsUploadingImage] = useState(false);
   const [isUploadingMedia, setIsUploadingMedia] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const isLink = (url) => url?.startsWith("http") && !url.includes("uploadthing");
   const isUploadThingUrl = (url) => url?.includes("uploadthing");
@@ -22,8 +25,10 @@ export default function MediaItemModal({ isOpen, onClose, mediaItem = null, onSu
     image: "",
     mediaUrl: "",
     mediaType: "AUDIO",
+    status: "DRAFT", // default
   });
 
+  // initialize for edit
   useEffect(() => {
     if (isEdit && mediaItem) {
       setForm({
@@ -32,9 +37,12 @@ export default function MediaItemModal({ isOpen, onClose, mediaItem = null, onSu
         image: mediaItem.image || "",
         mediaUrl: mediaItem.fileUrl || mediaItem.externalLink || "",
         mediaType: mediaItem.mediaType || "AUDIO",
+        status: mediaItem.status || "DRAFT",
       });
+    } else if (!isEdit && (me.role === "ADMIN" || me.role === "SUPERADMIN")) {
+      setForm((prev) => ({ ...prev, status: "PUBLISHED" })); // default publish
     }
-  }, [mediaItem, isEdit]);
+  }, [mediaItem, isEdit, me.role]);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -50,20 +58,15 @@ export default function MediaItemModal({ isOpen, onClose, mediaItem = null, onSu
       deletes.push(form.mediaUrl);
     }
 
-    if (deletes.length > 0) {
-      await fetch("/api/admin/uploadthing/delete", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ url: deletes[0] }), // single file
-      });
-
-      // if multiple, send in loop
-      for (let i = 1; i < deletes.length; i++) {
+    for (const url of deletes) {
+      try {
         await fetch("/api/admin/uploadthing/delete", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ url: deletes[i] }),
+          body: JSON.stringify({ url }),
         });
+      } catch (err) {
+        console.error("Cleanup failed for:", url, err);
       }
     }
   };
@@ -76,10 +79,12 @@ export default function MediaItemModal({ isOpen, onClose, mediaItem = null, onSu
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const body = {
-      ...form,
-      folderId,
-    };
+    let body = { ...form, folderId };
+
+    // 🔒 Enforce contributor restriction on client too (UI safeguard)
+    if (me?.role === "CONTRIBUTOR") {
+      body.status = "DRAFT";
+    }
 
     const endpoint = isEdit
       ? `/api/admin/media/${mediaItem.id}`
@@ -105,6 +110,13 @@ export default function MediaItemModal({ isOpen, onClose, mediaItem = null, onSu
 
   if (!isOpen) return null;
 
+  const isContributor = me.role === "CONTRIBUTOR";
+  const buttonLabel = isContributor
+    ? "Save as Draft"
+    : form.status === "PUBLISHED"
+      ? isEdit ? "Update & Publish" : "Publish"
+      : isEdit ? "Update Draft" : "Save as Draft";
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
       <form
@@ -114,6 +126,12 @@ export default function MediaItemModal({ isOpen, onClose, mediaItem = null, onSu
         <h2 className="text-lg font-semibold">
           {isEdit ? "Edit Media Item" : "Add Media Item"}
         </h2>
+
+        {isContributor && isEdit && mediaItem?.status === "PUBLISHED" && (
+          <div className="p-2 text-sm bg-yellow-100 text-yellow-800 rounded-md">
+            Warning: Editing this will convert it to a Draft.
+          </div>
+        )}
 
         <input
           name="title"
@@ -145,6 +163,9 @@ export default function MediaItemModal({ isOpen, onClose, mediaItem = null, onSu
           <option value="LINK">Link</option>
         </select>
 
+        {/* Publish toggle only for admins/superadmins */}
+        
+
         <div>
           <label className="block text-sm font-medium mb-1">Thumbnail (Image)</label>
           <ImageUploaderWithToggle
@@ -153,7 +174,6 @@ export default function MediaItemModal({ isOpen, onClose, mediaItem = null, onSu
             onChange={(url) => setForm({ ...form, image: url })}
             setIsUploading={setIsUploadingImage}
             endpoint="folderImageUploader"
-            // initialMode={isLink(form.image) ? "link" : "upload"}
           />
         </div>
 
@@ -166,27 +186,48 @@ export default function MediaItemModal({ isOpen, onClose, mediaItem = null, onSu
             setIsUploading={setIsUploadingMedia}
             endpoint="mediaFileUploader"
             placeholder="PDF, audio, image, etc."
-            // initialMode={isLink(form.mediaUrl) ? "link" : "upload"}
           />
         </div>
+
+        {(me.role === "ADMIN" || me.role === "SUPERADMIN") && (
+          <div className="flex items-center gap-2">
+            <label htmlFor="published" className="text-sm">
+              Publish?
+            </label>
+            <Switch
+              id="published"
+              checked={form.status === "PUBLISHED"}
+              onCheckedChange={(checked) =>
+                setForm((prev) => ({
+                  ...prev,
+                  status: checked ? "PUBLISHED" : "DRAFT",
+                }))
+              }
+              className="
+                data-[state=checked]:bg-green-500 
+                data-[state=unchecked]:bg-gray-400 
+                border border-gray-300
+              "
+            />
+          </div>
+        )}
 
         <div className="flex justify-end gap-2">
           <button
             type="button"
-            onClick={handleClose}
+            onClick={onClose}
             className="text-sm text-muted-foreground"
+            disabled={loading}
           >
             Cancel
           </button>
 
           <button
             type="submit"
-            disabled={isUploadingImage || isUploadingMedia}
-            className={`bg-primary text-primary-foreground px-4 py-2 rounded-md ${
-              isUploadingImage || isUploadingMedia ? "opacity-50 cursor-not-allowed" : ""
-            }`}
+            disabled={isUploadingImage || isUploadingMedia || loading}
+            className="bg-primary text-primary-foreground px-4 py-2 rounded-md disabled:opacity-50"
           >
-            {isEdit ? "Update" : "Create"}
+            {loading ? "Saving..." : buttonLabel}
           </button>
         </div>
       </form>

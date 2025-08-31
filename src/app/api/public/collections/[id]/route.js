@@ -21,7 +21,8 @@ export async function GET(req, { params }) {
       },
     });
 
-    if (!folder) {
+    if (!folder || folder.status !== "PUBLISHED") {
+      // Hide draft folders from public API
       return NextResponse.json({ error: "Collection not found" }, { status: 404 });
     }
 
@@ -29,7 +30,7 @@ export async function GET(req, { params }) {
       id: folder.id,
       name: folder.name,
       imageUrl: folder.image,
-      description: folder.description, // You can add if you support it
+      description: folder.description, // optional
       parent: folder.parent,
     });
   } catch (err) {

@@ -23,13 +23,13 @@ export async function GET(request, { params }) {
 // PUT /api/admin/blogs/:id
 export async function PUT(request, { params }) {
   const user = await getUserFromRequest(request);
-  if (!user || (user.role !== 'ADMIN' && user.role !== 'SUPERADMIN')) {
+  if (!user || (user.role !== "ADMIN" && user.role !== "SUPERADMIN" && user.role !== "CONTRIBUTOR")) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   const { id } = params;
   const body = await request.json();
-  const { title, slug, content, bannerUrl, published, author } = body;
+  const { title, slug, content, bannerUrl, status, rejectionReason } = body;
 
   try {
     const existing = await prisma.blog.findUnique({ where: { id } });
@@ -44,9 +44,15 @@ export async function PUT(request, { params }) {
         slug,
         content,
         bannerUrl,
-        published,
-        publishedAt: published ? new Date() : null,
-        author,
+        status,
+        rejectionReason: status === "REJECTED" ? rejectionReason : null,
+        approvedById:
+          status === "PUBLISHED" || status === "REJECTED" ? user.id : null,
+        approvedAt:
+          status === "PUBLISHED" || status === "REJECTED" ? new Date() : null,
+      },
+      include: {
+        approvedBy: true,
       },
     });
 

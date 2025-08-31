@@ -4,8 +4,9 @@ import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import ImageUploaderWithToggle from "../ImageUploaderWithToggle";
 import { UploadDropzone } from "@/lib/uploadthing";
+import { Switch } from "../ui/switch";
 
-export default function BulkMediaModal({ isOpen, onClose, onSuccess }) {
+export default function BulkMediaModal({ isOpen, onClose, onSuccess, me }) {
   const searchParams = useSearchParams();
   const folderId = searchParams.get("folderId");
 
@@ -13,7 +14,9 @@ export default function BulkMediaModal({ isOpen, onClose, onSuccess }) {
   const [isUploadingAny, setIsUploadingAny] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
 
-  // 🔹 New: common fields
+  const [published, setPublished] = useState(true);
+
+  // common fields
   const [common, setCommon] = useState({ title: "", description: "", image: "" });
 
   const isUploadThingUrl = (url) =>
@@ -135,6 +138,10 @@ export default function BulkMediaModal({ isOpen, onClose, onSuccess }) {
             mediaUrl: it.fileUrl,
             mediaType: it.mediaType || "AUDIO",
             language: it.language || null,
+            status:
+              me?.role === "ADMIN" || me?.role === "SUPERADMIN"
+                ? (published ? "PUBLISHED" : "DRAFT")
+                : "PENDING",
           })),
         }),
       });
@@ -401,26 +408,45 @@ export default function BulkMediaModal({ isOpen, onClose, onSuccess }) {
             {items.length} item{items.length === 1 ? "" : "s"} ready
             {isUploadingAny ? " • uploading…" : ""}
           </div>
-          <div className="flex gap-2">
-            <button
-              type="button"
-              onClick={handleClose}
-              className="text-sm text-muted-foreground"
-            >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              disabled={isUploadingAny || isSaving || !items.length}
-              className={`bg-gray-950 hover:bg-gray-800 cursor-pointer text-primary-foreground px-4 py-2 rounded-md   ${
-                isUploadingAny || isSaving || !items.length
-                  ? "opacity-50 cursor-not-allowed"
-                  : ""
-              }`}
-            >
-              {isSaving ? "Saving…" : "Create All"}
-            </button>
-          </div>
+          <div className="flex items-center gap-4">
+            {(me?.role === "ADMIN" || me?.role === "SUPERADMIN") && (
+              <div className="flex items-center gap-2 text-sm">
+                <Switch
+                  checked={published}
+                  onCheckedChange={setPublished}
+                  className="
+                    data-[state=checked]:bg-green-500 
+                    data-[state=unchecked]:bg-gray-400 
+                    border border-gray-300
+                  "
+                />
+                <span>Publish</span>
+              </div>
+            )}
+
+            <div className="flex gap-2">
+               <button
+                 type="button"
+                 onClick={handleClose}
+                 className="text-sm text-muted-foreground"
+               >
+                 Cancel
+               </button>
+               <button
+                 type="submit"
+                 disabled={isUploadingAny || isSaving || !items.length}
+                 className={`bg-gray-950 hover:bg-gray-800 cursor-pointer text-primary-foreground px-4 py-2 rounded-md   ${
+                   isUploadingAny || isSaving || !items.length
+                     ? "opacity-50 cursor-not-allowed"
+                     : ""
+                 }`}
+               >
+                 {isSaving ? "Saving…" : "Create All"}
+               </button>
+            </div>
+           </div>
+
+          
         </div>
 
       </form>

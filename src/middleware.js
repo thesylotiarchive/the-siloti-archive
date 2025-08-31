@@ -41,7 +41,7 @@ export async function middleware(req) {
   // 🔹 Protect ADMIN PAGES (/admin/*)
   if (adminPagePaths.some((path) => pathname.startsWith(path))) {
     if (pathname !== "/admin/login") {
-      if (!user || (user.role !== "ADMIN" && user.role !== "SUPERADMIN")) {
+      if (!user || (user.role !== "ADMIN" && user.role !== "SUPERADMIN" && user.role !== "CONTRIBUTOR")) {
         return NextResponse.redirect(new URL("/admin/login", req.url));
       }
     }
@@ -49,7 +49,7 @@ export async function middleware(req) {
 
   // 🔹 Protect ADMIN API routes (/api/admin/*) → return JSON instead of redirect
   if (adminApiPaths.some((path) => pathname.startsWith(path))) {
-    if (!user || (user.role !== "ADMIN" && user.role !== "SUPERADMIN")) {
+    if (!user || (user.role !== "ADMIN" && user.role !== "SUPERADMIN" && user.role !== "CONTRIBUTOR")) {
       return new NextResponse(
         JSON.stringify({ error: "Unauthorized" }),
         { status: 401, headers: { "Content-Type": "application/json" } }

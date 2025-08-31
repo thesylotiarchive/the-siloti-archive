@@ -6,8 +6,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
-export function AdminUserFormDialog({ open, setOpen, initial, onSubmit, loading, canManageSuperadmin }) {
-  const isEdit = !!initial;
+export function AdminUserFormDialog({ open, setOpen, initial = {}, onSubmit, loading, canManageSuperadmin }) {
+  const isEdit = Boolean(initial?.id); // more reliable
   const [form, setForm] = useState({
     username: initial?.username || "",
     email: initial?.email || "",
@@ -17,7 +17,7 @@ export function AdminUserFormDialog({ open, setOpen, initial, onSubmit, loading,
   });
 
   useEffect(() => {
-    if (initial) {
+    if (initial && initial?.id) {
       setForm({
         username: initial.username || "",
         email: initial.email || "",
@@ -30,7 +30,7 @@ export function AdminUserFormDialog({ open, setOpen, initial, onSubmit, loading,
     }
   }, [initial, open]);
 
-  function set(k, v) {
+  function setField(k, v) {
     setForm(prev => ({ ...prev, [k]: v }));
   }
 
@@ -56,7 +56,7 @@ export function AdminUserFormDialog({ open, setOpen, initial, onSubmit, loading,
 
         {/* Header */}
         <h2 className="mb-4 text-lg font-semibold">
-          {isEdit ? "Edit Admin" : "Create Admin"}
+          {isEdit ? "Edit Account" : "Create Account"}
         </h2>
 
         {/* Form fields */}
@@ -65,7 +65,7 @@ export function AdminUserFormDialog({ open, setOpen, initial, onSubmit, loading,
             <Label>Username</Label>
             <Input
               value={form.username}
-              onChange={e => set("username", e.target.value)}
+              onChange={e => setField("username", e.target.value)}
             />
           </div>
 
@@ -74,7 +74,7 @@ export function AdminUserFormDialog({ open, setOpen, initial, onSubmit, loading,
             <Input
               type="email"
               value={form.email}
-              onChange={e => set("email", e.target.value)}
+              onChange={e => setField("email", e.target.value)}
             />
           </div>
 
@@ -82,7 +82,7 @@ export function AdminUserFormDialog({ open, setOpen, initial, onSubmit, loading,
             <Label>Name (optional)</Label>
             <Input
               value={form.name}
-              onChange={e => set("name", e.target.value)}
+              onChange={e => setField("name", e.target.value)}
             />
           </div>
 
@@ -93,7 +93,7 @@ export function AdminUserFormDialog({ open, setOpen, initial, onSubmit, loading,
             <Input
               type="password"
               value={form.password}
-              onChange={e => set("password", e.target.value)}
+              onChange={e => setField("password", e.target.value)}
             />
             {!isEdit && (
               <p className="mt-1 text-xs text-muted-foreground">
@@ -107,9 +107,12 @@ export function AdminUserFormDialog({ open, setOpen, initial, onSubmit, loading,
             <select
               className="w-full rounded-md border bg-background px-3 py-2"
               value={form.role}
-              onChange={e => set("role", e.target.value)}
+              onChange={e => setField("role", e.target.value)}
             >
+              {/* Admins tab contains admin and superadmin; creation is allowed based on canManageSuperadmin */}
               <option value="ADMIN">ADMIN</option>
+              <option value="CONTRIBUTOR">CONTRIBUTOR</option>
+              <option value="VIEWER">VIEWER</option>
               {canManageSuperadmin && <option value="SUPERADMIN">SUPERADMIN</option>}
             </select>
           </div>

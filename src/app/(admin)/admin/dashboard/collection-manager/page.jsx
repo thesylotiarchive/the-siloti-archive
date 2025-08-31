@@ -1,3 +1,5 @@
+// app/(admin)/admin/dashboard/collection-manager/page.jsx
+
 import CollectionManagerClient from "@/components/admin/CollectionManagerClient";
 import { Suspense } from "react";
 

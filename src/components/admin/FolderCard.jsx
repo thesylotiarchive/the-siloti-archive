@@ -13,6 +13,8 @@ export function FolderCard({
   setActiveMenuId,
   onDrop,
   onDragOver,
+  role,
+  onPublish,
 }) {
   const menuRef = useRef(null);
 
@@ -28,6 +30,17 @@ export function FolderCard({
       onDrop={onDrop}
       onDragOver={onDragOver}
     >
+
+      {/* Status badge */}
+      <div
+        className={`absolute top-2 left-2 px-2 py-0.5 text-[10px] font-semibold rounded-full
+          ${folder.status === "PUBLISHED" ? "bg-green-100 text-green-700"
+           : folder.status === "DRAFT" ? "bg-yellow-100 text-yellow-700"
+           : "bg-red-100 text-red-700"}`}
+      >
+        {folder.status}
+      </div>
+
       {/* Full clickable link */}
       <Link
         href={`/admin/dashboard/collection-manager?folderId=${folder.id}`}
@@ -54,6 +67,19 @@ export function FolderCard({
 
         {activeMenuId === folder.id && (
           <div className="absolute right-0 mt-2 w-28 bg-popover text-popover-foreground rounded-md shadow-lg border z-50">
+            {(role === "ADMIN" || role === "SUPERADMIN") && folder.status !== "PUBLISHED" && (
+              <button
+                onClick={(e) => {
+                  e.preventDefault();
+                  onPublish?.(folder.id);
+                  setActiveMenuId(null);
+                }}
+                className="block w-full px-4 py-2 text-sm hover:bg-muted text-left"
+              >
+                ✅ Publish
+              </button>
+            )}
+
             <button
               onClick={(e) => {
                 e.preventDefault();
@@ -64,16 +90,20 @@ export function FolderCard({
             >
               ✏️ Edit
             </button>
-            <button
-              onClick={(e) => {
-                e.preventDefault();
-                onDelete(folder.id);
-                setActiveMenuId(null);
-              }}
-              className="block w-full px-4 py-2 text-sm text-red-600 hover:bg-muted text-left"
-            >
-              🗑 Delete
-            </button>
+
+            {(role === "ADMIN" || role === "SUPERADMIN") && (
+              <button
+                onClick={(e) => {
+                  e.preventDefault();
+                  onDelete(folder.id);
+                  setActiveMenuId(null);
+                }}
+                className="block w-full px-4 py-2 text-sm text-red-600 hover:bg-muted text-left"
+              >
+                🗑 Delete
+              </button>
+            )}
+
           </div>
         )}
       </div>

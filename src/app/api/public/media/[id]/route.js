@@ -7,8 +7,8 @@ export async function GET(_, { params }) {
       where: { id: params.id },
     });
 
-    if (!media) {
-      return NextResponse.json({ error: "Not found" }, { status: 404 });
+    if (!media || media.status !== "PUBLISHED") {
+      return NextResponse.json({ error: "Media not found" }, { status: 404 });
     }
 
     return NextResponse.json(media);
@@ -17,3 +17,4 @@ export async function GET(_, { params }) {
     return NextResponse.json({ error: "Failed to fetch media" }, { status: 500 });
   }
 }
+

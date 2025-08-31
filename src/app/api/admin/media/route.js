@@ -6,23 +6,21 @@ import { getUserFromRequest } from "@/lib/auth-helpers";
 export async function POST(req) {
   try {
     const user = await getUserFromRequest(req);
-    if (!user || (user.role !== 'ADMIN' && user.role !== 'SUPERADMIN')) {
+    if (!user || !["ADMIN", "SUPERADMIN", "CONTRIBUTOR"].includes(user.role)) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     const body = await req.json();
-    const {
-      title,
-      description,
-      image,
-      mediaUrl,
-      mediaType,
-      language,
-      folderId,
-    } = body;
+    let { title, description, image, mediaUrl, mediaType, language, folderId, status } = body;
 
-    const url = new URL(mediaUrl);
-    const isExternal = !["utfs.io", "localhost"].includes(url.hostname); 
+    // force contributors to draft
+    if (user.role === "CONTRIBUTOR") {
+      status = "DRAFT";
+    } else {
+      status = status || "PUBLISHED";
+    }
+
+    const isExternal = mediaUrl?.startsWith("http") && !mediaUrl.includes("utfs.io");
 
     const created = await prisma.mediaItem.create({
       data: {
@@ -33,9 +31,11 @@ export async function POST(req) {
         language,
         folderId: folderId || undefined,
         contributorId: user.id,
-        // Store mediaUrl in fileUrl or externalLink depending on type
+        status,
         fileUrl: isExternal ? null : mediaUrl,
         externalLink: isExternal ? mediaUrl : null,
+        approvedById: status === "PUBLISHED" ? user.id : null,
+        approvedAt: status === "PUBLISHED" ? new Date() : null,
       },
     });
 

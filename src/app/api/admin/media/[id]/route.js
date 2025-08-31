@@ -6,20 +6,18 @@ import { getUserFromRequest } from "@/lib/auth-helpers";
 export async function PATCH(req, { params }) {
   try {
     const user = await getUserFromRequest(req);
-    if (!user || (user.role !== 'ADMIN' && user.role !== 'SUPERADMIN')) {
+    if (!user || !["ADMIN", "SUPERADMIN", "CONTRIBUTOR"].includes(user.role)) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     const body = await req.json();
-    const {
-      title,
-      description,
-      image,
-      mediaUrl,
-      mediaType,
-      language,
-      folderId,
-    } = body;
+    let { title, description, image, mediaUrl, mediaType, language, folderId, status } = body;
+
+    if (user.role === "CONTRIBUTOR") {
+      status = "DRAFT"; // force draft
+    }
+
+    const isExternal = mediaUrl?.startsWith("http") && !mediaUrl.includes("utfs.io");
 
     const updated = await prisma.mediaItem.update({
       where: { id: params.id },
@@ -30,8 +28,12 @@ export async function PATCH(req, { params }) {
         mediaType,
         language,
         folderId,
-        fileUrl: mediaType === "LINK" ? null : mediaUrl,
-        externalLink: mediaType === "LINK" ? mediaUrl : null,
+        status,
+        fileUrl: isExternal ? null : mediaUrl,
+        externalLink: isExternal ? mediaUrl : null,
+        approvedById: status === "PUBLISHED" ? user.id : null,
+        approvedAt: status === "PUBLISHED" ? new Date() : null,
+        rejectionReason: status === "PUBLISHED" ? null : undefined,
       },
     });
 

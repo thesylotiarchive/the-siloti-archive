@@ -12,13 +12,16 @@ import {
   LogOut,
   Newspaper,
   ShieldCheck,
+  FileText,
 } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 
 const navLinks = [
   { href: "/admin/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { href: "/admin/dashboard/collection-manager", label: "Collection Manager", icon: FolderTree },
   { href: "/admin/dashboard/blogs", label: "Blogs", icon: Newspaper },
-  { href: "/admin/dashboard/admins", label: "Admins", icon: ShieldCheck },
+  { href: "/admin/dashboard/drafts", label: "Drafts", icon: FileText },
+  { href: "/admin/dashboard/admins", label: "Account Manager", icon: ShieldCheck },
 ];
 
 export function Sidebar({ open, setOpen }) {
@@ -51,19 +54,43 @@ export function Sidebar({ open, setOpen }) {
         <span className="font-bold text-base">The Siloti Archive</span>
       </div>
 
-      {/* Nav */}
-      <nav className="flex flex-col gap-2 mt-6">
-        {navLinks.map(({ href, label, icon: Icon }) => (
-          <Link
-            key={href}
-            href={href}
-            className="flex items-center gap-2 px-3 py-2 rounded-md hover:bg-muted transition"
-            onClick={() => setOpen(false)} // close on mobile click
+      {/* Role */}
+      {user && (
+        <div className="flex justify-center mt-3 items-center">
+          <span className="text-xs font-medium text-muted-foreground mr-1">Role:</span>
+          <span
+            className={`px-2 py-0.5 text-[11px] font-semibold rounded-full uppercase
+              ${user.role === "SUPERADMIN" ? "bg-red-100 text-red-700" :
+                user.role === "ADMIN" ? "bg-blue-100 text-blue-700" :
+                user.role === "CONTRIBUTOR" ? "bg-green-100 text-green-700" :
+                "bg-gray-100 text-gray-700"}`}
           >
-            <Icon className="w-4 h-4" />
-            {label}
-          </Link>
-        ))}
+            {user.role}
+          </span>
+        </div>
+      )}
+
+      {/* Nav */}
+      <nav className="flex flex-col gap-2 mt-3">
+        {navLinks.map(({ href, label, icon: Icon }) => {
+          // Hide admins page for contributors
+          if (href === "/admin/dashboard/admins" && user?.role === "CONTRIBUTOR") return null;
+
+          // Hide drafts page for non-admins if needed
+          if (href === "/admin/dashboard/drafts" && !["ADMIN", "SUPERADMIN"].includes(user?.role)) return null;
+
+          return (
+            <Link
+              key={href}
+              href={href}
+              className="flex items-center gap-2 px-3 py-2 rounded-md hover:bg-muted transition"
+              onClick={() => setOpen(false)} // close sidebar on mobile click
+            >
+              <Icon className="w-4 h-4" />
+              {label}
+            </Link>
+          );
+        })}
       </nav>
 
       {/* User info + logout */}

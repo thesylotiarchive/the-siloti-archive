@@ -14,6 +14,7 @@ export async function GET(req) {
     const media = await prisma.mediaItem.findMany({
       where: {
         folderId: collectionId,
+        status: "PUBLISHED", // Only show published media
       },
       orderBy: { createdAt: "desc" },
       select: {
@@ -24,7 +25,7 @@ export async function GET(req) {
         mediaType: true,
         fileUrl: true,
         externalLink: true,
-        views: true
+        views: true,
       },
     });
 

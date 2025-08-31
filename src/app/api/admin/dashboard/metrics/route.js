@@ -6,7 +6,7 @@ import { getUserFromRequest } from "@/lib/auth-helpers";
 export async function GET(req) {
   const user = await getUserFromRequest(req);
 
-  if (!user || (user.role !== "ADMIN" && user.role !== "SUPERADMIN")) {
+  if (!user || (user.role !== "ADMIN" && user.role !== "SUPERADMIN" && user.role !== "CONTRIBUTOR")) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 

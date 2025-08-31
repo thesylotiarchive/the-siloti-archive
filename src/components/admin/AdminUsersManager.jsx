@@ -26,33 +26,53 @@ function RoleBadge({ role }) {
   return <span className={`px-2 py-1 rounded text-xs ${color}`}>{role}</span>;
 }
 
-export default function AdminUsersManager({ initialMe, initialAdmins, canManageSuperadmin }) {
+export default function AdminUsersManager({ initialMe = {}, canManageSuperadmin = false }) {
   const [me, setMe] = useState(initialMe || { id: "", username: "", email: "", role: "ADMIN" });
-  const [admins, setAdmins] = useState(Array.isArray(initialAdmins) ? initialAdmins : []);
+  const [users, setUsers] = useState([]);
   const [q, setQ] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const filtered = useMemo(() => {
-    if (!Array.isArray(admins)) return [];
-    const s = q.trim().toLowerCase();
-    if (!s) return admins;
-    return admins.filter(u =>
-      u && [u.username, u.email, u.name].filter(Boolean).some(v => v.toLowerCase().includes(s))
-    );
-  }, [q, admins]);
+  // Tabs: admins (includes SUPERADMIN + ADMIN), contributors, viewers
+  const tabs = [
+    { key: "admins", label: "Admins" },
+    { key: "contributors", label: "Contributors" },
+    { key: "viewers", label: "Viewers" },
+  ];
+  const [activeTab, setActiveTab] = useState("admins");
 
+  // editing / dialogs
   const [editing, setEditing] = useState(null);
   const [openForm, setOpenForm] = useState(false);
   const [deleting, setDeleting] = useState(null);
   const [openDelete, setOpenDelete] = useState(false);
 
-  async function refreshList() {
+  const filtered = useMemo(() => {
+    if (!Array.isArray(users)) return [];
+    const s = q.trim().toLowerCase();
+    if (!s) return users;
+    return users.filter(u =>
+      u && [u.username, u.email, u.name].filter(Boolean).some(v => v.toLowerCase().includes(s))
+    );
+  }, [q, users]);
+
+  useEffect(() => {
+    // load users for the active tab on mount and when tab changes
+    refreshList(activeTab);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeTab]);
+
+  async function refreshList(tabKey) {
+    setLoading(true);
     try {
-      const res = await fetch("/api/admin/users", { cache: "no-store" });
+      const res = await fetch(`/api/admin/users?role=${encodeURIComponent(tabKey)}`, { cache: "no-store" });
       const data = await res.json();
-      setAdmins(Array.isArray(data?.admins) ? data.admins : []);
+      const list = Array.isArray(data?.users) ? data.users : Array.isArray(data?.admins) ? data.admins : [];
+      setUsers(list);
     } catch (e) {
       console.error(e);
+      setUsers([]);
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -66,7 +86,7 @@ export default function AdminUsersManager({ initialMe, initialAdmins, canManageS
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data?.error || "Failed");
-      await refreshList();
+      await refreshList(activeTab);
       setOpenForm(false);
       setEditing(null);
     } catch (e) {
@@ -82,7 +102,7 @@ export default function AdminUsersManager({ initialMe, initialAdmins, canManageS
       const res = await fetch(`/api/admin/users/${id}`, { method: "DELETE" });
       const data = await res.json();
       if (!res.ok) throw new Error(data?.error || "Failed");
-      await refreshList();
+      await refreshList(activeTab);
       setOpenDelete(false);
       setDeleting(null);
     } catch (e) {
@@ -96,9 +116,9 @@ export default function AdminUsersManager({ initialMe, initialAdmins, canManageS
     <div className="space-y-6 p-4 md:p-6">
       {/* Header */}
       <div className="flex items-center justify-between gap-2">
-        <h1 className="text-2xl font-semibold">Admin Users</h1>
+        <h1 className="text-2xl font-semibold">Account Management</h1>
         <Button onClick={() => { setEditing(null); setOpenForm(true); }}>
-          <Plus className="h-4 w-4 mr-2" /> New Admin
+          <Plus className="h-4 w-4 mr-2" /> New Account
         </Button>
       </div>
 
@@ -133,49 +153,60 @@ export default function AdminUsersManager({ initialMe, initialAdmins, canManageS
         </Card>
       )}
 
+      {/* Tabs */}
+      <div className="flex items-center gap-2">
+        {tabs.map(t => (
+          <button
+            key={t.key}
+            onClick={() => setActiveTab(t.key)}
+            className={`px-3 py-1 rounded-md ${activeTab === t.key ? "bg-primary text-white" : "bg-muted/40"}`}
+          >
+            {t.label}
+          </button>
+        ))}
+      </div>
+
       {/* Search */}
       <Input
-        placeholder="Search admin by name, username, or email…"
+        placeholder="Search by name, username, or email…"
         value={q}
         onChange={(e) => setQ(e.target.value)}
         className="max-w-md"
       />
 
-      {/* Admins list */}
+      {/* Users list */}
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-        {filtered
-          .filter(u => u?.id && u.id !== me?.id)
-          .map(u => (
-            <Card key={u.id} className="shadow-sm">
-              <CardHeader className="flex flex-row items-center gap-4">
-                <AvatarCircle text={u?.name || u?.username || ""} />
-                <div className="flex-1">
-                  <div className="flex items-center gap-2">
-                    <span className="font-semibold">{u?.name || u?.username || ""}</span>
-                    <RoleBadge role={u?.role || ""} />
-                  </div>
-                  <div className="text-sm text-muted-foreground">
-                    {u?.email || ""} • {u?.username || ""}
-                  </div>
+        {filtered.map(u => (
+          <Card key={u.id} className="shadow-sm">
+            <CardHeader className="flex flex-row items-center gap-4">
+              <AvatarCircle text={u?.name || u?.username || ""} />
+              <div className="flex-1">
+                <div className="flex items-center gap-2">
+                  <span className="font-semibold">{u?.name || u?.username || ""}</span>
+                  <RoleBadge role={u?.role || ""} />
                 </div>
-              </CardHeader>
-              <CardContent className="flex items-center justify-end gap-2">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => { setEditing(u); setOpenForm(true); }}
-                >
-                  <Pencil className="h-4 w-4 mr-1" /> Edit
-                </Button>
-                <Button
-                  variant="destructive"
-                  size="sm"
-                  onClick={() => { setDeleting(u); setOpenDelete(true); }}
-                >
-                  <Trash2 className="h-4 w-4 mr-1" /> Delete
-                </Button>
-              </CardContent>
-            </Card>
+                <div className="text-sm text-muted-foreground">
+                  {u?.email || ""} • {u?.username || ""}
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent className="flex items-center justify-end gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => { setEditing(u); setOpenForm(true); }}
+              >
+                <Pencil className="h-4 w-4 mr-1" /> Edit
+              </Button>
+              <Button
+                variant="destructive"
+                size="sm"
+                onClick={() => { setDeleting(u); setOpenDelete(true); }}
+              >
+                <Trash2 className="h-4 w-4 mr-1" /> Delete
+              </Button>
+            </CardContent>
+          </Card>
         ))}
       </div>
 
@@ -186,7 +217,7 @@ export default function AdminUsersManager({ initialMe, initialAdmins, canManageS
         initial={editing || {}}
         loading={loading}
         canManageSuperadmin={canManageSuperadmin}
-        onSubmit={handleCreateOrUpdate}
+        onSubmit={(payload, id) => handleCreateOrUpdate(payload, id)}
       />
 
       <ConfirmDeleteDialog

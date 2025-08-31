@@ -7,11 +7,13 @@ import dynamic from "next/dynamic";
 const MediaItemModal = dynamic(() => import("@/components/admin/MediaItemModal"), { ssr: false }); // lazy load
 import { useRef } from "react";
 import { useOutsideClick } from "@/lib/hooks/useOutsideClick";
-import { FolderModal } from "@/components/admin/FolderModal";
+// import { FolderModal } from "@/components/admin/FolderModal";
 import { MoreVertical } from "lucide-react";
 import { MediaCard } from "@/components/admin/MediaCard";
 import { FolderCard } from "@/components/admin/FolderCard";
 import BulkMediaModal from "./BulkMediaModal";
+import { useAuth } from "@/lib/context/AuthContext";
+import { FolderModal } from "./FolderModal";
 
 
 export default function CollectionManagerClient() {
@@ -32,6 +34,8 @@ export default function CollectionManagerClient() {
   const [movingMediaId, setMovingMediaId] = useState(null);
   const [draggingMediaId, setDraggingMediaId] = useState(null);
 
+  const { me, authLoading } = useAuth();
+
 
 
   const fetchFolderData = async () => {
@@ -49,6 +53,30 @@ export default function CollectionManagerClient() {
       console.error("Failed to load folder data", err);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handlePublishFolder = async (id) => {
+      try {
+        const res = await fetch(`/api/admin/folders/${id}/publish`, { method: "PATCH" });
+        if (!res.ok) throw new Error("Publish failed");
+        await fetchFolderData();
+        alert("Folder published.");
+      } catch (e) {
+        console.error(e);
+        alert("Failed to publish folder.");
+      }
+  };
+
+  const handlePublishMedia = async (id) => {
+    try {
+      const res = await fetch(`/api/admin/media/${id}/publish`, { method: "PATCH" });
+      if (!res.ok) throw new Error("Publish failed");
+      await fetchFolderData();
+      alert("Media item published.");
+    } catch (e) {
+      console.error(e);
+      alert("Failed to publish media item.");
     }
   };
 
@@ -228,6 +256,8 @@ export default function CollectionManagerClient() {
             <FolderCard
                 key={folder.id}
                 folder={folder}
+                role={me?.role}
+                onPublish={handlePublishFolder}
                 onDrop={(e) => handleDrop(e, folder.id)}
                 onDragOver={handleDragOver}
                 onEdit={(folder) => {
@@ -244,6 +274,8 @@ export default function CollectionManagerClient() {
             <MediaCard
                 key={item.id}
                 mediaItem={item}
+                role={me?.role}
+                onPublish={() => handlePublishMedia(item.id)}
                 isActive={activeMenuId === item.id}
                 draggable
                 onDragStart={(e) => handleDragStart(e, item.id)}
@@ -271,6 +303,7 @@ export default function CollectionManagerClient() {
 
                 fetchFolderData();
                 }}
+                me={me}
             />
         )}
 
@@ -283,6 +316,7 @@ export default function CollectionManagerClient() {
 
             fetchFolderData();
             }}
+          me={me}
         />
 
         <FolderModal
@@ -300,6 +334,7 @@ export default function CollectionManagerClient() {
             folders={[]} // optional
             folder={selectedFolder}
             parentId={folderId}
+            me={me}
         />
     </div>
   );

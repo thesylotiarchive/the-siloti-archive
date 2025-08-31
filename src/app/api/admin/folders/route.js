@@ -29,27 +29,29 @@ export async function GET(req) {
 export async function POST(req) {
   try {
     const user = await getUserFromRequest(req);
-    if (!user || (user.role !== 'ADMIN' && user.role !== 'SUPERADMIN')) {
+    if (!user || (user.role !== "ADMIN" && user.role !== "SUPERADMIN" && user.role !== "CONTRIBUTOR")) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const { name, description, image, parentId } = await req.json();
+    const body = await req.json();
+    let status = body.status || "DRAFT";
 
-    // Debug log what you're receiving
-    console.log("📥 Creating folder with:", { name, description, image, parentId });
+    if (user.role === "CONTRIBUTOR") {
+      status = "DRAFT"; // force contributors
+    }
 
     const folder = await prisma.folder.create({
       data: {
-        name,
-        description,
-        image,
-        parentId: parentId || null, // Ensure null instead of undefined
+        name: body.name,
+        parentId: body.parentId || null,
+        status,
+        createdById: user.id,
       },
     });
 
     return NextResponse.json(folder);
   } catch (err) {
-    console.error("❌ Error creating folder:", err);
+    console.error("POST /admin/folders error", err);
     return NextResponse.json({ error: "Failed to create folder" }, { status: 500 });
   }
 }

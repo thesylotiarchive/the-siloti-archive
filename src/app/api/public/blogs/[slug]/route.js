@@ -1,5 +1,4 @@
 // File: src/app/api/public/blogs/[slug]/route.js
-
 import prisma from "@/lib/prisma";
 import { NextResponse } from "next/server";
 
@@ -11,8 +10,8 @@ export async function GET(req, { params }) {
   }
 
   try {
-    const blog = await prisma.blog.findUnique({
-      where: { slug },
+    const blog = await prisma.blog.findFirst({
+      where: { slug, status: "PUBLISHED" },
       select: {
         id: true,
         title: true,
@@ -20,12 +19,12 @@ export async function GET(req, { params }) {
         bannerUrl: true,
         publishedAt: true,
         slug: true,
-        author: true, // string now
+        author: true,
       },
     });
 
     if (!blog) {
-      return NextResponse.json({ error: "Blog not found" }, { status: 404 });
+      return NextResponse.json({ error: "Blog not found or not published" }, { status: 404 });
     }
 
     return NextResponse.json(blog);
@@ -34,4 +33,3 @@ export async function GET(req, { params }) {
     return NextResponse.json({ error: "Server error" }, { status: 500 });
   }
 }
-

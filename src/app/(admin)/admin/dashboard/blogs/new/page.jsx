@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -10,10 +10,11 @@ import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import slugify from "slugify";
 import ImageUploaderWithToggle from "@/components/ImageUploaderWithToggle";
-// import ImageUploaderWithToggle from "@/components/shared/ImageUploaderWithToggle"; // adjust path as needed
+import { useAuth } from "@/lib/context/AuthContext";
 
 export default function CreateBlogPage() {
   const router = useRouter();
+  const { me, authLoading } = useAuth();
 
   const [title, setTitle] = useState("");
   const [slug, setSlug] = useState("");
@@ -23,6 +24,15 @@ export default function CreateBlogPage() {
   const [published, setPublished] = useState(false);
   const [loading, setLoading] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
+
+  // Set default publish state based on role
+  useEffect(() => {
+    if (me?.role === "ADMIN" || me?.role === "SUPERADMIN") {
+      setPublished(true);
+    } else {
+      setPublished(false); // contributors default to draft
+    }
+  }, [me]);
 
   const handleTitleChange = (val) => {
     setTitle(val);
@@ -39,7 +49,14 @@ export default function CreateBlogPage() {
     try {
       const res = await fetch("/api/admin/blogs", {
         method: "POST",
-        body: JSON.stringify({ title, slug, content, bannerUrl, published, author }),
+        body: JSON.stringify({
+          title,
+          slug,
+          content,
+          bannerUrl,
+          published,
+          author,
+        }),
         headers: { "Content-Type": "application/json" },
       });
 
@@ -55,6 +72,10 @@ export default function CreateBlogPage() {
       setLoading(false);
     }
   };
+
+  if (authLoading) {
+    return <p className="text-center mt-10">Loading...</p>;
+  }
 
   return (
     <main className="max-w-4xl mx-auto py-10 px-4 space-y-8">
@@ -118,16 +139,36 @@ export default function CreateBlogPage() {
           />
         </div>
 
-        {/* Publish Toggle */}
-        <div className="flex items-center gap-2">
-          <Switch id="published" checked={published} onCheckedChange={setPublished} />
-          <Label htmlFor="published">Publish</Label>
-        </div>
+        {/* Publish Toggle (Admins only) */}
+        {me?.role === "ADMIN" || me?.role === "SUPERADMIN" ? (
+          <div className="flex items-center gap-2">
+            <Switch
+              id="published"
+              checked={published}
+              onCheckedChange={setPublished}
+              className="
+                data-[state=checked]:bg-green-500 
+                data-[state=unchecked]:bg-gray-400 
+                border border-gray-300
+              "
+            />
+            <Label htmlFor="published">Publish</Label>
+          </div>
+        ) : (
+          <p className="text-sm text-muted-foreground">
+            Blogs you create will be saved as <strong>draft</strong> until
+            approved by an Admin.
+          </p>
+        )}
 
         {/* Actions */}
         <div className="flex gap-3 pt-4">
           <Button onClick={handleSubmit} disabled={loading || isUploading}>
-            {loading ? "Saving..." : "Save"}
+            {loading
+              ? "Saving..."
+              : me?.role === "CONTRIBUTOR"
+              ? "Submit as Draft"
+              : "Save"}
           </Button>
 
           <Button

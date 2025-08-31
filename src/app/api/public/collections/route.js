@@ -9,10 +9,17 @@ export async function GET(req) {
 
   try {
     const folders = await prisma.folder.findMany({
-      where: { parentId },
+      where: {
+        parentId,
+        status: "PUBLISHED", // only published folders
+      },
       include: {
-        mediaItems: true,
-        children: true,
+        mediaItems: {
+          where: { status: "PUBLISHED" }, // only published media items
+        },
+        children: {
+          where: { status: "PUBLISHED" }, // only published subfolders
+        },
       },
       orderBy: { createdAt: "asc" },
     });

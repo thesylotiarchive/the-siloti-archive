@@ -28,7 +28,7 @@ export async function GET(request) {
 // POST /api/admin/blogs
 export async function POST(request) {
   const user = await getUserFromRequest(request);
-  if (!user || (user.role !== 'ADMIN' && user.role !== 'SUPERADMIN')) {
+  if (!user) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
@@ -37,7 +37,21 @@ export async function POST(request) {
     const { title, slug, content, bannerUrl, published, author } = body;
 
     if (!title || !slug || !content || !author) {
-      return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
+      return NextResponse.json(
+        { error: "Missing required fields" },
+        { status: 400 }
+      );
+    }
+
+    let status = "DRAFT";
+    let publishedAt = null;
+
+    if (user.role === "ADMIN" || user.role === "SUPERADMIN") {
+      status = published ? "PUBLISHED" : "DRAFT";
+      publishedAt = published ? new Date() : null;
+    } else if (user.role === "CONTRIBUTOR") {
+      status = "DRAFT"; // enforce draft
+      publishedAt = null;
     }
 
     const newBlog = await prisma.blog.create({
@@ -46,15 +60,20 @@ export async function POST(request) {
         slug,
         content,
         bannerUrl,
-        published,
-        publishedAt: published ? new Date() : null,
         author,
+        status,
+        publishedAt,
+        createdById: user.id,
       },
     });
 
     return NextResponse.json(newBlog, { status: 201 });
   } catch (error) {
     console.error("POST /api/admin/blogs error:", error);
-    return NextResponse.json({ error: "Failed to create blog" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Failed to create blog" },
+      { status: 500 }
+    );
   }
 }
+

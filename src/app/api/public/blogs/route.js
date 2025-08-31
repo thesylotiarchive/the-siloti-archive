@@ -10,7 +10,7 @@ export async function GET(req) {
   try {
     const [blogs, total] = await Promise.all([
       prisma.blog.findMany({
-        where: { published: true },
+        where: { status: "PUBLISHED" },
         orderBy: { publishedAt: "desc" },
         skip: (page - 1) * limit,
         take: limit,
@@ -21,10 +21,10 @@ export async function GET(req) {
           bannerUrl: true,
           publishedAt: true,
           content: true,
-          author: true, // now just a string
+          author: true,
         },
       }),
-      prisma.blog.count({ where: { published: true } }),
+      prisma.blog.count({ where: { status: "PUBLISHED" } }),
     ]);
 
     return NextResponse.json({ blogs, total });

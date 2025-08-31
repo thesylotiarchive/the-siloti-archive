@@ -5,7 +5,7 @@ import { getUserFromRequest } from "@/lib/auth-helpers";
 export async function POST(req) {
   try {
     const user = await getUserFromRequest(req);
-    if (!user || (user.role !== "ADMIN" && user.role !== "SUPERADMIN")) {
+    if (!user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
@@ -23,6 +23,7 @@ export async function POST(req) {
         mediaUrl = "",
         mediaType = "AUDIO",
         language = null,
+        status, // optional from client
       } = it || {};
 
       let isExternal = true;
@@ -33,6 +34,14 @@ export async function POST(req) {
         isExternal = true;
       }
 
+      // enforce status
+      let finalStatus = "DRAFT";
+      if (user.role === "ADMIN" || user.role === "SUPERADMIN") {
+        finalStatus = status === "PUBLISHED" ? "PUBLISHED" : "DRAFT";
+      } else if (user.role === "CONTRIBUTOR") {
+        finalStatus = "DRAFT";
+      }
+
       return {
         title,
         description,
@@ -41,6 +50,7 @@ export async function POST(req) {
         language,
         folderId: folderId || undefined,
         contributorId: user.id,
+        status: finalStatus,
         fileUrl: isExternal ? null : mediaUrl,
         externalLink: isExternal ? mediaUrl : null,
       };
