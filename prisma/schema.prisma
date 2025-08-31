@@ -21,6 +21,13 @@ enum Role {
   VIEWER
 }
 
+enum ItemStatus {
+  DRAFT
+  PUBLISHED
+  REJECTED
+}
+
+
 model User {
   id        String   @id @default(cuid())
   username  String   @unique
@@ -33,6 +40,13 @@ model User {
 
   mediaItems   MediaItem[]   @relation("UserMediaItems")
   collections  Collection[]  @relation("CreatedCollections")
+
+  createdFolders   Folder[]      @relation("UserCreatedFolders")
+  approvedFolders  Folder[]      @relation("UserApprovedFolders")
+  approvedMedia    MediaItem[]   @relation("UserApprovedMedia")
+
+  createdBlogs     Blog[]        @relation("UserCreatedBlogs")
+  approvedBlogs    Blog[]        @relation("UserApprovedBlogs")
 
 }
 
@@ -70,16 +84,26 @@ model SubCategory {
 }
 
 model Folder {
-  id        String     @id @default(cuid())
-  name      String
+  id          String     @id @default(cuid())
+  name        String
   description String?
-  image     String?    // optional icon or preview
-  parent    Folder?    @relation("Subfolders", fields: [parentId], references: [id])
-  parentId  String?
-  children  Folder[]   @relation("Subfolders")
-  mediaItems MediaItem[]
+  image       String?
+  parent      Folder?    @relation("Subfolders", fields: [parentId], references: [id])
+  parentId    String?
+  children    Folder[]   @relation("Subfolders")
+  mediaItems  MediaItem[]
 
-  createdAt DateTime   @default(now())
+  // NEW: draft & audit fields
+  status       ItemStatus @default(PUBLISHED)
+  createdBy    User?      @relation("UserCreatedFolders", fields: [createdById], references: [id])
+  createdById  String?
+  approvedBy   User?      @relation("UserApprovedFolders", fields: [approvedById], references: [id])
+  approvedById String?
+  approvedAt   DateTime?
+  rejectionReason String?
+
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @default(now())  @updatedAt
 }
 
 model MediaItem {
@@ -104,8 +128,16 @@ model MediaItem {
   tags           Tag[]        @relation("MediaItemTags")
   collections    Collection[] @relation("CollectionItems")
   createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @default(now()) @updatedAt
 
   views          Int          @default(0)
+
+  // NEW: draft & audit fields
+  status         ItemStatus   @default(PUBLISHED)
+  approvedBy     User?        @relation("UserApprovedMedia", fields: [approvedById], references: [id])
+  approvedById   String?
+  approvedAt     DateTime?
+  rejectionReason String?
 }
 
 model MediaView {
@@ -144,10 +176,19 @@ model Blog {
   slug        String   @unique
   content     String   // Markdown or HTML
   bannerUrl   String?  // Optional blog banner
-  published   Boolean  @default(false)
-  publishedAt DateTime?
   author      String   @default("Unknown")
 
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  // NEW: draft & audit fields
+  status         ItemStatus   @default(DRAFT) // same enum as Folder & MediaItem
+  approvedBy     User?        @relation("UserApprovedBlogs", fields: [approvedById], references: [id])
+  approvedById   String?
+  approvedAt     DateTime?
+  rejectionReason String?
+
+  createdBy      User?        @relation("UserCreatedBlogs", fields: [createdById], references: [id])
+  createdById    String?
+
+  publishedAt    DateTime?
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
 }
