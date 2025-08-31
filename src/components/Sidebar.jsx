@@ -4,7 +4,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import {
   LayoutDashboard,
@@ -27,6 +27,7 @@ const navLinks = [
 export function Sidebar({ open, setOpen }) {
   const router = useRouter();
   const [user, setUser] = useState(null);
+  const pathname = usePathname();
 
   useEffect(() => {
     fetch("/api/auth/me", { credentials: "include" })
@@ -73,20 +74,25 @@ export function Sidebar({ open, setOpen }) {
       {/* Nav */}
       <nav className="flex flex-col gap-2 mt-3">
         {navLinks.map(({ href, label, icon: Icon }) => {
-          // Hide admins page for contributors
           if (href === "/admin/dashboard/admins" && user?.role === "CONTRIBUTOR") return null;
-
-          // Hide drafts page for non-admins if needed
           if (href === "/admin/dashboard/drafts" && !["ADMIN", "SUPERADMIN"].includes(user?.role)) return null;
+
+          // Check if current route matches or is a nested route
+          const isDashboard = href === "/admin/dashboard";
+
+          const isActive = isDashboard
+              ? pathname === href // only exact match for dashboard
+              : pathname === href || pathname?.startsWith(href + "/");
 
           return (
             <Link
               key={href}
               href={href}
-              className="flex items-center gap-2 px-3 py-2 rounded-md hover:bg-muted transition"
-              onClick={() => setOpen(false)} // close sidebar on mobile click
+              className={`flex items-center gap-2 px-3 py-2 rounded-md transition
+                ${isActive ? "bg-primary text-primary-foreground" : "hover:bg-muted"}`}
+              onClick={() => setOpen(false)}
             >
-              <Icon className="w-4 h-4" />
+              <Icon className={`w-4 h-4 ${isActive ? "text-primary-foreground" : ""}`} />
               {label}
             </Link>
           );
