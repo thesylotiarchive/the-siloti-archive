@@ -1,4 +1,5 @@
 // components/Sidebar.jsx
+
 "use client";
 
 import { useState, useEffect } from "react";
@@ -13,6 +14,7 @@ import {
   Newspaper,
   ShieldCheck,
   FileText,
+  FileEdit,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 
@@ -21,6 +23,7 @@ const navLinks = [
   { href: "/admin/dashboard/collection-manager", label: "Collection Manager", icon: FolderTree },
   { href: "/admin/dashboard/blogs", label: "Blogs", icon: Newspaper },
   { href: "/admin/dashboard/drafts", label: "Drafts", icon: FileText },
+  { href: "/admin/dashboard/pages", label: "Edit Pages", icon: FileEdit },
   { href: "/admin/dashboard/admins", label: "Account Manager", icon: ShieldCheck },
 ];
 
@@ -55,8 +58,15 @@ export function Sidebar({ open, setOpen }) {
         <span className="font-bold text-base">The Siloti Archive</span>
       </div>
 
+
       {/* Role */}
-      {user && (
+      {!user ? (
+        // Skeleton Loader for Role
+        <div className="flex justify-center mt-3 items-center animate-pulse">
+          <div className="h-4 w-10 bg-gray-300 rounded mr-2"></div>
+          <div className="h-5 w-20 bg-gray-300 rounded-full"></div>
+        </div>
+      ) : (
         <div className="flex justify-center mt-3 items-center">
           <span className="text-xs font-medium text-muted-foreground mr-1">Role:</span>
           <span
@@ -76,6 +86,7 @@ export function Sidebar({ open, setOpen }) {
         {navLinks.map(({ href, label, icon: Icon }) => {
           if (href === "/admin/dashboard/admins" && user?.role === "CONTRIBUTOR") return null;
           if (href === "/admin/dashboard/drafts" && !["ADMIN", "SUPERADMIN"].includes(user?.role)) return null;
+          if (href === "/admin/dashboard/pages" && !["ADMIN", "SUPERADMIN"].includes(user?.role)) return null;
 
           // Check if current route matches or is a nested route
           const isDashboard = href === "/admin/dashboard";

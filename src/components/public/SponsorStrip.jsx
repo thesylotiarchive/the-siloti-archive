@@ -16,7 +16,7 @@ export default function SponsorStrip() {
     <div className="bg-white border-t border-gray-200 pt-10 pb-6 overflow-hidden">
       <div className="w-full mx-auto px-6 text-center">
         <h3 className="text-lg font-semibold text-gray-800 mb-6 uppercase tracking-widest">
-          Our Sponsors
+          Our Partners
         </h3>
 
         <div className="relative w-full overflow-hidden">

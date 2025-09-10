@@ -1,91 +1,120 @@
-'use client';
+"use client";
 
-import React from 'react';
+import { useEffect, useState } from "react";
 
 export default function WhatWeDoPage() {
+  const [page, setPage] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchPage() {
+      try {
+        const res = await fetch("/api/public/pages/what-we-do");
+        if (!res.ok) throw new Error("Failed to load page");
+        const data = await res.json();
+        setPage(data);
+      } catch (err) {
+        console.error("Error fetching What We Do page:", err);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchPage();
+  }, []);
+
+  const SkeletonCard = () => (
+    <div className="bg-[#faf8f5] p-10 rounded-xl animate-pulse">
+      <div className="h-1 w-full bg-gradient-to-r from-gray-200 to-gray-300 rounded mb-6" />
+      <div className="w-12 h-12 bg-gray-300 rounded-full mx-auto mb-6" />
+      <div className="h-5 bg-gray-300 rounded w-3/4 mx-auto mb-4" />
+      <ul className="space-y-2 mt-4">
+        <li className="h-4 bg-gray-200 rounded w-full" />
+        <li className="h-4 bg-gray-200 rounded w-5/6" />
+        <li className="h-4 bg-gray-200 rounded w-4/6" />
+      </ul>
+    </div>
+  );
+
+  if (loading) {
+    return (
+      <section className="py-24 bg-white">
+        <div className="container max-w-7xl mx-auto px-4">
+          {/* Hero Skeleton */}
+          <div className="animate-pulse text-center">
+            <div className="h-8 bg-gray-300 rounded w-64 mx-auto mb-4" />
+            <div className="h-5 bg-gray-200 rounded w-96 mx-auto mb-2" />
+            <div className="h-4 bg-gray-200 rounded w-2/3 mx-auto" />
+          </div>
+
+          {/* Services Skeleton Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 mt-12">
+            {Array.from({ length: 6 }).map((_, i) => (
+              <SkeletonCard key={i} />
+            ))}
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  if (!page) {
+    return (
+      <section className="py-24 bg-white">
+        <div className="container max-w-7xl mx-auto px-4 text-center">
+          <p className="text-red-500">Page not found</p>
+        </div>
+      </section>
+    );
+  }
+
+  const { sections } = page;
+  const hero = sections?.hero || {};
+  const services = sections?.services || [];
+
   return (
     <section id="services" className="py-24 bg-white">
       <div className="container max-w-7xl mx-auto px-4">
-        <h2 className="text-3xl font-bold text-center text-[#1276AB]">What We Do</h2>
-        <p className="text-center text-lg text-[#666666] mt-4 max-w-3xl mx-auto">
-          Comprehensive cultural preservation through archive, research, education, and community engagement
-        </p>
+        {/* Hero */}
+        <h2 className="text-3xl font-bold text-center text-[#1276AB]">
+          {hero.heading || "What We Do"}
+        </h2>
+        {hero.subheading && (
+          <p className="text-center text-xl text-[#1276AB] mt-2">
+            {hero.subheading}
+          </p>
+        )}
+        {hero.description && (
+          <p className="text-center text-lg text-[#666666] mt-4 max-w-3xl mx-auto">
+            {hero.description}
+          </p>
+        )}
 
+        {/* Services Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 mt-12">
-          {/* Cultural Preservation */}
-          <div className="bg-[#faf8f5] p-10 rounded-xl text-center border-2 border-transparent hover:translate-y-[-10px] transition-all duration-300 hover:shadow-xl hover:border-[#d4a574] relative overflow-hidden">
-            <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#1276AB] to-[#d4a574]" />
-            <div className="text-5xl mb-6 text-[#1276AB]">🏛️</div>
-            <h3 className="text-xl font-semibold text-[#1276AB] mb-4">Cultural Preservation</h3>
-            <ul className="text-left text-[#666666] space-y-2">
-              <li>Reviving endangered languages like Nagri</li>
-              <li>Documenting oral histories and traditions</li>
-              <li>Preserving cultural practices and rituals</li>
-            </ul>
-          </div>
-
-          {/* Research & Education */}
-          <div className="bg-[#faf8f5] p-10 rounded-xl text-center border-2 border-transparent hover:translate-y-[-10px] transition-all duration-300 hover:shadow-xl hover:border-[#d4a574] relative overflow-hidden">
-            <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#1276AB] to-[#d4a574]" />
-            <div className="text-5xl mb-6 text-[#1276AB]">🔬</div>
-            <h3 className="text-xl font-semibold text-[#1276AB] mb-4">Research & Education</h3>
-            <ul className="text-left text-[#666666] space-y-2">
-              <li>Establishing a Museum, Library, and Cultural Centre in Cachar, Assam</li>
-              <li>Supporting academic research, workshops, and public lectures</li>
-              <li>Promoting Indigenous knowledge and cultural exchange</li>
-            </ul>
-          </div>
-
-          {/* Community Empowerment */}
-          <div className="bg-[#faf8f5] p-10 rounded-xl text-center border-2 border-transparent hover:translate-y-[-10px] transition-all duration-300 hover:shadow-xl hover:border-[#d4a574] relative overflow-hidden">
-            <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#1276AB] to-[#d4a574]" />
-            <div className="text-5xl mb-6 text-[#1276AB]">👥</div>
-            <h3 className="text-xl font-semibold text-[#1276AB] mb-4">Community Empowerment</h3>
-            <ul className="text-left text-[#666666] space-y-2">
-              <li>Job creation through cultural education</li>
-              <li>Skills training for underprivileged groups</li>
-              <li>Promoting peace, harmony, and cultural coexistence</li>
-            </ul>
-          </div>
-
-          {/* Library & Archives */}
-          <div className="bg-[#faf8f5] p-10 rounded-xl text-center border-2 border-transparent hover:translate-y-[-10px] transition-all duration-300 hover:shadow-xl hover:border-[#d4a574] relative overflow-hidden">
-            <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#1276AB] to-[#d4a574]" />
-            <div className="text-5xl mb-6 text-[#1276AB]">📚</div>
-            <h3 className="text-xl font-semibold text-[#1276AB] mb-4">Library & Archives</h3>
-            <ul className="text-left text-[#666666] space-y-2">
-              <li>Develop a public-access library for all age groups</li>
-              <li>Collect rare books, manuscripts, and periodicals</li>
-              <li>Create digital archives for global access</li>
-              <li>Provide multimedia resources for language education</li>
-            </ul>
-          </div>
-
-          {/* Museum Development */}
-          <div className="bg-[#faf8f5] p-10 rounded-xl text-center border-2 border-transparent hover:translate-y-[-10px] transition-all duration-300 hover:shadow-xl hover:border-[#d4a574] relative overflow-hidden">
-            <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#1276AB] to-[#d4a574]" />
-            <div className="text-5xl mb-6 text-[#1276AB]">🏺</div>
-            <h3 className="text-xl font-semibold text-[#1276AB] mb-4">Museum Development</h3>
-            <ul className="text-left text-[#666666] space-y-2">
-              <li>Exhibit historical artifacts and cultural objects</li>
-              <li>Preserve and display Nagri Puthi manuscripts</li>
-              <li>Digitize and document heritage sites</li>
-              <li>Curate rotating exhibitions and oral history displays</li>
-            </ul>
-          </div>
-
-          {/* Global Outreach */}
-          <div className="bg-[#faf8f5] p-10 rounded-xl text-center border-2 border-transparent hover:translate-y-[-10px] transition-all duration-300 hover:shadow-xl hover:border-[#d4a574] relative overflow-hidden">
-            <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#1276AB] to-[#d4a574]" />
-            <div className="text-5xl mb-6 text-[#1276AB]">🌍</div>
-            <h3 className="text-xl font-semibold text-[#1276AB] mb-4">Global Outreach</h3>
-            <ul className="text-left text-[#666666] space-y-2">
-              <li>Connect with Siloti diaspora worldwide</li>
-              <li>Share cultural materials through digital platforms</li>
-              <li>Facilitate international cultural exchange</li>
-              <li>Offer online access to archives and virtual exhibits</li>
-            </ul>
-          </div>
+          {services.map((service, idx) => (
+            <div
+              key={idx}
+              className="bg-[#faf8f5] p-10 rounded-xl text-center border-2 border-transparent hover:translate-y-[-10px] transition-all duration-300 hover:shadow-xl hover:border-[#d4a574] relative overflow-hidden"
+            >
+              <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#1276AB] to-[#d4a574]" />
+              {service.icon && (
+                <div className="text-5xl mb-6 text-[#1276AB]">{service.icon}</div>
+              )}
+              <h3 className="text-xl font-semibold text-[#1276AB] mb-4">
+                {service.title}
+              </h3>
+              {service.summary && (
+                <p className="text-[#444] text-base mb-4">{service.summary}</p>
+              )}
+              {service.bullets?.length > 0 && (
+                <ul className="text-left text-[#666666] space-y-2">
+                  {service.bullets.map((bullet, j) => (
+                    <li key={j}>{bullet}</li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          ))}
         </div>
       </div>
     </section>

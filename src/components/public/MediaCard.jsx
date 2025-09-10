@@ -4,9 +4,9 @@ import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { Share2, Eye, Heart, MessageCircle } from "lucide-react";
-import ShareModal from "./ShareModal";
+import { createPortal } from "react-dom";
 
-export function MediaCard({ mediaItem, onShare }) {
+export function MediaCard({ mediaItem, onShare, className = "" }) {
   const {
     id,
     title,
@@ -19,7 +19,8 @@ export function MediaCard({ mediaItem, onShare }) {
   } = mediaItem;
 
   const [hovered, setHovered] = useState(false);
-  const [position, setPosition] = useState("top");
+  const [position, setPosition] = useState("bottom");
+  const [coords, setCoords] = useState({ left: 0, top: 0 });
   const cardRef = useRef(null);
 
   const isExternal = !!externalLink;
@@ -42,93 +43,118 @@ export function MediaCard({ mediaItem, onShare }) {
   let thumbnailSrc = null;
   if (mediaItem.mediaType === "IMAGE") {
     thumbnailSrc = mediaItem.image || mediaItem.fileUrl || null;
-  }else {
-    thumbnailSrc = mediaItem.image
+  } else {
+    thumbnailSrc = mediaItem.image;
   }
 
+  const updatePosition = () => {
+    if (!cardRef.current) return;
+    const rect = cardRef.current.getBoundingClientRect();
+    const tooltipWidth = 320;
+
+    const spaceBelow = window.innerHeight - rect.bottom;
+    const newPosition = spaceBelow > 240 ? "bottom" : "top";
+    setPosition(newPosition);
+
+    const newLeft = Math.max(
+      16,
+      Math.min(
+        rect.left + rect.width / 2 - tooltipWidth / 2,
+        window.innerWidth - tooltipWidth - 16
+      )
+    );
+
+    const newTop =
+      newPosition === "bottom"
+        ? rect.bottom + 12
+        : rect.top - 12; // distance for top placement
+
+    setCoords({ left: newLeft, top: newTop });
+  };
+
+  // 🖱 Hover logic + scroll/resize listeners
   useEffect(() => {
-    if (hovered && cardRef.current) {
-      const rect = cardRef.current.getBoundingClientRect();
-      const spaceAbove = rect.top;
-      const spaceBelow = window.innerHeight - rect.bottom;
-      setPosition(spaceBelow > 200 ? "bottom" : "top");
+    if (hovered) {
+      updatePosition();
+      window.addEventListener("scroll", updatePosition, true);
+      window.addEventListener("resize", updatePosition);
     }
+    return () => {
+      window.removeEventListener("scroll", updatePosition, true);
+      window.removeEventListener("resize", updatePosition);
+    };
   }, [hovered]);
 
   return (
     <div
       ref={cardRef}
-      className="relative bg-card border border-border rounded-2xl shadow transition-transform hover:shadow-xl hover:-translate-y-1"
+      className={`relative overflow-visible bg-card border border-border rounded-2xl shadow-md transition-all duration-300 hover:shadow-xl hover:-translate-y-1 group ${className}`}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
     >
-      {/* ✅ Main clickable content */}
+      {/* Main clickable content */}
       <Link href={`/media/${id}`} className="block">
-        <div className="relative w-full aspect-video bg-muted">
+        <div className="relative w-full aspect-video bg-muted rounded-t-2xl overflow-hidden">
           {thumbnailSrc ? (
             <Image
               src={thumbnailSrc}
               alt={title}
               fill
-              className="object-cover rounded-t-xl"
+              className="object-cover transition-transform duration-300 group-hover:scale-105"
             />
           ) : (
-            <div className="w-full h-full flex items-center justify-center text-4xl">
+            <div className="w-full h-full flex items-center justify-center text-4xl bg-gradient-to-br from-muted to-muted/80">
               {iconMap[mediaType] || "❓"}
             </div>
           )}
+          
+          {/* Overlay gradient for better text readability */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
         </div>
 
         <div className="p-4">
-          <h3 className="text-base font-semibold mb-1 line-clamp-1">
+          <h3 className="text-base font-semibold mb-2 line-clamp-2 text-foreground leading-tight">
             {title}
           </h3>
-          <div className="flex items-center justify-between">
-            <div className="text-sm text-muted-foreground capitalize">
+          
+          <div className="flex items-center justify-between mb-3">
+            <div className="text-sm text-muted-foreground capitalize font-medium bg-secondary/50 px-3 py-1 rounded-full">
               {mediaType.toLowerCase()}
             </div>
-            {/* <button
-              onClick={() => onShare(shareUrl)}
-              className="flex items-center gap-2 text-sm font-medium text-primary bg-primary/10 hover:bg-primary/20 px-2 py-1.5 rounded-lg transition"
-            >
-              <Share2 size={16} />
-              <span>Share</span>
-            </button> */}
           </div>
 
-          <div className="mt-2 flex items-center gap-4 text-xs text-muted-foreground">
-            <div className="flex items-center gap-1">
+          <div className="flex items-center gap-4 text-xs text-muted-foreground">
+            <div className="flex items-center gap-1.5 hover:text-primary transition-colors">
               <Eye className="w-4 h-4" />
-              {views}
+              <span className="font-medium">{views || 0}</span>
             </div>
-            <div className="flex items-center gap-1">
+            <div className="flex items-center gap-1.5 hover:text-red-500 transition-colors">
               <Heart className="w-4 h-4" />
-              0
+              <span className="font-medium">0</span>
             </div>
-            <div className="flex items-center gap-1">
+            <div className="flex items-center gap-1.5 hover:text-blue-500 transition-colors">
               <MessageCircle className="w-4 h-4" />
-              0
+              <span className="font-medium">0</span>
             </div>
           </div>
-
         </div>
       </Link>
 
-      {/* ✅ Share button with modal */}
-      <div className="absolute top-2 right-2 z-20">
+      {/* Share button */}
+      <div className="absolute top-3 right-3 z-20 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
         <button
           onClick={(e) => {
-            e.stopPropagation(); // prevent click bubbling to Link
+            e.stopPropagation();
             onShare(shareUrl);
           }}
-          className="flex items-center gap-1 text-sm font-medium text-white bg-black/60 hover:bg-black/80 px-3 py-1.5 rounded-full shadow transition"
+          className="flex items-center gap-2 text-sm font-medium text-white bg-black/70 hover:bg-black/90 backdrop-blur-sm px-3 py-2 rounded-full shadow-lg transition-all duration-200 hover:scale-105"
         >
-          <Share2 size={16} />
+          <Share2 size={14} />
           <span>Share</span>
         </button>
       </div>
 
-      {/* ✅ Tooltip preview */}
+      {/* Improved tooltip*/}
       {hovered && (
         <div
           className={`absolute z-50 left-1/2 -translate-x-1/2 w-64 bg-white border border-gray-300 rounded-xl shadow-xl p-4 ${
@@ -158,6 +184,8 @@ export function MediaCard({ mediaItem, onShare }) {
           )}
         </div>
       )}
+      
+      
     </div>
   );
 }
