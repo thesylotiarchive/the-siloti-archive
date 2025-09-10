@@ -72,7 +72,7 @@ export function CollectionCard({ collection, className = "" }) {
               </div>
             )}
 
-            <h3 className="text-lg sm:text-lg font-bold text-black line-clamp-1 leading-tight px-2 drop-shadow-sm">
+            <h3 className="text-sm sm:text-sm font-bold text-black line-clamp-1 leading-tight px-2 drop-shadow-sm">
               {collection.name}
             </h3>
           </div>
