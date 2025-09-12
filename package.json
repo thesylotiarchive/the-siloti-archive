@@ -31,6 +31,7 @@
     "jsonwebtoken": "^9.0.2",
     "localforage": "^1.10.0",
     "lucide-react": "^0.517.0",
+    "nanoid": "^5.1.5",
     "next": "15.3.3",
     "page-flip": "^2.0.7",
     "pdfjs-dist": "^5.4.54",

@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import useSWR from "swr";
+import Link from "next/link";
 
 const fetcher = (url) => fetch(url).then((r) => r.json());
 
@@ -11,11 +12,11 @@ export default function PeoplePage() {
   if (error) return <div>Failed to load</div>;
   if (!data) return <div>Loading...</div>;
 
-  const { title, intro, people } = data.sections;
+  const { title, intro, sections } = data.sections;
 
   return (
-    <main className="max-w-4xl mx-auto px-4 py-20">
-      {/* Title */}
+    <main className="max-w-6xl mx-auto px-4 py-20 space-y-16">
+      {/* Page Title */}
       <motion.h1
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
@@ -35,40 +36,63 @@ export default function PeoplePage() {
         {intro}
       </motion.p>
 
-      {/* People List */}
-      <div className="space-y-8">
-        {people.map((person, i) => (
-          <motion.div
-            key={i}
-            initial={{ opacity: 0, x: -40 }}
-            whileInView={{ opacity: 1, x: 0 }}
+      {/* Sections */}
+      {sections.map((section, sIndex) => (
+        <section key={sIndex} className="space-y-8">
+          <motion.h2
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ delay: i * 0.2, duration: 0.6 }}
-            className="flex flex-col sm:flex-row items-center sm:items-start gap-6 bg-gradient-to-r from-[#F9FAFB] to-[#F3F4F6] border border-gray-200 rounded-2xl p-6 shadow-md hover:shadow-lg transition-all duration-300"
+            transition={{ duration: 0.6 }}
+            className="text-2xl font-semibold text-[#1276AB] text-center sm:text-left"
           >
-            {/* Avatar */}
-            <motion.img
-              whileHover={{ scale: 1.05 }}
-              src={person.image || "/avatars/avatar.png"}
-              alt={person.name}
-              className="w-24 h-24 rounded-full object-cover shadow-lg border-4 border-[#1276AB]/20"
-            />
+            {section.title}
+          </motion.h2>
 
-            {/* Info */}
-            <div className="flex-1 text-center sm:text-left">
-              <h3 className="text-xl font-semibold text-[#1276AB]">
-                {person.name}
-              </h3>
-              <p className="text-sm font-medium text-[#D4A574] mb-2">
-                {person.role}
-              </p>
-              <p className="text-sm text-gray-600 leading-relaxed">
-                {person.description}
-              </p>
-            </div>
-          </motion.div>
-        ))}
-      </div>
+          {/* People Grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            {section.people.map((person, i) => (
+              <motion.div
+                key={person.id || i}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.1, duration: 0.6 }}
+                className="flex flex-col items-center bg-gradient-to-r from-[#F9FAFB] to-[#F3F4F6] border border-gray-200 rounded-2xl p-6 shadow-md hover:shadow-lg transition-all duration-300"
+              >
+                {/* Avatar */}
+                <motion.img
+                  whileHover={{ scale: 1.05 }}
+                  src={person.image || "/avatars/avatar.png"}
+                  alt={person.name}
+                  className="w-24 h-24 rounded-full object-cover shadow-lg border-4 border-[#1276AB]/20 mb-4"
+                />
+
+                {/* Info */}
+                <div className="text-center">
+                  <h3 className="text-xl font-semibold text-[#1276AB]">
+                    {person.name}
+                  </h3>
+                  <p className="text-sm font-medium text-[#D4A574] mb-2">
+                    {person.role}
+                  </p>
+                  <p className="text-sm text-gray-600 leading-relaxed mb-2">
+                    {person.description.length > 100
+                      ? person.description.slice(0, 100) + "..."
+                      : person.description}
+                  </p>
+                  <Link
+                    href={`/people/${person.id}`}
+                    className="text-[#1276AB] text-sm font-semibold hover:underline"
+                  >
+                    More
+                  </Link>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </section>
+      ))}
     </main>
   );
 }

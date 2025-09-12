@@ -147,21 +147,41 @@ export function MediaCard({ mediaItem, onShare, className = "" }) {
       onMouseLeave={() => setHovered(false)}
     >
       {/* --- rest of your card markup unchanged --- */}
-      <Link href={`/media/${id}`} className="block">
-        <div className="relative w-full aspect-video bg-muted rounded-t-2xl overflow-hidden">
+      <Link
+        href={`/media/${id}`}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="block"
+      >
+        <div className="relative w-full aspect-[4/3] rounded-t-2xl overflow-hidden bg-muted">
           {thumbnailSrc ? (
-            <Image
-              src={thumbnailSrc}
-              alt={title}
-              fill
-              className="object-cover transition-transform duration-300 group-hover:scale-105"
-            />
+            <>
+              {/* Blurry background */}
+              <Image
+                src={thumbnailSrc}
+                alt={`${title} blurred background`}
+                fill
+                className="object-cover scale-110 blur-md opacity-60"
+                priority
+              />
+              {/* Foreground image (keeps full aspect, no crop) */}
+              <div className="absolute inset-0 flex items-center justify-center">
+                <Image
+                  src={thumbnailSrc}
+                  alt={title}
+                  fill
+                  className="object-contain transition-transform duration-300 group-hover:scale-105"
+                  priority
+                />
+              </div>
+            </>
           ) : (
             <div className="w-full h-full flex items-center justify-center text-4xl bg-gradient-to-br from-muted to-muted/80">
-              {/* icon */}
+              {/* fallback icon */}
             </div>
           )}
 
+          {/* Hover gradient overlay */}
           <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
         </div>
 
@@ -211,7 +231,7 @@ export function MediaCard({ mediaItem, onShare, className = "" }) {
         createPortal(
           <div
             // outer wrapper: fixed to viewport
-            className="fixed z-[99999] pointer-events-none bg-gray-100"
+            className="fixed z-[99999] pointer-events-none"
             style={{
               left: portalStyle.left,
               top: portalStyle.top,
@@ -221,24 +241,24 @@ export function MediaCard({ mediaItem, onShare, className = "" }) {
             {/* inner box we measure */}
             <div
               ref={tooltipInnerRef}
-              className="pointer-events-auto relative bg-white border border-gray-300 rounded-xl shadow-xl p-4"
+              className="pointer-events-auto relative bg-gray-500 text-white border border-gray-300 rounded-xl shadow-xl p-4"
               style={{ width: tooltipSize.width || 320 }}
             >
               {/* arrow (centered) */}
               <div
-                className="absolute left-1/2 -translate-x-1/2 w-0 h-0"
+                className="absolute left-1/2 -translate-x-1/2 w-0 h-0 "
                 style={
                   position === "top"
                     ? {
                         borderLeft: "8px solid transparent",
                         borderRight: "8px solid transparent",
-                        borderTop: "8px solid white",
+                        borderTop: "8px solid #6A7282",
                         bottom: -8,
                       }
                     : {
                         borderLeft: "8px solid transparent",
                         borderRight: "8px solid transparent",
-                        borderBottom: "8px solid white",
+                        borderBottom: "8px solid #6A7282",
                         top: -8,
                       }
                 }
@@ -246,15 +266,30 @@ export function MediaCard({ mediaItem, onShare, className = "" }) {
               {/* tooltip content */}
               {thumbnailSrc && (
                 <div className="relative w-full aspect-video mb-2 rounded-lg overflow-hidden">
-                  <Image src={thumbnailSrc} alt={title} fill className="object-cover" />
+                  {/* Blurry background */}
+                  <Image
+                    src={thumbnailSrc}
+                    alt={`${title} blurred background`}
+                    fill
+                    className="object-cover scale-110 blur-md opacity-60"
+                  />
+                  {/* Foreground image (object-contain so it doesn’t crop) */}
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <Image
+                      src={thumbnailSrc}
+                      alt={title}
+                      fill
+                      className="object-contain"
+                    />
+                  </div>
                 </div>
               )}
               <div className="text-sm font-semibold mb-1">{title}</div>
-              <div className="text-xs text-muted-foreground mb-1 capitalize">
+              <div className="text-xs text-white mb-1 capitalize">
                 {mediaType.toLowerCase()}
               </div>
               {description && (
-                <p className="text-xs text-muted-foreground line-clamp-3">
+                <p className="text-xs text-white line-clamp-3">
                   {description}
                 </p>
               )}
