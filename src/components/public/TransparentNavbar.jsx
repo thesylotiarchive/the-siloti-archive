@@ -11,6 +11,7 @@ const navItems = [
   { label: 'Blogs', href: '/blogs' },
   { label: 'Contact', href: '/contact' },
   { label: 'People', href: '/people' },
+  { label: 'Donate', href: '/donate' },
 ];
 
 export default function TransparentNavbar() {
@@ -44,13 +45,13 @@ export default function TransparentNavbar() {
           >
             <Image
               src="/logo.png"
-              alt="Syloti Archive Logo"
+              alt="Sylheti Archive Logo"
               width={50}
               height={50}
               className="rounded-sm w-9 h-9 sm:w-[70px] sm:h-[70px]"
             />
             <div className="flex flex-col items-start sm:items-center leading-tight">
-              <span className="font-bold text-[13px] sm:text-lg">Syloti Archive</span>
+              <span className="font-bold text-[13px] sm:text-lg">Sylheti Archive</span>
               <span className="font-medium text-[10px] sm:text-sm">An Initiative of</span>
               <span className="font-semibold text-[9px] sm:text-sm max-w-[190px] sm:max-w-none leading-snug bg-clip-text text-transparent bg-gradient-to-r from-[#a6e355] via-[#3d9fdc] to-[#edb991]">
                 Siloti Archive Research & Cultural Centre

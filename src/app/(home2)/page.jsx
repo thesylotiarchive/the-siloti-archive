@@ -3,8 +3,12 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { CollectionCard } from "@/components/public/CollectionCard";
+import { Heart, PlayCircle } from "lucide-react";
+import { useRouter } from 'next/navigation';
 
 export default function Home2Page() {
+  const router = useRouter();
+
   const [collections, setCollections] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -39,25 +43,56 @@ export default function Home2Page() {
           Your browser does not support the video tag.
         </video>
 
-        <div className="absolute inset-0 bg-black/50 flex flex-col items-center justify-center text-center px-4 sm:px-6">
-          <h1 className="text-3xl sm:text-5xl md:text-6xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-[#74C043] via-[#0A65A8] to-[#D6A57C] max-w-[90vw] sm:max-w-3xl leading-tight">
-            The Siloti Archive
+        {/* Overlay */}
+        <div className="absolute inset-0 bg-black/40 flex flex-col items-center justify-center text-center px-4 sm:px-6">
+          <h1 className="text-3xl sm:text-5xl md:text-6xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-blue-500 to-amber-400 max-w-[90vw] sm:max-w-3xl leading-tight mb-2">
+            The Sylheti Archive
           </h1>
 
-          <p className="mt-4 text-sm sm:text-lg md:text-2xl text-white/90 drop-shadow max-w-[90vw] sm:max-w-xl px-2 sm:px-0">
+          <p className="mt-4 text-sm sm:text-lg md:text-2xl text-white/90 drop-shadow-lg max-w-[90vw] sm:max-w-xl px-2 sm:px-0 font-light">
             A Digital Collection of Siloti Arts, Culture, Heritage & Initiatives
           </p>
 
-          <div className="mt-6">
-            <Link
-              href="/collection"
-              className="inline-block font-medium px-5 py-2.5 sm:px-6 sm:py-3 rounded-lg shadow transition text-white bg-gradient-to-r from-[#74C043] via-[#0A65A8] to-[#D6A57C] hover:brightness-110 hover:scale-105"
+          <div className="mt-8 flex flex-col sm:flex-row gap-6 justify-center">
+            {/* Explore Archive Button */}
+            <button
+              onClick={() => router.push('/collection')}
+              className="group relative inline-flex items-center justify-center gap-3 font-semibold px-8 py-4 text-lg rounded-2xl transition-all duration-300 ease-in-out transform hover:scale-105 active:scale-95 bg-gradient-to-r from-emerald-500 to-blue-600 text-white shadow-2xl hover:shadow-emerald-500/25 hover:shadow-2xl border border-white/10 backdrop-blur-sm"
+            
             >
-              Explore the Archive
-            </Link>
+              <PlayCircle className="w-5 h-5 transition-transform group-hover:rotate-12" />
+              <span className="relative">
+                Explore the Archive
+              </span>
+              <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-emerald-400 to-blue-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10 blur-xl"></div>
+            </button>
+
+            {/* Donate Button */}
+            <button 
+              onClick={() => router.push('/donate')}
+              className="group relative inline-flex items-center justify-center gap-3 font-semibold px-8 py-4 text-lg rounded-2xl transition-all duration-300 ease-in-out transform hover:scale-105 active:scale-95 bg-white/10 text-white shadow-2xl hover:shadow-amber-500/25 hover:shadow-2xl border-2 border-white/20 backdrop-blur-md hover:bg-gradient-to-r hover:from-amber-500/20 hover:to-orange-500/20 hover:border-amber-400/50"
+            
+            >
+              <Heart className="w-5 h-5 transition-all group-hover:text-red-400 group-hover:scale-110" />
+              <span className="relative">
+                Support Our Mission
+              </span>
+              <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-amber-400/20 to-orange-400/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10 blur-xl"></div>
+            </button>
+          </div>
+
+          {/* Additional Visual Enhancement */}
+          <div className="mt-12 flex items-center gap-4 text-white/60">
+            <div className="w-16 h-px bg-gradient-to-r from-transparent to-white/30"></div>
+            <span className="text-sm font-light">Preserving Cultural Heritage</span>
+            <div className="w-16 h-px bg-gradient-to-l from-transparent to-white/30"></div>
           </div>
         </div>
 
+        {/* Floating Elements for Visual Interest */}
+        <div className="absolute top-1/4 left-1/4 w-2 h-2 bg-emerald-400 rounded-full animate-pulse opacity-60"></div>
+        <div className="absolute top-1/3 right-1/3 w-3 h-3 bg-blue-400 rounded-full animate-pulse opacity-40 animation-delay-1000"></div>
+        <div className="absolute bottom-1/4 left-1/3 w-1 h-1 bg-amber-400 rounded-full animate-pulse opacity-50 animation-delay-2000"></div>
       </section>
 
       {/* Featured Collections */}
@@ -65,7 +100,7 @@ export default function Home2Page() {
         {/* Background Image */}
         <img
           src="/hero-image01.jpg"
-          alt="Syloti Archive Hero"
+          alt="Sylheti Archive Hero"
           className="absolute inset-0 w-full h-full object-cover"
         />
         {/* Optional Overlay */}

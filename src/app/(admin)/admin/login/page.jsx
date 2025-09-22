@@ -48,7 +48,7 @@ export default function AdminLoginPage() {
             alt="Logo"
             className="w-12 h-12"
           />
-          <h1 className="text-2xl font-bold">Syloti Archive Admin</h1>
+          <h1 className="text-2xl font-bold">Sylheti Archive Admin</h1>
           <p className="text-sm text-muted-foreground">Sign in to continue</p>
         </div>
 

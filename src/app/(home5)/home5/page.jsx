@@ -30,7 +30,7 @@ export default function HomePage() {
       {/* Hero Section */}
       <section className="text-center py-24 px-4">
         <h1 className="text-5xl md:text-6xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-[#74C043] via-[#0A65A8] to-[#D6A57C]">
-          The Syloti Archive
+          The Sylheti Archive
         </h1>
         <p className="mt-4 max-w-2xl mx-auto text-muted-foreground text-lg">
           Preserving the stories, songs, and scripts of Sylhet’s rich heritage.

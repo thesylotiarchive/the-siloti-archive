@@ -13,13 +13,13 @@ export default function Footer() {
           <Link href="/" className="flex flex-col items-center gap-2 text-white">
             <Image
               src="/logo.png"
-              alt="Syloti Archive Logo"
+              alt="Sylheti Archive Logo"
               width={70}
               height={70}
               className="rounded-sm"
             />
             <div className="flex flex-col items-center">
-              <span className="text-2xl font-bold">Syloti Archive</span>
+              <span className="text-2xl font-bold">Sylheti Archive</span>
               <span className="text-sm font-bold">An Initiative of</span>
               <span className="text-sm font-bold bg-clip-text text-transparent bg-gradient-to-r from-[#a6e355] via-[#3d9fdc] to-[#edb991]">
                 Siloti Archive Research & Cultural Centre
@@ -66,7 +66,7 @@ export default function Footer() {
 
       {/* Bottom line */}
       <div className="mt-10 border-t border-gray-700 pt-6 text-sm text-center text-gray-500">
-        © {new Date().getFullYear()} Syloti Archive. All rights reserved.
+        © {new Date().getFullYear()} Sylheti Archive. All rights reserved.
       </div>
     </footer>
   );

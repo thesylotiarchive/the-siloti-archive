@@ -11,6 +11,7 @@ const navItems = [
   { label: 'Blogs', href: '/blogs' },
   { label: 'Contact', href: '/contact' },
   { label: 'People', href: '/people' },
+  { label: 'Donate', href: '/donate' },
 ];
 
 export default function CollectionNavBar() {
@@ -41,14 +42,14 @@ export default function CollectionNavBar() {
           >
             <Image
               src="/logo.png"
-              alt="Syloti Archive Logo"
+              alt="Sylheti Archive Logo"
               width={50}
               height={50}
               className="rounded-sm w-9 h-9 sm:w-[70px] sm:h-[70px]"
             />
             <div className="flex flex-col leading-tight max-w-[180px] sm:max-w-[200px] md:max-w-none truncate">
               <span className="font-bold text-[13px] sm:text-lg">
-                Syloti Archive
+                Sylheti Archive
               </span>
               <span className="font-medium text-[10px] sm:text-sm">
                 An Initiative of

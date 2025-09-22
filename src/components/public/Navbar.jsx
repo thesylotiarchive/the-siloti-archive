@@ -11,13 +11,13 @@ export default function Navbar() {
         <Link href="/" className="flex items-center gap-2">
           <Image
             src="/logo.png"
-            alt="Syloti Archive Logo"
+            alt="Sylheti Archive Logo"
             width={70}
             height={70}
             className="rounded-sm"
           />
           <div className="flex flex-col items-center">
-              <span className="font-bold text-lg">Syloti Archive</span>
+              <span className="font-bold text-lg">Sylheti Archive</span>
               <span className="font-bold text-sm">An Initiative of</span>
               <span className="font-bold text-sm bg-clip-text text-transparent bg-gradient-to-r from-[#a6e355] via-[#3d9fdc] to-[#edb991]">
                 Siloti Archive Research & Cultural Centre
