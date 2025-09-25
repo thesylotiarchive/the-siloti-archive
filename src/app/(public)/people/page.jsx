@@ -44,13 +44,13 @@ export default function PeoplePage() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="text-2xl font-semibold text-[#1276AB] text-center sm:text-left"
+            className="text-2xl font-semibold text-[#1276AB] text-center"
           >
             {section.title}
           </motion.h2>
 
           {/* People Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="flex flex-wrap justify-center gap-8">
             {section.people.map((person, i) => (
               <motion.div
                 key={person.id || i}
@@ -58,7 +58,7 @@ export default function PeoplePage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.1, duration: 0.6 }}
-                className="flex flex-col items-center bg-gradient-to-r from-[#F9FAFB] to-[#F3F4F6] border border-gray-200 rounded-2xl p-6 shadow-md hover:shadow-lg transition-all duration-300"
+                className="w-full sm:w-[calc(50%-1rem)] lg:w-[calc(33.333%-1rem)] flex flex-col items-center bg-gradient-to-r from-[#F9FAFB] to-[#F3F4F6] border border-gray-200 rounded-2xl p-6 shadow-md hover:shadow-lg transition-all duration-300"
               >
                 {/* Avatar */}
                 <motion.img
@@ -91,6 +91,9 @@ export default function PeoplePage() {
               </motion.div>
             ))}
           </div>
+
+
+
         </section>
       ))}
     </main>
