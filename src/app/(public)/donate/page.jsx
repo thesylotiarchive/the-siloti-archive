@@ -9,7 +9,7 @@ export default function DonationPage() {
       ifsc: 'PUNB0062720',
       swift: 'PUNBINBBISB',
       adCode: '0300200',
-      branch: 'New Delhi', // you can update if needed
+      branch: 'Kalain', // you can update if needed
     },
   ];
 
