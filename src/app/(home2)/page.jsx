@@ -53,30 +53,24 @@ export default function Home2Page() {
             A Digital Collection of Siloti Arts, Culture, Heritage & Initiatives
           </p>
 
-          <div className="mt-8 flex flex-col sm:flex-row gap-6 justify-center">
+          <div className="mt-8 flex flex-col gap-4 items-center">
             {/* Explore Archive Button */}
             <button
               onClick={() => router.push('/collection')}
               className="group relative inline-flex items-center justify-center gap-3 font-semibold px-8 py-4 text-lg rounded-2xl transition-all duration-300 ease-in-out transform hover:scale-105 active:scale-95 bg-gradient-to-r from-emerald-500 to-blue-600 text-white shadow-2xl hover:shadow-emerald-500/25 hover:shadow-2xl border border-white/10 backdrop-blur-sm"
-            
             >
               <PlayCircle className="w-5 h-5 transition-transform group-hover:rotate-12" />
-              <span className="relative">
-                Explore the Archive
-              </span>
+              <span className="relative">Explore the Archive</span>
               <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-emerald-400 to-blue-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10 blur-xl"></div>
             </button>
 
             {/* Donate Button */}
-            <button 
+            <button
               onClick={() => router.push('/donate')}
-              className="group relative inline-flex items-center justify-center gap-3 font-semibold px-8 py-4 text-lg rounded-2xl transition-all duration-300 ease-in-out transform hover:scale-105 active:scale-95 bg-white/10 text-white shadow-2xl hover:shadow-amber-500/25 hover:shadow-2xl border-2 border-white/20 backdrop-blur-md hover:bg-gradient-to-r hover:from-amber-500/20 hover:to-orange-500/20 hover:border-amber-400/50"
-            
+              className="group relative inline-flex items-center justify-center gap-2 font-semibold px-6 py-3 text-base rounded-2xl transition-all duration-300 ease-in-out transform hover:scale-105 active:scale-95 bg-white/10 text-white shadow-2xl hover:shadow-amber-500/25 hover:shadow-2xl border-2 border-white/20 backdrop-blur-md hover:bg-gradient-to-r hover:from-amber-500/20 hover:to-orange-500/20 hover:border-amber-400/50"
             >
-              <Heart className="w-5 h-5 transition-all group-hover:text-red-400 group-hover:scale-110" />
-              <span className="relative">
-                Support Our Mission
-              </span>
+              <Heart className="w-4 h-4 transition-all group-hover:text-red-400 group-hover:scale-110" />
+              <span className="relative">Donate</span>
               <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-amber-400/20 to-orange-400/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10 blur-xl"></div>
             </button>
           </div>
