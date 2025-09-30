@@ -4,9 +4,15 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 
 export default function SponsorStrip() {
+  // const links = [
+  //   "https://gbillp.com/",
+  //   "https://masterpeace.org/",
+  //   "#",
+  // ];
+
   const links = [
-    "https://gbillp.com/",
-    "https://masterpeace.org/",
+    "#",
+    "#",
     "#",
   ];
   
