@@ -265,7 +265,7 @@ export default function CollectionViewPage() {
 
               {/* Results grid */}
               {results.length > 0 && (
-                <div className="grid gap-6 grid-cols-1 md:grid-cols-3 lg:grid-cols-4">
+                <div className="grid gap-6 grid-cols-1 md:grid-cols-3">
                   {results.map((item) =>
                     item.type === "collection" ? (
                       <CollectionCard key={`c-${item.id}`} collection={item} />
@@ -298,7 +298,7 @@ export default function CollectionViewPage() {
               {subcollections.length > 0 && (
                 <div className="mb-12">
                   <h2 className="text-xl font-semibold mb-4">Subcollections</h2>
-                  <div className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
                     {subcollections.map((col) => (
                       <CollectionCard key={col.id} collection={col} />
                     ))}
@@ -309,7 +309,7 @@ export default function CollectionViewPage() {
               {mediaItems.length > 0 && (
                 <div>
                   <h2 className="text-xl font-semibold mb-4">Media Items</h2>
-                  <div className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
                     {mediaItems.map((item) => (
                       <MediaCard
                         key={item.id}

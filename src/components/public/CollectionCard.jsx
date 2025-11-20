@@ -132,9 +132,13 @@ export function CollectionCard({ collection, className = "" }) {
                 📁
               </div>
             )}
-            <h3 className="text-sm sm:text-sm font-bold text-black line-clamp-1 leading-tight px-2 drop-shadow-sm">
-              {collection.name}
-            </h3>
+
+            <div className="h-[3.6rem] flex items-start justify-center px-3">
+              <h3 className="text-sm font-bold text-black leading-tight text-center line-clamp-3">
+                {collection.name}
+              </h3>
+            </div>
+
           </div>
         </div>
         <div className="flex items-center gap-3 text-base text-white px-4 py-3 bg-gray-800/95 backdrop-blur-sm border-t border-gray-700/50">
