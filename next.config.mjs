@@ -1,14 +1,17 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-    images: {
-      domains: [
-        "utfs.io",
-        "i3.ytimg.com",
-        "facebook.com",
-        "www.facebook.com",   // ✅ add this
-        "scontent.xx.fbcdn.net", // ✅ Facebook often serves images here
-      ],
-    },
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: '**',   // allow ALL https domains
+      },
+      {
+        protocol: 'http',
+        hostname: '**',   // if you want to allow http too
+      },
+    ],
+  },
 };
 
 export default nextConfig;
