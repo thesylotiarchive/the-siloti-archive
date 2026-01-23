@@ -14,6 +14,7 @@ const navItems = [
   { label: 'Blogs', href: '/blogs' },
   { label: 'Contact', href: '/contact' },
   { label: 'People', href: '/people' },
+  { label: 'Reports', href: '/reports' },
   { label: 'Donate', href: '/donate' },
 ];
 

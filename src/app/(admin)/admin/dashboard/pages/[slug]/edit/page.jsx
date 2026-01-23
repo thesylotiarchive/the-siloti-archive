@@ -8,6 +8,7 @@ import WhatWeDoEditor from "@/components/admin/pages/WhatWeDoEditor";
 import PeoplePageEditor from "@/components/admin/pages/PeoplePageEditor";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
+import ReportsPageEditor from "@/components/admin/pages/ReportsPageEditor";
 
 export default function EditPage() {
   const { slug } = useParams();
@@ -105,9 +106,10 @@ export default function EditPage() {
 
       {/* Render correct editor component */}
       {slug === "about" && <AboutPageEditor page={page} />}
+      {slug === "reports" && <ReportsPageEditor page={page} />}
       {slug === "what-we-do" && <WhatWeDoEditor />}
       {slug === "people" && <PeoplePageEditor page={page} />}
-      {slug !== "about" && slug !== "what-we-do" && slug !== "people" && (
+      {slug !== "about" && slug !== "what-we-do" && slug !== "people" && slug !== "reports" && (
         <div className="p-6">⚠️ No editor defined for {slug}</div>
       )}
     </div>

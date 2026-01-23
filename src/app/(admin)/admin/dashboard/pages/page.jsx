@@ -26,6 +26,12 @@ const pages = [
     description: "Update team members and their details.",
     color: "from-purple-50 to-purple-100",
   },
+  {
+    slug: "reports",
+    title: "Reports",
+    description: "Manage published reports, sections, and files.",
+    color: "from-orange-50 to-orange-100",
+  },
 ];
 
 export default function PagesDashboard() {

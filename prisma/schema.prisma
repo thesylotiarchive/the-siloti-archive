@@ -94,6 +94,7 @@ model Folder {
   mediaItems  MediaItem[]
 
   // NEW: draft & audit fields
+  totalItemCount Int      @default(0)
   status       ItemStatus @default(PUBLISHED)
   createdBy    User?      @relation("UserCreatedFolders", fields: [createdById], references: [id])
   createdById  String?
