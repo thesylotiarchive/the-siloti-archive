@@ -11,12 +11,13 @@ export default function SponsorStrip() {
   // ];
 
   const links = [
-    "#",
-    "#",
-    "#",
+    "https://gbillp.com/",
+    "https://masterpeace.org/",
+    "https://www.facebook.com/Sylhetikhobornews/",
+    "https://cemca.org/"
   ];
   
-  const demoSponsors = Array.from({ length: 3 }, (_, i) => ({
+  const demoSponsors = Array.from({ length: 4 }, (_, i) => ({
     name: `Partner ${i + 1}`,
     logo: `/partners/partner0${i + 1}.png`,
     url: links[i], // pick matching link by index
@@ -33,7 +34,7 @@ export default function SponsorStrip() {
     return () => window.removeEventListener("resize", checkScreen);
   }, []);
 
-  const shouldScroll = sponsors.length > 6 && isLargeScreen; // scroll only if lots of logos on large screens
+  const shouldScroll = sponsors.length > 8 && isLargeScreen; // scroll only if lots of logos on large screens
 
   return (
     <div className="bg-white border-t border-gray-200 pt-10 pb-6 overflow-hidden">
