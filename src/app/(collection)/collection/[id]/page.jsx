@@ -8,14 +8,24 @@ import { MediaCard } from "@/components/public/MediaCard";
 import { CollectionCard } from "@/components/public/CollectionCard";
 import ShareModal from "@/components/public/ShareModal";
 import FilterSidebar from "@/components/public/FilterBar";
+import ArchiveViewManager from "@/components/public/ArchiveViewManager";
 import { useSearch } from "@/lib/hooks/useSearch";
 import { X } from "lucide-react";
 
-// ✅ Skeleton card (same aspect ratio as your cards)
+// ✅ Premium dark glassmorphic skeleton card
 function SkeletonCard() {
   return (
-    <div className="animate-pulse rounded-xl border bg-card shadow-sm overflow-hidden">
-      <div className="w-full aspect-[3/4] bg-gray-200" />
+    <div className="animate-pulse border border-white/5 bg-slate-900/40 rounded-2xl overflow-hidden shadow-sm aspect-[4/3] flex flex-col justify-between">
+      <div className="relative w-full aspect-[4/3] bg-slate-950/80 p-6 flex flex-col items-center justify-center">
+        {/* Thumbnail fallback skeleton */}
+        <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-white/5 border border-white/10" />
+        <div className="w-2/3 h-4 bg-white/10 rounded-md mt-4" />
+        <div className="w-1/2 h-3 bg-white/5 rounded-md mt-2" />
+      </div>
+      <div className="h-10 bg-slate-950/60 border-t border-white/5 px-4 py-3 flex items-center gap-2">
+        <div className="w-4 h-4 bg-white/5 rounded" />
+        <div className="w-12 h-3 bg-white/10 rounded" />
+      </div>
     </div>
   );
 }
@@ -49,6 +59,13 @@ export default function CollectionViewPage() {
     }),
     [submittedQuery, filters, id]
   );
+
+  // ✅ Unified collection items memo (combining subfolders and media items)
+  const combinedItems = useMemo(() => {
+    const mappedSubs = subcollections.map((col) => ({ ...col, type: "collection" }));
+    const mappedMedia = mediaItems.map((item) => ({ ...item, type: "media" }));
+    return [...mappedSubs, ...mappedMedia];
+  }, [subcollections, mediaItems]);
 
   // ✅ Hook for search + filter results
   const {
@@ -133,43 +150,86 @@ export default function CollectionViewPage() {
     return crumbs;
   };
 
+  const breadcrumbsList = renderBreadcrumb();
+
   // ✅ Whether we’re in search/filter mode
   const inSearchMode = submittedQuery || filters.mediaType.length || filters.language.length || filters.tags.length;
 
-  if (loading) return <p className="p-8">Loading...</p>;
+  if (loading) {
+    return (
+      <main className="max-w-7xl mx-auto px-4 py-8 sm:py-12 flex flex-col gap-6 animate-pulse">
+        {/* Breadcrumb Skeleton */}
+        <div className="h-4 w-48 bg-white/5 rounded-md" />
+        
+        {/* Title Block Skeleton */}
+        <div className="flex items-center gap-5 mb-8 bg-white/[0.02] border border-white/5 rounded-2xl p-5 backdrop-blur-md">
+          <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-xl bg-white/5 shrink-0" />
+          <div className="space-y-2 flex-grow">
+            <div className="h-6 w-1/4 bg-white/10 rounded-md" />
+            <div className="h-4 w-2/3 bg-white/5 rounded-md" />
+          </div>
+        </div>
+
+        {/* Search Bar Skeleton */}
+        <div className="max-w-xl mx-auto w-full h-12 bg-white/5 border border-white/5 rounded-xl mb-12" />
+
+        {/* Results Skeleton */}
+        <div className="flex gap-8">
+          {/* Sidebar Skeleton */}
+          <div className="hidden lg:block w-64 shrink-0 h-80 bg-white/[0.02] border border-white/5 rounded-2xl" />
+          
+          <div className="flex-grow">
+            {/* Sort/Toggle Bar Skeleton */}
+            <div className="flex justify-between items-center pb-4 border-b border-white/5 mb-6">
+              <div className="h-8 w-40 bg-white/5 rounded-lg" />
+              <div className="h-8 w-28 bg-white/5 rounded-lg" />
+            </div>
+
+            {/* Grid Loader */}
+            <div className="grid gap-6 grid-cols-2 md:grid-cols-3 xl:grid-cols-4 w-full">
+              {Array.from({ length: 8 }).map((_, i) => (
+                <SkeletonCard key={i} />
+              ))}
+            </div>
+          </div>
+        </div>
+      </main>
+    );
+  }
   if (!collection) return <p className="text-muted-foreground p-8">Collection not found.</p>;
 
   return (
     <main className="max-w-7xl mx-auto px-4 py-8 sm:py-12">
       {/* Breadcrumb */}
-      <div className="text-sm text-muted-foreground mb-4">
-        <Link href="/collection" className="hover:underline">Home</Link>
-        {renderBreadcrumb().map((crumb) => (
+      <div className="text-sm text-white/50 mb-4 font-sans font-light">
+        <Link href="/collection" className="hover:text-emerald-400 cursor-pointer transition-colors duration-150">Home</Link>
+        {breadcrumbsList.map((crumb) => (
           <span key={crumb.id}>
             {" / "}
-            <Link href={`/collection/${crumb.id}`} className="hover:underline">
+            <Link href={`/collection/${crumb.id}`} className="hover:text-emerald-400 cursor-pointer transition-colors duration-150">
               {crumb.name}
             </Link>
           </span>
         ))}
-        <span>{" / "}{collection.name}</span>
+        <span className="text-emerald-400 font-normal">{" / "}{collection.name}</span>
       </div>
 
       {/* Title & Thumbnail */}
-      <div className="flex items-center gap-4 mb-6">
+      <div className="flex items-center gap-5 mb-8 bg-white/[0.02] border border-white/10 rounded-2xl p-5 backdrop-blur-md">
         {collection.imageUrl && (
-          <Image
-            src={collection.imageUrl}
-            alt={collection.name}
-            width={80}
-            height={80}
-            className="rounded object-cover border"
-          />
+          <div className="relative w-16 h-16 sm:w-20 sm:h-20 rounded-xl overflow-hidden border border-white/15 bg-slate-900 shrink-0">
+            <Image
+              src={collection.imageUrl}
+              alt={collection.name}
+              fill
+              className="object-cover"
+            />
+          </div>
         )}
-        <div>
-          <h1 className="text-3xl font-bold">{collection.name}</h1>
+        <div className="min-w-0">
+          <h1 className="text-2xl sm:text-3xl font-bold text-white tracking-wide leading-tight">{collection.name}</h1>
           {collection.description && (
-            <p className="text-muted-foreground mt-1">{collection.description}</p>
+            <p className="text-sm sm:text-base text-white/60 font-light mt-1.5 leading-relaxed">{collection.description}</p>
           )}
         </div>
       </div>
@@ -177,7 +237,7 @@ export default function CollectionViewPage() {
       {/* 🔍 Search Bar */}
       <form
         onSubmit={handleSearch}
-        className="flex flex-col lg:flex-row items-center justify-center gap-2 mb-10 max-w-xl mx-auto w-full"
+        className="flex flex-col lg:flex-row items-center justify-center gap-2.5 mb-12 max-w-xl mx-auto w-full px-4"
       >
         {/* Input */}
         <div className="relative flex-grow w-full">
@@ -186,13 +246,13 @@ export default function CollectionViewPage() {
             placeholder="Search in this collection..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary"
+            className="w-full px-4 py-2.5 bg-white/5 border border-white/10 rounded-xl text-white placeholder-white/35 focus:outline-none focus:border-emerald-400 focus:ring-1 focus:ring-emerald-400 transition-all duration-200 text-sm font-sans font-light"
           />
           {searchQuery && (
             <button
               type="button"
               onClick={clearSearch}
-              className="absolute right-3 top-1/2 -translate-y-1/2 bg-black text-white rounded-full w-6 h-6 flex items-center justify-center hover:bg-gray-800"
+              className="absolute right-3 top-1/2 -translate-y-1/2 bg-white/10 text-white rounded-full w-5 h-5 flex items-center justify-center hover:bg-white/20 hover:scale-105 transition-all cursor-pointer text-xs"
             >
               ✕
             </button>
@@ -200,17 +260,17 @@ export default function CollectionViewPage() {
         </div>
 
         {/* Buttons */}
-        <div className="flex gap-2 w-full lg:w-auto justify-end lg:justify-start mt-2 lg:mt-0">
+        <div className="flex gap-2.5 w-full lg:w-auto justify-end lg:justify-start mt-2 lg:mt-0">
           <button
             type="submit"
-            className="flex-1 lg:flex-none px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 whitespace-nowrap"
+            className="flex-1 lg:flex-none px-6 py-2.5 bg-gradient-to-r from-emerald-500 to-blue-600 hover:from-emerald-400 hover:to-blue-500 text-white font-bold rounded-xl transition-all duration-300 cursor-pointer shadow-lg shadow-emerald-500/10 whitespace-nowrap text-sm"
           >
             Search
           </button>
           <button
             type="button"
             onClick={() => setFiltersOpen(true)}
-            className="flex-1 lg:hidden px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 whitespace-nowrap"
+            className="flex-1 lg:hidden px-6 py-2.5 bg-white/5 border border-white/10 hover:bg-white/10 text-white font-bold rounded-xl transition-all duration-300 cursor-pointer shadow-md whitespace-nowrap text-sm"
           >
             Filters
           </button>
@@ -249,7 +309,7 @@ export default function CollectionViewPage() {
 
               {/* Initial loading */}
               {searchLoading && results.length === 0 && (
-                <div className="grid gap-6 grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+                <div className="grid gap-6 grid-cols-2 md:grid-cols-3 xl:grid-cols-4 w-full animate-fadeIn">
                   {Array.from({ length: 8 }).map((_, i) => (
                     <SkeletonCard key={i} />
                   ))}
@@ -263,27 +323,21 @@ export default function CollectionViewPage() {
                 </p>
               )}
 
-              {/* Results grid */}
+              {/* Results views (Grid, List, Table) */}
               {results.length > 0 && (
-                <div className="grid gap-6 grid-cols-1 md:grid-cols-3">
-                  {results.map((item) =>
-                    item.type === "collection" ? (
-                      <CollectionCard key={`c-${item.id}`} collection={item} />
-                    ) : (
-                      <MediaCard
-                        key={`m-${item.id}`}
-                        mediaItem={item}
-                        onShare={handleShare}
-                      />
-                    )
-                  )}
+                <ArchiveViewManager
+                  items={results}
+                  onShare={handleShare}
+                  isLoading={searchLoading}
+                />
+              )}
 
-                  {/* Scroll skeletons */}
-                  {searchLoading &&
-                    results.length > 0 &&
-                    Array.from({ length: 4 }).map((_, i) => (
-                      <SkeletonCard key={`s-${i}`} />
-                    ))}
+              {/* Scroll skeletons */}
+              {searchLoading && results.length > 0 && (
+                <div className="grid gap-6 grid-cols-2 md:grid-cols-3 xl:grid-cols-4 w-full mt-6">
+                  {Array.from({ length: 4 }).map((_, i) => (
+                    <SkeletonCard key={`s-${i}`} />
+                  ))}
                 </div>
               )}
 
@@ -293,40 +347,12 @@ export default function CollectionViewPage() {
               )}
             </>
           ) : (
-            // 🔙 Default collection view
-            <>
-              {subcollections.length > 0 && (
-                <div className="mb-12">
-                  <h2 className="text-xl font-semibold mb-4">Subcollections</h2>
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-                    {subcollections.map((col) => (
-                      <CollectionCard key={col.id} collection={col} />
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {mediaItems.length > 0 && (
-                <div>
-                  <h2 className="text-xl font-semibold mb-4">Media Items</h2>
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-                    {mediaItems.map((item) => (
-                      <MediaCard
-                        key={item.id}
-                        mediaItem={item}
-                        onShare={handleShare}
-                      />
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {mediaItems.length === 0 && subcollections.length === 0 && (
-                <p className="text-muted-foreground">
-                  This collection is currently empty.
-                </p>
-              )}
-            </>
+            /* 🔙 Default unified collection view mode */
+            <ArchiveViewManager
+              items={combinedItems}
+              onShare={handleShare}
+              isLoading={loading}
+            />
           )}
         </div>
       </div>
@@ -335,18 +361,20 @@ export default function CollectionViewPage() {
         <div className="fixed inset-0 z-50 flex">
           {/* Backdrop */}
           <div
-            className="fixed inset-0 bg-black/50"
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm"
             onClick={() => setFiltersOpen(false)}
           />
           {/* Panel */}
-          <div className="relative ml-auto w-72 max-w-full bg-white dark:bg-gray-900 h-full shadow-lg p-4">
+          <div className="relative ml-auto w-72 max-w-full bg-slate-950 border-l border-white/10 h-full shadow-2xl p-6 overflow-y-auto text-white">
             <button
-              className="absolute top-4 right-4 p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-800"
+              className="absolute top-4 right-4 p-2 rounded-lg bg-white/5 hover:bg-white/10 text-white/70 hover:text-white transition-colors cursor-pointer"
               onClick={() => setFiltersOpen(false)}
             >
               <X className="w-5 h-5" />
             </button>
-            <FilterSidebar activeFilters={filters} onChange={setFilters} />
+            <div className="mt-8">
+              <FilterSidebar activeFilters={filters} onChange={setFilters} />
+            </div>
           </div>
         </div>
       )}

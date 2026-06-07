@@ -28,7 +28,8 @@ function todayKeyUTC() {
 
 export async function POST(req, { params }) {
   try {
-    const mediaId = params.id;
+    const { id } = await params;
+    const mediaId = id;
     if (!mediaId) {
       return NextResponse.json({ error: "Missing media id" }, { status: 400 });
     }

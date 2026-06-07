@@ -11,7 +11,7 @@ export async function POST(req) {
     }
 
     const body = await req.json();
-    let { title, description, image, mediaUrl, mediaType, language, folderId, status } = body;
+    let { title, description, image, mediaUrl, mediaType, language, folderId, status, author } = body;
 
     // force contributors to draft
     if (user.role === "CONTRIBUTOR") {
@@ -29,6 +29,7 @@ export async function POST(req) {
         image,
         mediaType,
         language,
+        author: author || null,
         folderId: folderId || undefined,
         contributorId: user.id,
         status,

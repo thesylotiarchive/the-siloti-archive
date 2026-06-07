@@ -12,13 +12,17 @@ export default function AdminLayout({ children }) {
 
   return (
     <AuthProvider>
-      <div className="flex h-screen w-full overflow-hidden relative">
+      <div className="flex h-screen w-full overflow-hidden relative bg-slate-50/50 text-slate-900 selection:bg-emerald-400/30 selection:text-slate-900">
+        {/* Soft background glows */}
+        <div className="absolute top-0 left-0 w-[600px] h-[350px] bg-emerald-400/[0.03] blur-[130px] rounded-full pointer-events-none -z-10"></div>
+        <div className="absolute bottom-0 right-0 w-[600px] h-[350px] bg-blue-400/[0.03] blur-[130px] rounded-full pointer-events-none -z-10"></div>
+
         {/* Sidebar */}
         <Sidebar open={sidebarOpen} setOpen={setSidebarOpen} />
 
         {/* Main content */}
         <div
-          className={`flex-1 flex flex-col transition-all duration-300 ${
+          className={`flex-1 flex flex-col transition-all duration-300 relative z-10 ${
             sidebarOpen ? "md:ml-64" : ""
           }`}
         >
@@ -28,7 +32,7 @@ export default function AdminLayout({ children }) {
           </div>
 
           {/* Scrollable content */}
-          <main className="flex-1 overflow-auto p-4 md:p-8 w-full">
+          <main className="flex-1 overflow-auto p-6 md:p-10 w-full relative">
             {children}
           </main>
         </div>

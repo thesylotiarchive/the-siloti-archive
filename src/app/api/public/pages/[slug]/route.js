@@ -1,13 +1,16 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
+import { getCachedData } from "@/lib/cache";
 
 export async function GET(req, { params }) {
   try {
     const { slug } = await params;
 
-    const page = await prisma.page.findUnique({
-      where: { slug },
-    });
+    const page = await getCachedData(`page:${slug}`, async () => {
+      return await prisma.page.findUnique({
+        where: { slug },
+      });
+    }, 3600); // 1 hour TTL
 
     // console.log("Fetched page:", page);
 

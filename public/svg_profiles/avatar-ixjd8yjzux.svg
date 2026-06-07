@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 256 256" role="img" aria-label="Avatar iXJd8YJzUx">
+  <defs>
+    <linearGradient id="bg" gradientTransform="rotate(181 128 128)">
+      <stop offset="0" stop-color="#ff9a9e"/>
+      <stop offset="1" stop-color="#ff5f6d"/>
+    </linearGradient>
+    <filter id="grain" x="-20%" y="-20%" width="140%" height="140%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="3" seed="6615" />
+      <feColorMatrix type="saturate" values="0" />
+      <feComponentTransfer>
+        <feFuncA type="table" tableValues="0 0.12" />
+      </feComponentTransfer>
+    </filter>
+    <filter id="softShadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feDropShadow dx="0" dy="6" stdDeviation="8" flood-color="rgba(0,0,0,0.2)" />
+    </filter>
+    <clipPath id="clip">
+      <rect x="16" y="16" width="224" height="224" rx="56" />
+    </clipPath>
+  </defs>
+
+  <g clip-path="url(#clip)">
+    <rect x="16" y="16" width="224" height="224" rx="56" fill="url(#bg)"/>
+    <rect x="128" y="52" width="46" height="46" rx="34" fill="#ff5f6d" opacity="0.13787744353991002" transform="rotate(27 151 75)"/>
+    <rect x="13" y="138" width="57" height="57" rx="24" fill="#ff5f6d" opacity="0.23424330384936182" transform="rotate(212 41.5 166.5)"/>
+    <circle cx="149" cy="96" r="44" fill="#ff9a9e" opacity="0.24368015748448668"/>
+    <circle cx="130" cy="157" r="42" fill="#fad0c4" opacity="0.27322694104630496"/>
+    <circle cx="170.5" cy="191.5" r="48.5" fill="#ff9a9e" opacity="0.17050461848732085"/>
+    <rect x="147" y="71" width="76" height="76" rx="28" fill="#fad0c4" opacity="0.259471500730142" transform="rotate(128 185 109)"/>
+    <rect x="16" y="16" width="224" height="224" rx="56" filter="url(#grain)" opacity="0.7"/>
+
+    <!-- Headwear behind face -->
+    
+
+    <!-- Face -->
+    <g filter="url(#softShadow)">
+      <circle cx="130" cy="141" r="49" fill="rgba(255,255,255,0.55)"/>
+      
+      <!-- Eyebrows -->
+      
+      
+      <!-- Eyes -->
+      
+        <circle cx="109.5" cy="124" r="6" fill="rgba(17,24,39,0.78)"/>
+        <circle cx="150.5" cy="124" r="6" fill="rgba(17,24,39,0.78)"/>
+        <circle cx="111.5" cy="122" r="1.7999999999999998" fill="rgba(255,255,255,0.6)"/>
+        <circle cx="152.5" cy="122" r="1.7999999999999998" fill="rgba(255,255,255,0.6)"/>
+      
+      
+      <!-- Mouth -->
+      <path d="M 111 154 Q 130 168 149 154" fill="none" stroke="rgba(17,24,39,0.7)" stroke-width="5" stroke-linecap="round"/>
+      
+      <!-- Accessories -->
+      
+        <path d="M 160 111 l 3 9 h 9 l -7 5 3 9 -8 -6 -8 6 3 -9 -7 -5 h 9 z" fill="rgba(255,200,50,0.7)"/>
+      
+    </g>
+    
+    <!-- Headwear in front -->
+    
+  </g>
+
+  <rect x="16" y="16" width="224" height="224" rx="56" fill="none" stroke="rgba(255,255,255,0.35)" stroke-width="2"/>
+</svg>

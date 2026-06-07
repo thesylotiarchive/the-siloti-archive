@@ -2,6 +2,7 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { getUserFromRequest } from "@/lib/auth-helpers";
+import { invalidatePattern } from "@/lib/cache";
 
 // helper: recursively delete
 async function deleteFolderRecursively(folderId) {
@@ -34,6 +35,10 @@ export async function POST(req) {
         await deleteFolderRecursively(id);
       }
     }
+
+    // Invalidate all collection detail & list caches
+    await invalidatePattern("collection:detail:*");
+    await invalidatePattern("collections:parent:*");
 
     return NextResponse.json({ success: true, deleted: ids.length });
   } catch (err) {

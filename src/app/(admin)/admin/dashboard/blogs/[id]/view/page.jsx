@@ -39,18 +39,18 @@ export default function BlogViewPage() {
 
   if (loading || authLoading) {
     return (
-      <div className="max-w-4xl mx-auto py-12 space-y-4">
-        <Skeleton className="h-8 w-1/2" />
-        <Skeleton className="h-6 w-1/4" />
-        <Skeleton className="h-96 w-full" />
+      <div className="max-w-4xl mx-auto py-12 space-y-4 animate-pulse">
+        <div className="h-8 bg-slate-200 rounded-xl w-1/2" />
+        <div className="h-6 bg-slate-200 rounded-xl w-1/4" />
+        <div className="h-96 bg-slate-200 rounded-[2rem] w-full" />
       </div>
     );
   }
 
   if (!blog) {
     return (
-      <div className="max-w-4xl mx-auto py-12 text-center text-red-500">
-        Blog not found.
+      <div className="text-center py-16 bg-white/50 border border-slate-200/40 rounded-[2rem] shadow-sm max-w-xl mx-auto mt-10">
+        <p className="text-red-500 font-medium">Blog article not found.</p>
       </div>
     );
   }
@@ -65,7 +65,7 @@ export default function BlogViewPage() {
       if (res.ok) {
         alert("Blog published successfully!");
         const updated = await res.json();
-        setBlog(updated); // ✅ update UI without reload
+        setBlog(updated);
         setPublishing(false)
       } else {
         alert("Failed to publish blog.");
@@ -98,92 +98,89 @@ export default function BlogViewPage() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-8 space-y-6">
+    <div className="max-w-4xl mx-auto space-y-6">
       {/* Breadcrumb */}
-      <div className="text-sm text-muted-foreground mb-2">
-        <Link href="/admin/dashboard/blogs" className="hover:underline">
-          ← Back to Blogs
-        </Link>
+      <div className="text-xs text-slate-500 font-semibold tracking-wide flex items-center gap-1.5 p-2 px-3.5 bg-white/60 border border-slate-200/50 rounded-xl w-fit backdrop-blur-sm hover:text-emerald-700 transition-colors shadow-sm cursor-pointer mb-6" onClick={() => router.push("/admin/dashboard/blogs")}>
+        ← Back to Blogs
       </div>
 
-      {/* Top Buttons */}
-      <div className="flex justify-end gap-2">
-          {/* {blog.status === "PUBLISHED" && (
-            <Badge className="bg-green-600 text-white">Published</Badge>
-          )}
-          {blog.status === "DRAFT" && (
-            <Badge className="bg-yellow-500 text-black">Draft</Badge>
-          )}
-          {blog.status === "REJECTED" && (
-            <Badge className="bg-red-600 text-white">Rejected</Badge>
-          )}
-           */}
-        <Link href={`/admin/dashboard/blogs/${blog.id}/edit`}>
-          <Button variant="outline">Edit</Button>
-        </Link>
-
-        {(me?.role === "ADMIN" || me?.role === "SUPERADMIN") && (
-          <>
-            {(blog.status === "DRAFT" || blog.status === "REJECTED") && (
-              <Button 
-                onClick={handlePublish} 
-                variant="default"
-                disabled={publishing}
-              >
-                {publishing ? "Publishing..." : "Publish"}
-              </Button>
+      <div className="bg-white/70 border border-slate-200/60 p-8 sm:p-12 rounded-[2.5rem] shadow-sm backdrop-blur-md space-y-6">
+        {/* Top Buttons */}
+        <div className="flex justify-between items-center pb-4 border-b border-slate-100 gap-4">
+          <div className="flex items-center gap-2">
+            {blog.status === "PUBLISHED" && (
+              <span className="px-2.5 py-0.5 text-xs font-bold rounded-full border bg-emerald-50 text-emerald-700 border-emerald-200/80 uppercase tracking-wider">Published</span>
             )}
-            {/* {!blog.published && (
-              <Button onClick={handlePublish} variant="default">
-                Publish
-              </Button>
-            )} */}
+            {blog.status === "DRAFT" && (
+              <span className="px-2.5 py-0.5 text-xs font-bold rounded-full border bg-amber-50 text-amber-700 border-amber-200/80 uppercase tracking-wider">Draft</span>
+            )}
+            {blog.status === "REJECTED" && (
+              <span className="px-2.5 py-0.5 text-xs font-bold rounded-full border bg-red-50 text-red-700 border-red-200/80 uppercase tracking-wider">Rejected</span>
+            )}
+          </div>
 
-            <Button variant="destructive" onClick={handleDelete}>
-              Delete
-            </Button>
-          </>
+          <div className="flex gap-2">
+            <Link href={`/admin/dashboard/blogs/${blog.id}/edit`}>
+              <Button className="text-xs font-semibold px-4 py-2 h-auto rounded-xl cursor-pointer border border-slate-200 text-slate-700 bg-white hover:bg-slate-50 transition-all duration-200" variant="outline">Edit</Button>
+            </Link>
+
+            {(me?.role === "ADMIN" || me?.role === "SUPERADMIN") && (
+              <>
+                {(blog.status === "DRAFT" || blog.status === "REJECTED") && (
+                  <Button 
+                    onClick={handlePublish} 
+                    className="px-5 py-2 text-sm font-bold bg-gradient-to-r from-emerald-500 to-blue-600 hover:from-emerald-400 hover:to-blue-500 text-white rounded-xl shadow-sm transition-all duration-300 active:scale-[0.98] cursor-pointer"
+                    variant="default"
+                    disabled={publishing}
+                  >
+                    {publishing ? "Publishing..." : "Publish"}
+                  </Button>
+                )}
+
+                <Button 
+                  className="px-4 py-2 text-sm font-semibold rounded-xl bg-red-50 text-red-600 hover:bg-red-100 transition-all duration-200 border border-red-200/50 cursor-pointer"
+                  variant="destructive" 
+                  onClick={handleDelete}
+                >
+                  Delete
+                </Button>
+              </>
+            )}
+          </div>
+        </div>
+
+        {/* Blog Banner */}
+        {blog.bannerUrl && (
+          <img
+            src={blog.bannerUrl}
+            alt={blog.title}
+            className="w-full h-80 object-cover rounded-[2rem] border border-slate-200/60 shadow-sm"
+          />
         )}
-      </div>
 
-      {/* Blog Banner */}
-      {blog.bannerUrl && (
-        <img
-          src={blog.bannerUrl}
-          alt={blog.title}
-          className="w-full h-64 object-cover rounded-md"
-        />
-      )}
+        {/* Blog Title & Meta */}
+        <div className="space-y-2.5">
+          <h1 className="text-3xl font-bold tracking-tight text-slate-800">{blog.title}</h1>
+          
+          <p className="text-xs text-slate-400 font-medium tracking-wide flex gap-1.5 items-center">
+            <span>By <strong className="font-bold text-slate-600">{typeof blog.author === "string" ? blog.author : blog.author?.name || "Unknown Author"}</strong></span>
+            <span>•</span>
+            <span>{blog.published ? "✅ Published" : "⏳ Draft"}</span>
+            <span>•</span>
+            <span>
+              {blog.publishedAt
+                ? format(new Date(blog.publishedAt), "PPP")
+                : format(new Date(blog.createdAt), "PPP")}
+            </span>
+          </p>
+        </div>
 
-      {/* Blog Title & Meta */}
-      <div className="flex items-center gap-3">
-        <h1 className="text-3xl font-bold">{blog.title}</h1>
-
-        {/* ✅ Status Badge */}
-        {blog.status === "PUBLISHED" && (
-          <Badge className="bg-green-600 text-white">Published</Badge>
-        )}
-        {blog.status === "DRAFT" && (
-          <Badge className="bg-yellow-500 text-black">Draft</Badge>
-        )}
-        {blog.status === "REJECTED" && (
-          <Badge className="bg-red-600 text-white">Rejected</Badge>
-        )}
-      </div>
-
-      <p className="text-sm text-muted-foreground">
-        By {blog.author?.name || "Unknown Author"} ·{" "}
-        {blog.published ? "✅ Published" : "⏳ Draft"} ·{" "}
-        {blog.publishedAt
-          ? format(new Date(blog.publishedAt), "PPP")
-          : format(new Date(blog.createdAt), "PPP")}
-      </p>
-
-      {/* Blog Content */}
-      <div className="prose max-w-none">
-        <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw]}>
-          {blog.content}
-        </ReactMarkdown>
+        {/* Blog Content */}
+        <div className="prose prose-slate max-w-none text-slate-700 leading-relaxed font-sans pt-4 border-t border-slate-100">
+          <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw]}>
+            {blog.content}
+          </ReactMarkdown>
+        </div>
       </div>
     </div>
   );

@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { getUserFromRequest } from "@/lib/auth-helpers";
+import { invalidatePattern } from "@/lib/cache";
 
 // GET /api/admin/blogs/:id
 export async function GET(request, { params }) {
@@ -56,6 +57,10 @@ export async function PUT(request, { params }) {
       },
     });
 
+    // Invalidate caches
+    await invalidatePattern("blog:detail:*");
+    await invalidatePattern("blogs:list:*");
+
     return NextResponse.json(updatedBlog);
   } catch (error) {
     console.error("PUT /api/admin/blogs/:id error:", error);
@@ -76,6 +81,10 @@ export async function DELETE(request, { params }) {
     await prisma.blog.delete({
       where: { id },
     });
+
+    // Invalidate caches
+    await invalidatePattern("blog:detail:*");
+    await invalidatePattern("blogs:list:*");
 
     return NextResponse.json({ success: true });
   } catch (error) {

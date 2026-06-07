@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { FileText } from "lucide-react";
 
 export default function DraftBlogCard({
   blog,
@@ -13,8 +14,8 @@ export default function DraftBlogCard({
 }) {
   return (
     <div
-      className={`relative flex flex-col items-center border rounded-lg p-3 sm:p-4 hover:bg-gray-50 transition ${
-        isSelected ? "ring-2 ring-primary" : ""
+      className={`relative flex flex-col items-center border border-slate-200/60 rounded-[2rem] p-6 bg-white/70 backdrop-blur-md shadow-sm transition-all duration-300 group hover:shadow-md hover:border-emerald-500/30 ${
+        isSelected ? "ring-2 ring-emerald-500 border-transparent bg-white/95 shadow-md" : ""
       }`}
     >
       {/* Checkbox for bulk select */}
@@ -23,36 +24,44 @@ export default function DraftBlogCard({
           type="checkbox"
           checked={isSelected}
           onChange={() => onToggleSelect?.(blog.id)}
-          className="absolute top-2 left-2 z-50"
+          className="absolute top-4 left-4 z-30 cursor-pointer accent-emerald-600 w-4 h-4 rounded border-slate-300 focus:ring-emerald-500"
         />
       )}
 
       {/* Status badge */}
       <div
-        className={`absolute top-2 ${selectable ? "left-8" : "left-2"} px-2 py-0.5 text-[10px] font-semibold rounded-full bg-yellow-100 text-yellow-700`}
+        className={`absolute top-4 ${selectable ? "left-10" : "left-4"} px-2.5 py-0.5 text-[9px] font-bold tracking-wider uppercase rounded-full border ${
+          blog.status === "PUBLISHED"
+            ? "bg-emerald-50 border-emerald-200/80 text-emerald-700"
+            : blog.status === "REJECTED"
+            ? "bg-red-50 border-red-200/80 text-red-700"
+            : "bg-amber-50 border-amber-200/80 text-amber-700"
+        }`}
       >
         {blog.status}
       </div>
 
       {/* Thumbnail/banner */}
-      <div className="w-12 h-12 sm:w-16 sm:h-16 bg-muted rounded-md mb-2 flex items-center justify-center overflow-hidden">
+      <div className="w-16 h-16 bg-slate-50 border border-slate-100 rounded-2xl mb-3 flex items-center justify-center overflow-hidden shrink-0 transition-transform duration-300 group-hover:scale-105 shadow-inner">
         {blog.bannerUrl ? (
           <img
             src={blog.bannerUrl}
             alt={blog.title}
-            className="w-full h-full object-cover rounded-md"
+            className="w-full h-full object-cover"
           />
         ) : (
-          <div className="text-2xl">📝</div>
+          <FileText className="w-8 h-8 text-emerald-600" />
         )}
       </div>
 
       {/* Blog title */}
-      <span className="text-sm text-center break-words">{blog.title}</span>
+      <span className="text-sm font-bold text-slate-800 group-hover:text-emerald-700 text-center transition-colors duration-300 line-clamp-1 w-full px-1 mb-4">
+        {blog.title}
+      </span>
 
       {/* Action buttons */}
-      <div className="mt-2 flex flex-wrap gap-2 justify-center w-full">
-        <Button className="flex-1 min-w-[100px] sm:flex-none" asChild variant="secondary" size="sm">
+      <div className="mt-auto pt-3 border-t border-slate-100 flex flex-wrap gap-2 justify-center w-full">
+        <Button className="flex-grow min-w-[70px] text-xs font-semibold px-2 py-1.5 h-auto rounded-xl cursor-pointer bg-slate-100 hover:bg-slate-200 text-slate-700 transition-all duration-200" asChild variant="secondary" size="sm">
           <a
             href={`/admin/dashboard/blogs/${blog.id}/view`}
             target="_blank"
@@ -62,7 +71,7 @@ export default function DraftBlogCard({
           </a>
         </Button>
 
-        <Button className="flex-1 min-w-[100px] sm:flex-none" asChild variant="outline" size="sm">
+        <Button className="flex-grow min-w-[70px] text-xs font-semibold px-2 py-1.5 h-auto rounded-xl cursor-pointer border border-slate-200 text-slate-600 hover:bg-slate-50 transition-all duration-200" asChild variant="outline" size="sm">
           <a
             href={`/admin/dashboard/blogs/${blog.id}/edit`}
             target="_blank"
@@ -76,7 +85,7 @@ export default function DraftBlogCard({
           <>
             {blog.status !== "PUBLISHED" && (
               <Button
-                className="flex-1 min-w-[100px] sm:flex-none"
+                className="flex-grow min-w-[70px] text-xs font-semibold px-2 py-1.5 h-auto rounded-xl cursor-pointer bg-gradient-to-r from-emerald-500 to-blue-600 hover:from-emerald-400 hover:to-blue-500 text-white shadow-sm transition-all duration-300 active:scale-[0.98]"
                 variant="default"
                 size="sm"
                 onClick={() => onPublish?.(blog.id)}
@@ -86,7 +95,7 @@ export default function DraftBlogCard({
             )}
 
             <Button
-              className="flex-1 min-w-[100px] sm:flex-none"
+              className="flex-grow min-w-[70px] text-xs font-semibold px-2 py-1.5 h-auto rounded-xl cursor-pointer bg-red-50 text-red-600 hover:bg-red-100 transition-all duration-200 border border-red-200/50"
               variant="destructive"
               size="sm"
               onClick={() => onDelete?.(blog.id)}

@@ -1,13 +1,16 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
+import { getCachedData } from "@/lib/cache";
 
 export async function GET(req, { params }) {
-  const { id } = params;
-
   try {
-    const page = await prisma.page.findUnique({
-      where: { slug: "people" },
-    });
+    const { slug: id } = await params;
+
+    const page = await getCachedData("page:people", async () => {
+      return await prisma.page.findUnique({
+        where: { slug: "people" },
+      });
+    }, 3600); // 1 hour TTL
 
     if (!page) {
       return NextResponse.json({ error: "People page not found" }, { status: 404 });

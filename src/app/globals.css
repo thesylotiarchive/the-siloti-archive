@@ -44,6 +44,16 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
+
+  /* Centralized Brand Palette */
+  --color-brand-green: #74C043;
+  --color-brand-sky: #ADD4F7;
+  --color-brand-blue: #0A65A8;
+  --color-brand-sand: #D3C3AA;
+  --color-brand-earth: #D6A57C;
+  --color-brand-cream: #F9E9A0;
+  --color-brand-gold: #D4A574;
+  --color-brand-dark: #12181F;
 }
 
 :root {
@@ -165,4 +175,63 @@
   .animate-scroll-horizontal {
     animation-duration: 5s; /* Faster on mobile (smaller screens) */
   }
+}
+
+/* Luxury Theme Styles & Micro-animations */
+@keyframes luxury-float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+@keyframes luxury-glow {
+  0%, 100% {
+    box-shadow: 0 0 25px rgba(212, 165, 116, 0.15);
+  }
+  50% {
+    box-shadow: 0 0 40px rgba(212, 165, 116, 0.3);
+  }
+}
+
+.animate-luxury-float {
+  animation: luxury-float 6s ease-in-out infinite;
+}
+
+.animate-luxury-glow {
+  animation: luxury-glow 4s ease-in-out infinite;
+}
+
+.animation-delay-1000 {
+  animation-delay: 1s;
+}
+
+.animation-delay-2000 {
+  animation-delay: 2s;
+}
+
+.luxury-text-gradient {
+  background: linear-gradient(135deg, #ffffff 30%, #e2e8f0 70%, #d4a574 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Autocomplete / Autofill overrides to preserve dark glassmorphic inputs */
+input:-webkit-autofill,
+input:-webkit-autofill:hover, 
+input:-webkit-autofill:focus, 
+input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 100px #0f172a inset !important;
+  -webkit-text-fill-color: #ffffff !important;
+  caret-color: #ffffff;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+/* Fallback: if browser still renders white autofill, make overlay icons black */
+input:-webkit-autofill ~ button,
+input:-webkit-autofill ~ span {
+  color: #020617 !important;
+  opacity: 0.9 !important;
 }

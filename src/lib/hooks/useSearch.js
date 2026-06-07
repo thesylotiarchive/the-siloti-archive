@@ -6,15 +6,30 @@ import { useState, useEffect, useCallback } from "react";
 export function useSearch({ query = "", filters = {}, pageSize = 20 }) {
   const [results, setResults] = useState([]);
   const [page, setPage] = useState(1);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(
+    !!(query || Object.keys(filters).length > 0)
+  );
   const [error, setError] = useState(null);
   const [hasMore, setHasMore] = useState(true);
 
-  // Reset when query or filters change
-  useEffect(() => {
+  // Track previous values for synchronous render-time state resets
+  const [prevQuery, setPrevQuery] = useState(query);
+  const [prevFilters, setPrevFilters] = useState(filters);
+
+  const filtersStr = JSON.stringify(filters);
+  const prevFiltersStr = JSON.stringify(prevFilters);
+
+  if (query !== prevQuery || filtersStr !== prevFiltersStr) {
+    setPrevQuery(query);
+    setPrevFilters(filters);
     setResults([]);
     setPage(1);
-  }, [query, JSON.stringify(filters)]);
+    if (query || Object.keys(filters).length > 0) {
+      setLoading(true);
+    } else {
+      setLoading(false);
+    }
+  }
 
   const fetchResults = useCallback(async () => {
     try {
@@ -52,7 +67,7 @@ export function useSearch({ query = "", filters = {}, pageSize = 20 }) {
     } finally {
       setLoading(false);
     }
-  }, [query, filters, page, pageSize]);
+  }, [query, filtersStr, page, pageSize]); // depend on filtersStr for stable reference
 
   useEffect(() => {
     // ✅ Always allow fetch when filters.collectionId is set,
@@ -60,7 +75,7 @@ export function useSearch({ query = "", filters = {}, pageSize = 20 }) {
     if (query || Object.keys(filters).length > 0) {
       fetchResults();
     }
-  }, [fetchResults, query, filters, page]);
+  }, [fetchResults, query, filtersStr, page]);
 
   return {
     results,

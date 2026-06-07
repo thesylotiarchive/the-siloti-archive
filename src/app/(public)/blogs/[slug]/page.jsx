@@ -54,7 +54,7 @@ export default function PublicBlogViewPage() {
     <main className="max-w-4xl mx-auto px-4 md:px-6 py-10 space-y-6">
       {/* Breadcrumb */}
       <div className="text-sm text-muted-foreground">
-        <a href="/blogs" className="hover:underline">← Back to Blogs</a>
+        <a href="/blogs" className="hover:underline cursor-pointer">← Back to Blogs</a>
       </div>
 
       {/* Banner */}

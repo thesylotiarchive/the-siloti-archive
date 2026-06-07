@@ -34,6 +34,7 @@ model User {
   email     String   @unique
   password  String
   name      String?  // optional, can be null until user updates it
+  avatarUrl String?  // URL to profile picture or SVG avatar
   role      Role     @default(VIEWER)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -116,6 +117,7 @@ model MediaItem {
   image          String?
   mediaType      MediaType
   language       String?
+  author         String?
 
   contributor    User         @relation("UserMediaItems", fields: [contributorId], references: [id])
   contributorId  String

@@ -74,118 +74,149 @@ export default function CreateBlogPage() {
   };
 
   if (authLoading) {
-    return <p className="text-center mt-10">Loading...</p>;
+    return (
+      <div className="flex flex-col items-center justify-center py-12 space-y-4">
+        <div className="w-8 h-8 border-4 border-emerald-500/80 border-t-transparent rounded-full animate-spin"></div>
+        <p className="text-sm text-slate-400 font-medium animate-pulse">Loading user...</p>
+      </div>
+    );
   }
 
   return (
-    <main className="max-w-4xl mx-auto py-10 px-4 space-y-8">
-      <h1 className="text-3xl font-bold">📝 Create New Blog</h1>
+    <main className="max-w-4xl mx-auto space-y-6">
+      <div className="bg-white/70 border border-slate-200/60 p-8 rounded-[2rem] shadow-sm backdrop-blur-md space-y-6">
+        <h1 className="text-3xl font-light tracking-tight pb-4 border-b border-slate-200/50">
+          <span className="bg-gradient-to-r from-slate-950 via-slate-800 to-slate-700 bg-clip-text text-transparent font-serif italic font-bold">
+            Create New Blog
+          </span>
+        </h1>
 
-      <div className="space-y-6">
-        {/* Title */}
-        <div className="space-y-2">
-          <Label htmlFor="title">Title</Label>
-          <Input
-            id="title"
-            value={title}
-            onChange={(e) => handleTitleChange(e.target.value)}
-            placeholder="Blog title"
-          />
-        </div>
-
-        {/* Slug */}
-        <div className="space-y-2">
-          <Label htmlFor="slug">Slug</Label>
-          <Input
-            id="slug"
-            value={slug}
-            onChange={(e) => setSlug(e.target.value)}
-            placeholder="Auto-generated from title, but editable"
-          />
-        </div>
-
-        {/* Author */}
-        <div className="space-y-2">
-          <Label htmlFor="author">Author</Label>
-          <Input
-            id="author"
-            value={author}
-            onChange={(e) => setAuthor(e.target.value)}
-            placeholder="Author name"
-          />
-        </div>
-
-        {/* Banner Image */}
-        <div className="space-y-2">
-          <Label>Banner Image</Label>
-          <ImageUploaderWithToggle
-            value={bannerUrl}
-            onChange={setBannerUrl}
-            setIsUploading={setIsUploading}
-            endpoint="blogBannerUploader"
-            placeholder="Paste image URL or upload"
-          />
-        </div>
-
-        {/* Content */}
-        <div className="space-y-2">
-          <Label htmlFor="content">Content (Markdown)</Label>
-          <Textarea
-            id="content"
-            rows={15}
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-            placeholder="Write your blog content in Markdown..."
-          />
-        </div>
-
-        {/* Publish Toggle (Admins only) */}
-        {me?.role === "ADMIN" || me?.role === "SUPERADMIN" ? (
-          <div className="flex items-center gap-2">
-            <Switch
-              id="published"
-              checked={published}
-              onCheckedChange={setPublished}
-              className="
-                data-[state=checked]:bg-green-500 
-                data-[state=unchecked]:bg-gray-400 
-                border border-gray-300
-              "
+        <div className="space-y-5">
+          {/* Title */}
+          <div className="space-y-1">
+            <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1" htmlFor="title">Title</label>
+            <Input
+              id="title"
+              value={title}
+              onChange={(e) => handleTitleChange(e.target.value)}
+              placeholder="Blog title"
+              className="w-full px-3.5 py-2 border border-slate-200 focus:border-emerald-400 focus:ring-1 focus:ring-emerald-400/50 rounded-xl bg-white/60 text-slate-900 text-sm shadow-inner transition-all duration-200 outline-none"
             />
-            <Label htmlFor="published">Publish</Label>
           </div>
-        ) : (
-          <p className="text-sm text-muted-foreground">
-            Blogs you create will be saved as <strong>draft</strong> until
-            approved by an Admin.
-          </p>
-        )}
 
-        {/* Actions */}
-        <div className="flex gap-3 pt-4">
-          <Button onClick={handleSubmit} disabled={loading || isUploading}>
-            {loading
-              ? "Saving..."
-              : me?.role === "CONTRIBUTOR"
-              ? "Submit as Draft"
-              : "Save"}
-          </Button>
+          {/* Slug */}
+          <div className="space-y-1">
+            <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1" htmlFor="slug">Slug</label>
+            <Input
+              id="slug"
+              value={slug}
+              onChange={(e) => setSlug(e.target.value)}
+              placeholder="Auto-generated from title, but editable"
+              className="w-full px-3.5 py-2 border border-slate-200 focus:border-emerald-400 focus:ring-1 focus:ring-emerald-400/50 rounded-xl bg-white/60 text-slate-900 text-sm shadow-inner transition-all duration-200 outline-none"
+            />
+          </div>
 
-          <Button
-            type="button"
-            variant="outline"
-            disabled={!content}
-            onClick={() => {
-              const previewUrl = `/admin/dashboard/blogs/preview?title=${encodeURIComponent(
-                title
-              )}&slug=${encodeURIComponent(slug)}&content=${encodeURIComponent(
-                content
-              )}&bannerUrl=${encodeURIComponent(bannerUrl)}`;
-              window.open(previewUrl, "_blank");
-            }}
-          >
-            Preview
-          </Button>
+          {/* Author */}
+          <div className="space-y-1">
+            <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1" htmlFor="author">Author</label>
+            <Input
+              id="author"
+              value={author}
+              onChange={(e) => setAuthor(e.target.value)}
+              placeholder="Author name"
+              className="w-full px-3.5 py-2 border border-slate-200 focus:border-emerald-400 focus:ring-1 focus:ring-emerald-400/50 rounded-xl bg-white/60 text-slate-900 text-sm shadow-inner transition-all duration-200 outline-none"
+            />
+          </div>
+
+          {/* Banner Image */}
+          <div className="space-y-1">
+            <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Banner Image</label>
+            <div className="p-1 border border-slate-200/60 rounded-xl bg-white/40">
+              <ImageUploaderWithToggle
+                value={bannerUrl}
+                onChange={setBannerUrl}
+                setIsUploading={setIsUploading}
+                endpoint="blogBannerUploader"
+                placeholder="Paste image URL or upload"
+              />
+            </div>
+          </div>
+
+          {/* Content */}
+          <div className="space-y-1">
+            <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1" htmlFor="content">Content (Markdown)</label>
+            <Textarea
+              id="content"
+              rows={15}
+              value={content}
+              onChange={(e) => setContent(e.target.value)}
+              placeholder="Write your blog content in Markdown..."
+              className="w-full px-3.5 py-2 border border-slate-200 focus:border-emerald-400 focus:ring-1 focus:ring-emerald-400/50 rounded-xl bg-white/60 text-slate-900 text-sm shadow-inner transition-all duration-200 resize-none outline-none"
+            />
+          </div>
+
+          {/* Publish Toggle (Admins only) */}
+          {me?.role === "ADMIN" || me?.role === "SUPERADMIN" ? (
+            <div className="flex items-center gap-3 p-3 bg-white/40 border border-slate-200/50 rounded-xl w-fit">
+              <Switch
+                id="published"
+                checked={published}
+                onCheckedChange={setPublished}
+                className="
+                  data-[state=checked]:bg-emerald-500 
+                  data-[state=unchecked]:bg-slate-300 
+                "
+              />
+              <label htmlFor="published" className="text-xs font-bold text-slate-700 uppercase tracking-wider cursor-pointer">Publish Immediately</label>
+            </div>
+          ) : (
+            <div className="p-4 bg-emerald-50/50 border border-emerald-100/80 rounded-xl">
+              <p className="text-xs text-emerald-800 leading-relaxed font-medium">
+                Note: Blogs you create will be saved as <strong className="font-bold">draft</strong> until reviewed and published by an administrator.
+              </p>
+            </div>
+          )}
+
+          {/* Actions */}
+          <div className="flex gap-3 pt-4 border-t border-slate-100">
+            <Button 
+              onClick={handleSubmit} 
+              disabled={loading || isUploading}
+              className="px-5 py-2 text-sm font-bold bg-gradient-to-r from-emerald-500 to-blue-600 hover:from-emerald-400 hover:to-blue-500 text-white rounded-xl shadow-sm transition-all duration-300 active:scale-[0.98] cursor-pointer"
+            >
+              {loading
+                ? "Saving..."
+                : me?.role === "CONTRIBUTOR"
+                ? "Submit as Draft"
+                : "Save"}
+            </Button>
+
+            <Button
+              type="button"
+              variant="outline"
+              disabled={!content}
+              onClick={() => {
+                const previewUrl = `/admin/dashboard/blogs/preview?title=${encodeURIComponent(
+                  title
+                )}&slug=${encodeURIComponent(slug)}&content=${encodeURIComponent(
+                  content
+                )}&bannerUrl=${encodeURIComponent(bannerUrl)}`;
+                window.open(previewUrl, "_blank");
+              }}
+              className="px-5 py-2 text-sm font-semibold border border-slate-200 text-slate-700 bg-white/80 hover:bg-slate-50 rounded-xl shadow-sm transition-all duration-200 cursor-pointer"
+            >
+              Preview
+            </Button>
+
+            <Button
+              type="button"
+              variant="ghost"
+              onClick={() => router.push("/admin/dashboard/blogs")}
+              className="px-5 py-2 text-sm font-semibold text-slate-500 hover:text-slate-800 hover:bg-slate-100 rounded-xl transition-all duration-200 cursor-pointer ml-auto"
+            >
+              Cancel
+            </Button>
+          </div>
         </div>
       </div>
     </main>

@@ -1,25 +1,28 @@
 // app/api/public/collections/[id]/route.js
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
+import { getCachedData } from "@/lib/cache";
 
 export async function GET(req, { params }) {
-  const { id } = params;
-
   try {
-    const folder = await prisma.folder.findUnique({
-      where: { id },
-      include: {
-        parent: {
-          include: {
-            parent: {
-              include: {
-                parent: true,
+    const { id } = await params;
+
+    const folder = await getCachedData(`collection:detail:${id}`, async () => {
+      return await prisma.folder.findUnique({
+        where: { id },
+        include: {
+          parent: {
+            include: {
+              parent: {
+                include: {
+                  parent: true,
+                },
               },
             },
           },
         },
-      },
-    });
+      });
+    }, 600); // 10 minutes TTL
 
     if (!folder || folder.status !== "PUBLISHED") {
       // Hide draft folders from public API

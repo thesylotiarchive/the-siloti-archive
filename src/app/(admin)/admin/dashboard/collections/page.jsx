@@ -66,33 +66,42 @@ export default function FolderExplorerPage() {
 
   return (
     <div>
-      <div className="flex justify-between items-center mb-4">
-        <h1 className="text-2xl font-bold">Folder Explorer</h1>
+      <div className="flex justify-between items-center mb-6 border-b border-slate-200/50 pb-5">
+        <div>
+          <h1 className="text-3xl font-light tracking-tight">
+            <span className="bg-gradient-to-r from-slate-950 via-slate-800 to-slate-700 bg-clip-text text-transparent font-serif italic font-bold">
+              Folder Explorer
+            </span>
+          </h1>
+          <p className="text-sm text-slate-400 mt-1">Browse, view and modify hierarchical directory structures.</p>
+        </div>
         <button
             onClick={() => {
             setSelectedFolder(null);
             setModalOpen(true);
             }}
-            className="bg-primary text-primary-foreground px-4 py-2 rounded-md"
+            className="px-5 py-2 text-sm font-bold bg-gradient-to-r from-emerald-500 to-blue-600 hover:from-emerald-400 hover:to-blue-500 text-white rounded-xl shadow-sm transition-all duration-300 active:scale-[0.98] cursor-pointer"
         >
             Add Folder
         </button>
       </div>
 
       {loading ? (
-        <div className="space-y-2 animate-pulse">
-          {Array.from({ length: 4 }).map((_, idx) => (
+        <div className="space-y-3">
+          {Array.from({ length: 5 }).map((_, idx) => (
             <div
               key={idx}
-              className="h-4 bg-muted rounded w-[60%] ml-[1.5rem]"
-              style={{ marginLeft: `${idx * 1.5}rem` }}
+              className="h-10 bg-white/40 border border-slate-200/30 rounded-xl animate-pulse w-full max-w-xl"
+              style={{ marginLeft: `${idx * 1.2}rem` }}
             />
           ))}
         </div>
       ) : folders.length === 0 ? (
-        <p className="text-muted-foreground">No folders found.</p>
+        <div className="text-center py-16 bg-white/50 border border-slate-200/40 rounded-[2rem] shadow-sm max-w-xl">
+          <p className="text-slate-400 font-medium">No folders found.</p>
+        </div>
       ) : (
-        <div className="space-y-2">
+        <div className="space-y-3 p-6 bg-white/70 border border-slate-200/60 rounded-[2rem] shadow-sm backdrop-blur-md max-w-2xl">
           {folders.map((folder) => (
             <FolderNode
               key={folder.id}
@@ -105,7 +114,7 @@ export default function FolderExplorerPage() {
         </div>
       )}
 
-        <FolderModal
+      <FolderModal
         isOpen={modalOpen}
         onClose={handleCloseModal}
         onSuccess={() => {
@@ -113,11 +122,8 @@ export default function FolderExplorerPage() {
         }}
         folders={folders}
         folder={selectedFolder}
-        />
-
+      />
     </div>
-
-
   );
 }
 
@@ -126,44 +132,47 @@ function FolderNode({ folder, level, onEdit, onDelete }) {
   const [showMenu, setShowMenu] = useState(false);
 
   return (
-    <div style={{ marginLeft: `${level * 1.5}rem` }}>
-      <div className="flex items-center justify-between group">
+    <div style={{ marginLeft: `${level * 1.5}rem` }} className="space-y-1">
+      <div className="flex items-center justify-between group p-2 hover:bg-slate-50/80 rounded-xl transition-all duration-200 border border-transparent hover:border-slate-100">
         <div
-          className="flex items-center gap-2 cursor-pointer hover:underline"
+          className="flex items-center gap-2.5 cursor-pointer text-slate-800 hover:text-emerald-700 transition-colors"
           onClick={() => setExpanded((prev) => !prev)}
         >
-          <span className="font-medium">
-            {expanded ? "📂" : "📁"} {folder.name}
+          <span className="text-base transition-transform duration-200 group-hover:scale-110">
+            {expanded ? "📂" : "📁"}
+          </span>
+          <span className="font-semibold text-sm">
+            {folder.name}
           </span>
         </div>
 
         <div className="relative">
           <button
-            className="opacity-0 group-hover:opacity-100 transition text-muted-foreground"
+            className="w-7 h-7 flex items-center justify-center rounded-full border border-slate-200/60 bg-white opacity-0 group-hover:opacity-100 transition-all text-slate-500 hover:text-slate-900 shadow-sm cursor-pointer"
             onClick={() => setShowMenu((prev) => !prev)}
           >
-            <MoreHorizontal size={18} />
+            <MoreHorizontal size={14} />
           </button>
 
           {showMenu && (
-            <div className="absolute right-0 mt-2 w-32 bg-white border rounded shadow z-50">
+            <div className="absolute right-0 mt-1.5 w-32 bg-white border border-slate-200/80 rounded-xl shadow-lg p-1 z-50 animate-in fade-in slide-in-from-top-1 duration-150 text-slate-800">
               <button
-                className="w-full px-3 py-2 text-left text-sm hover:bg-gray-100"
+                className="w-full px-3 py-2 text-left text-xs font-semibold rounded-lg hover:bg-slate-50 transition-colors cursor-pointer"
                 onClick={() => {
                   setShowMenu(false);
                   onEdit(folder);
                 }}
               >
-                Edit
+                ✏️ Edit
               </button>
               <button
-                className="w-full px-3 py-2 text-left text-sm text-red-600 hover:bg-gray-100"
+                className="w-full px-3 py-2 text-left text-xs font-semibold text-rose-600 rounded-lg hover:bg-rose-50 transition-colors cursor-pointer"
                 onClick={() => {
                   setShowMenu(false);
                   onDelete(folder);
                 }}
               >
-                Delete
+                🗑 Delete
               </button>
             </div>
           )}
@@ -180,8 +189,6 @@ function FolderNode({ folder, level, onEdit, onDelete }) {
               onEdit={onEdit}
               onDelete={onDelete}
             />
-
-          
           ))}
         </div>
       )}

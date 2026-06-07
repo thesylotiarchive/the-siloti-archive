@@ -292,32 +292,32 @@ export default function PdfReader({ fileUrl, initialMode = 'scroll', className =
 function Toolbar({ mode, setMode, scale, zoomIn, zoomOut, resetZoom, isFullscreen, toggleFull, current, total, onPrev, onNext, showThumbs, setShowThumbs }) {
   return (
     <div className="sticky top-0 z-20 flex items-center gap-2 border-b border-neutral-200 dark:border-neutral-800 bg-white/80 dark:bg-neutral-900/80 backdrop-blur px-3 py-2">
-      <button className="px-2 py-1 rounded-xl border hover:bg-neutral-100 dark:hover:bg-neutral-800" onClick={() => setMode(mode === 'scroll' ? 'flip' : 'scroll')}>
+      <button className="px-2 py-1 rounded-xl border hover:bg-neutral-100 dark:hover:bg-neutral-800 cursor-pointer" onClick={() => setMode(mode === 'scroll' ? 'flip' : 'scroll')}>
         <div className="flex items-center gap-2 text-sm">{mode === 'scroll' ? <BookOpen className="size-4"/> : <Scroll className="size-4"/>} {mode === 'scroll' ? 'Flipbook' : 'Scroll'}</div>
       </button>
 
       <div className="mx-2 h-6 w-px bg-neutral-200 dark:bg-neutral-800"/>
 
-      <button className="px-2 py-1 rounded-xl border hover:bg-neutral-100 dark:hover:bg-neutral-800" onClick={zoomOut}><div className="flex items-center gap-2 text-sm"><ZoomOut className="size-4"/> Zoom out</div></button>
+      <button className="px-2 py-1 rounded-xl border hover:bg-neutral-100 dark:hover:bg-neutral-800 cursor-pointer" onClick={zoomOut}><div className="flex items-center gap-2 text-sm"><ZoomOut className="size-4"/> Zoom out</div></button>
       <span className="text-sm tabular-nums w-14 text-center">{Math.round(scale * 100)}%</span>
-      <button className="px-2 py-1 rounded-xl border hover:bg-neutral-100 dark:hover:bg-neutral-800" onClick={zoomIn}><div className="flex items-center gap-2 text-sm"><ZoomIn className="size-4"/> Zoom in</div></button>
-      <button className="px-2 py-1 rounded-xl border hover:bg-neutral-100 dark:hover:bg-neutral-800" onClick={resetZoom}><div className="flex items-center gap-2 text-sm"><Images className="size-4"/> Reset</div></button>
+      <button className="px-2 py-1 rounded-xl border hover:bg-neutral-100 dark:hover:bg-neutral-800 cursor-pointer" onClick={zoomIn}><div className="flex items-center gap-2 text-sm"><ZoomIn className="size-4"/> Zoom in</div></button>
+      <button className="px-2 py-1 rounded-xl border hover:bg-neutral-100 dark:hover:bg-neutral-800 cursor-pointer" onClick={resetZoom}><div className="flex items-center gap-2 text-sm"><Images className="size-4"/> Reset</div></button>
 
       <div className="mx-2 h-6 w-px bg-neutral-200 dark:bg-neutral-800"/>
 
-      <button className="px-2 py-1 rounded-xl border hover:bg-neutral-100 dark:hover:bg-neutral-800" onClick={onPrev}><div className="flex items-center gap-2 text-sm"><ChevronLeft className="size-4"/> Prev</div></button>
+      <button className="px-2 py-1 rounded-xl border hover:bg-neutral-100 dark:hover:bg-neutral-800 cursor-pointer" onClick={onPrev}><div className="flex items-center gap-2 text-sm"><ChevronLeft className="size-4"/> Prev</div></button>
       <span className="text-sm tabular-nums">{current} / {total}</span>
-      <button className="px-2 py-1 rounded-xl border hover:bg-neutral-100 dark:hover:bg-neutral-800" onClick={onNext}><div className="flex items-center gap-2 text-sm">Next <ChevronRight className="size-4"/></div></button>
+      <button className="px-2 py-1 rounded-xl border hover:bg-neutral-100 dark:hover:bg-neutral-800 cursor-pointer" onClick={onNext}><div className="flex items-center gap-2 text-sm">Next <ChevronRight className="size-4"/></div></button>
 
       <div className="mx-2 h-6 w-px bg-neutral-200 dark:bg-neutral-800"/>
 
-      <button className="px-2 py-1 rounded-xl border hover:bg-neutral-100 dark:hover:bg-neutral-800" onClick={() => setShowThumbs((v) => !v)}>
+      <button className="px-2 py-1 rounded-xl border hover:bg-neutral-100 dark:hover:bg-neutral-800 cursor-pointer" onClick={() => setShowThumbs((v) => !v)}>
         <div className="flex items-center gap-2 text-sm"><Grid className="size-4"/> {showThumbs ? 'Hide thumbnails' : 'Show thumbnails'}</div>
       </button>
 
       <div className="flex-1"/>
 
-      <button className="px-2 py-1 rounded-xl border hover:bg-neutral-100 dark:hover:bg-neutral-800" onClick={toggleFull}>
+      <button className="px-2 py-1 rounded-xl border hover:bg-neutral-100 dark:hover:bg-neutral-800 cursor-pointer" onClick={toggleFull}>
         <div className="flex items-center gap-2 text-sm">{isFullscreen ? <Minimize2 className="size-4"/> : <Maximize2 className="size-4"/>} Fullscreen</div>
       </button>
     </div>
@@ -419,7 +419,7 @@ function Thumb({ n, active, onClick, renderPageToURL }) {
   }, [n, renderPageToURL]);
 
   return (
-    <button onClick={onClick} className={`relative w-full rounded-xl overflow-hidden border ${active ? 'ring-2 ring-blue-500 border-blue-500' : 'border-neutral-200 dark:border-neutral-800'} bg-white hover:shadow` }>
+    <button onClick={onClick} className={`relative w-full rounded-xl overflow-hidden border ${active ? 'ring-2 ring-blue-500 border-blue-500' : 'border-neutral-200 dark:border-neutral-800'} bg-white hover:shadow cursor-pointer` }>
       {url ? (
         <img src={url} alt={`Thumb ${n}`} className="w-full h-auto block"/>
       ) : (

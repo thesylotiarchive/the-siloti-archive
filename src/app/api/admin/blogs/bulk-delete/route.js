@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { getUserFromRequest } from "@/lib/auth-helpers";
+import { invalidatePattern } from "@/lib/cache";
 
 export async function POST(req) {
   try {
@@ -18,6 +19,10 @@ export async function POST(req) {
     await prisma.blog.deleteMany({
       where: { id: { in: ids } },
     });
+
+    // Invalidate caches
+    await invalidatePattern("blog:detail:*");
+    await invalidatePattern("blogs:list:*");
 
     return NextResponse.json({ success: true, deletedCount: ids.length });
   } catch (err) {

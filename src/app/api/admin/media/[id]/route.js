@@ -11,7 +11,7 @@ export async function PATCH(req, { params }) {
     }
 
     const body = await req.json();
-    let { title, description, image, mediaUrl, mediaType, language, folderId, status } = body;
+    let { title, description, image, mediaUrl, mediaType, language, folderId, status, author } = body;
 
     if (user.role === "CONTRIBUTOR") {
       status = "DRAFT"; // force draft
@@ -27,6 +27,7 @@ export async function PATCH(req, { params }) {
         image,
         mediaType,
         language,
+        author: author !== undefined ? author : undefined,
         folderId,
         status,
         fileUrl: isExternal ? null : mediaUrl,

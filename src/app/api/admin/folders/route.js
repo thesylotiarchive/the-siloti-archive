@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { getUserFromRequest } from "@/lib/auth-helpers";
+import { invalidatePattern } from "@/lib/cache";
 
 // GET all folders (optional: ?parentId=<id>)
 export async function GET(req) {
@@ -48,6 +49,9 @@ export async function POST(req) {
         createdById: user.id,
       },
     });
+
+    // Invalidate collections cache parent lists since a new folder is created
+    await invalidatePattern("collections:parent:*");
 
     return NextResponse.json(folder);
   } catch (err) {

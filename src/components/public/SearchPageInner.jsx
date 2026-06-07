@@ -5,15 +5,25 @@ import { CollectionCard } from "@/components/public/CollectionCard";
 import FilterSidebar from "@/components/public/FilterBar";
 import { MediaCard } from "@/components/public/MediaCard";
 import ShareModal from "@/components/public/ShareModal";
+import ArchiveViewManager from "@/components/public/ArchiveViewManager";
 import { useSearch } from "@/lib/hooks/useSearch";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState, useMemo, useEffect, useRef } from "react";
 
-// ✅ Simple skeleton card
+// ✅ Premium dark glassmorphic skeleton card
 function SkeletonCard() {
   return (
-    <div className="animate-pulse rounded-xl border bg-card shadow-sm overflow-hidden">
-      <div className="w-full aspect-[3/4] bg-gray-200" />
+    <div className="animate-pulse border border-white/5 bg-slate-900/40 rounded-2xl overflow-hidden shadow-sm aspect-[4/3] flex flex-col justify-between">
+      <div className="relative w-full aspect-[4/3] bg-slate-950/80 p-6 flex flex-col items-center justify-center">
+        {/* Thumbnail fallback skeleton */}
+        <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-white/5 border border-white/10" />
+        <div className="w-2/3 h-4 bg-white/10 rounded-md mt-4" />
+        <div className="w-1/2 h-3 bg-white/5 rounded-md mt-2" />
+      </div>
+      <div className="h-10 bg-slate-950/60 border-t border-white/5 px-4 py-3 flex items-center gap-2">
+        <div className="w-4 h-4 bg-white/5 rounded" />
+        <div className="w-12 h-3 bg-white/10 rounded" />
+      </div>
     </div>
   );
 }
@@ -84,12 +94,12 @@ export default function SearchPageInner({ initialQuery }) {
   }, [urlQuery]);
 
   return (
-    <main className="w-full px-3 sm:px-6 md:px-10 py-10">
+    <div className="w-full py-6">
       <div className="max-w-7xl mx-auto">
         {/* 🔍 Search Bar */}
         <form
           onSubmit={handleSearch}
-          className="flex flex-col lg:flex-row items-center justify-center gap-2 mb-6 max-w-xl mx-auto w-full"
+          className="flex flex-col lg:flex-row items-center justify-center gap-2.5 mb-8 max-w-xl mx-auto w-full px-4"
         >
           <div className="relative flex-grow w-full">
             <input
@@ -97,22 +107,22 @@ export default function SearchPageInner({ initialQuery }) {
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
               placeholder="Search the archive..."
-              className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary"
+              className="w-full px-4 py-2.5 bg-white/5 border border-white/10 rounded-xl text-white placeholder-white/35 focus:outline-none focus:border-emerald-400 focus:ring-1 focus:ring-emerald-400 transition-all duration-200 text-sm font-sans font-light"
             />
           </div>
 
           {/* Buttons row */}
-          <div className="flex gap-2 w-full lg:w-auto justify-end lg:justify-start mt-2 lg:mt-0">
+          <div className="flex gap-2.5 w-full lg:w-auto justify-end lg:justify-start mt-2 lg:mt-0">
             <button
               type="submit"
-              className="flex-1 lg:flex-none px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 whitespace-nowrap"
+              className="flex-1 lg:flex-none px-6 py-2.5 bg-gradient-to-r from-emerald-500 to-blue-600 hover:from-emerald-400 hover:to-blue-500 text-white font-bold rounded-xl transition-all duration-300 cursor-pointer shadow-lg shadow-emerald-500/10 whitespace-nowrap text-sm"
             >
               Search
             </button>
             <button
               type="button"
               onClick={() => setFiltersOpen(true)}
-              className="flex-1 lg:hidden px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 whitespace-nowrap"
+              className="flex-1 lg:hidden px-6 py-2.5 bg-white/5 border border-white/10 hover:bg-white/10 text-white font-bold rounded-xl transition-all duration-300 cursor-pointer shadow-md whitespace-nowrap text-sm"
             >
               Filters
             </button>
@@ -139,7 +149,7 @@ export default function SearchPageInner({ initialQuery }) {
 
           {/* Initial loading skeletons */}
           {loading && results.length === 0 && (
-            <div className="grid gap-6 grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+            <div className="grid gap-6 grid-cols-2 md:grid-cols-3 xl:grid-cols-4 w-full animate-fadeIn">
               {Array.from({ length: 8 }).map((_, i) => (
                 <SkeletonCard key={i} />
               ))}
@@ -147,35 +157,30 @@ export default function SearchPageInner({ initialQuery }) {
           )}
 
           {/* Empty state */}
-          {!loading && results.length === 0 && (
+          {!loading && results.length === 0 && urlQuery && (
             <p className="text-center text-muted-foreground">
               No results found.
             </p>
           )}
 
-          {/* Results grid */}
+          {/* Results views (Grid, List, Table) */}
           {results.length > 0 && (
-            <div className="grid gap-6 grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-              {results.map((item) =>
-                item.type === "collection" ? (
-                  <CollectionCard key={`c-${item.id}`} collection={item} />
-                ) : (
-                  <MediaCard
-                    key={`m-${item.id}`}
-                    mediaItem={item}
-                    onShare={handleShare}
-                  />
-                )
-              )}
+            <ArchiveViewManager
+              items={results}
+              onShare={handleShare}
+              isLoading={loading}
+            />
+          )}
 
-              {/* Infinite scroll skeletons */}
-              {loading &&
-                results.length > 0 &&
-                Array.from({ length: 4 }).map((_, i) => (
+          {/* Infinite scroll skeletons */}
+          {loading &&
+            results.length > 0 && (
+              <div className="grid gap-6 grid-cols-2 md:grid-cols-3 xl:grid-cols-4 w-full mt-6">
+                {Array.from({ length: 4 }).map((_, i) => (
                   <SkeletonCard key={`s-${i}`} />
                 ))}
-            </div>
-          )}
+              </div>
+            )}
 
           {/* Observer target */}
           {hasMore && !loading && <div ref={loaderRef} className="h-10" />}
@@ -186,22 +191,24 @@ export default function SearchPageInner({ initialQuery }) {
       {filtersOpen && (
         <div className="fixed inset-0 z-50 flex">
           <div
-            className="fixed inset-0 bg-black/40"
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm"
             onClick={() => setFiltersOpen(false)}
           />
-          <div className="relative ml-auto w-72 max-w-full h-full bg-white dark:bg-gray-900 shadow-xl p-4 overflow-y-auto">
+          <div className="relative ml-auto w-72 max-w-full h-full bg-slate-950 border-l border-white/10 shadow-2xl p-6 overflow-y-auto text-white">
             <button
               onClick={() => setFiltersOpen(false)}
-              className="mb-4 text-sm text-gray-500 hover:text-gray-800"
+              className="mb-4 flex items-center justify-center p-2 rounded-lg bg-white/5 hover:bg-white/10 text-white/70 hover:text-white transition-colors cursor-pointer text-sm font-semibold"
             >
               ✕ Close
             </button>
-            <FilterSidebar activeFilters={filters} onChange={setFilters} />
+            <div className="mt-4">
+              <FilterSidebar activeFilters={filters} onChange={setFilters} />
+            </div>
           </div>
         </div>
       )}
 
       {shareUrl && <ShareModal url={shareUrl} onClose={closeShareModal} />}
-    </main>
+    </div>
   );
 }

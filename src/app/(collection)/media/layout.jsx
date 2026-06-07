@@ -1,11 +1,13 @@
+export default function MediaLayout({ children }) {
+  return (
+    <div className="min-h-screen bg-slate-950 text-white relative overflow-hidden">
+      {/* Background glows */}
+      <div className="absolute top-0 left-1/4 w-[500px] h-[300px] bg-emerald-400/5 blur-[150px] rounded-full pointer-events-none"></div>
+      <div className="absolute bottom-0 right-1/4 w-[500px] h-[300px] bg-blue-500/5 blur-[150px] rounded-full pointer-events-none"></div>
 
- import CollectionNavBar from "@/components/public/CollectionNavBar";
- import Navbar from "@/components/public/Navbar";
-
- export default function MediaLayout({ children }) {
-     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-white text-black">
-         <main className="mt-20 max-w-4xl mx-auto p-4">{children}</main>
-       </div>
-     );
- }
+      <main className="relative z-10 w-full">
+        {children}
+      </main>
+    </div>
+  );
+}

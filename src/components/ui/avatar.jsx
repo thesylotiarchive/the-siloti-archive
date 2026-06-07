@@ -19,12 +19,15 @@ function Avatar({
 
 function AvatarImage({
   className,
+  src,
   ...props
 }) {
+  const isSvg = typeof src === "string" && src.startsWith("/svg_profiles/");
   return (
     <AvatarPrimitive.Image
       data-slot="avatar-image"
-      className={cn("aspect-square size-full", className)}
+      src={src}
+      className={cn("aspect-square size-full object-cover", isSvg && "scale-[1.3]", className)}
       {...props} />
   );
 }

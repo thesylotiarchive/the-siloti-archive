@@ -2,6 +2,7 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { getUserFromRequest } from "@/lib/auth-helpers";
+import { invalidateCache, invalidatePattern } from "@/lib/cache";
 
 export async function PATCH(req) {
   try {
@@ -26,6 +27,12 @@ export async function PATCH(req) {
         rejectionReason: null,
       },
     });
+
+    // Invalidate caches
+    for (const id of ids) {
+      await invalidateCache(`collection:detail:${id}`);
+    }
+    await invalidatePattern("collections:parent:*");
 
     return NextResponse.json({ count: result.count });
   } catch (err) {

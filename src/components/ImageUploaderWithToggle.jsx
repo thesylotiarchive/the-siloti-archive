@@ -2,6 +2,8 @@
 
 import { UploadButton } from "@uploadthing/react";
 import { useEffect, useState } from "react";
+import Swal from "sweetalert2";
+import "sweetalert2/dist/sweetalert2.min.css";
 
 export default function ImageUploaderWithToggle({
   value,
@@ -130,7 +132,15 @@ export default function ImageUploaderWithToggle({
             setIsUploading?.(false);
           }}
           onUploadError={(error) => {
-            alert("Upload failed.");
+            Swal.fire({
+              title: "Upload Failed",
+              text: "Something went wrong while uploading your image. Please try again.",
+              icon: "error",
+              confirmButtonColor: "#ef4444",
+              background: "#0f172a",
+              color: "#fff",
+              customClass: { popup: "rounded-3xl border border-white/10 shadow-2xl" }
+            });
             console.error(error);
             setIsUploading?.(false);
           }}

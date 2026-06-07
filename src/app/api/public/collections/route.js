@@ -1,6 +1,7 @@
 // app/api/public/collections/route.js
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
+import { getCachedData } from "@/lib/cache";
 
 /**
  * Recursively count all published media items and subfolders under a folder.
@@ -37,22 +38,42 @@ export async function GET(req) {
   const parentId = parentIdParam === "null" ? null : parentIdParam;
 
   try {
-    const folders = await prisma.folder.findMany({
-      where: { parentId, status: "PUBLISHED" },
-      orderBy: { createdAt: "asc" },
-    });
+    const cacheKey = `collections:parent:${parentId || "root"}`;
+    const mapped = await getCachedData(cacheKey, async () => {
+      const folders = await prisma.folder.findMany({
+        where: { parentId, status: "PUBLISHED" },
+        orderBy: { createdAt: "asc" },
+        include: {
+          createdBy: {
+            select: {
+              id: true,
+              name: true,
+              username: true,
+            }
+          }
+        }
+      });
 
-    const mapped = await Promise.all(
-      folders.map(async (folder) => {
-        const itemCount = await getItemCount(folder.id);
-        return {
-          id: folder.id,
-          name: folder.name,
-          imageUrl: folder.image,
-          itemCount,
-        };
-      })
-    );
+      return await Promise.all(
+        folders.map(async (folder) => {
+          const itemCount = await getItemCount(folder.id);
+          return {
+            id: folder.id,
+            name: folder.name,
+            imageUrl: folder.image,
+            description: folder.description,
+            createdAt: folder.createdAt,
+            contributor: folder.createdBy ? {
+              id: folder.createdBy.id,
+              name: folder.createdBy.name,
+              username: folder.createdBy.username,
+            } : null,
+            itemCount,
+            type: "collection",
+          };
+        })
+      );
+    }, 600); // 10 minutes TTL
 
     return NextResponse.json(mapped);
   } catch (err) {

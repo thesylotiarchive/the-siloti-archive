@@ -16,8 +16,13 @@ export async function POST(req) {
       });
     }
 
-    const user = await prisma.user.findUnique({
-      where: { email },
+    const user = await prisma.user.findFirst({
+      where: {
+        OR: [
+          { email: email },
+          { username: email },
+        ]
+      },
     });
 
     if (!user || (user.role !== 'ADMIN' && user.role !== 'SUPERADMIN' && user.role !== 'CONTRIBUTOR')) {
@@ -59,6 +64,7 @@ export async function POST(req) {
           username: user.username,
           email: user.email,
           role: user.role,
+          avatarUrl: user.avatarUrl,
         },
       }),
       { status: 200, headers }

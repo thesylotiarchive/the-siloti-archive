@@ -2,9 +2,8 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useEffect, useRef, useState, useLayoutEffect } from "react";
-import { Share2, Eye, Heart, MessageCircle } from "lucide-react";
-import { createPortal } from "react-dom";
+import { Share2, Eye, Heart, MessageCircle, FileText, Music, Film, Image as ImageIcon } from "lucide-react";
+import { ArchiveThumbnail } from "@/components/public/ArchiveThumbnail";
 
 export function MediaCard({ mediaItem, onShare, className = "" }) {
   const {
@@ -14,289 +13,111 @@ export function MediaCard({ mediaItem, onShare, className = "" }) {
     fileUrl,
     externalLink,
     image,
-    description,
     views,
+    contributor,
   } = mediaItem;
 
-  const [hovered, setHovered] = useState(false);
-  const [position, setPosition] = useState("bottom"); // "bottom" | "top"
-  const [baseRect, setBaseRect] = useState(null); // card rect (viewport coords)
-  const [tooltipSize, setTooltipSize] = useState({ width: 320, height: 0 });
-  const cardRef = useRef(null);
-  const tooltipInnerRef = useRef(null);
-  const rAFRef = useRef(null);
-
   const isExternal = !!externalLink;
-  const mediaUrl = isExternal ? externalLink : fileUrl;
   const shareUrl =
     typeof window !== "undefined"
       ? `${window.location.origin}/media/${id}`
       : `/media/${id}`;
 
-  // thumbnail logic left intact...
   let thumbnailSrc = null;
-  if (mediaItem.mediaType === "IMAGE") {
-    thumbnailSrc = mediaItem.image || mediaItem.fileUrl || null;
+  if (mediaType === "IMAGE") {
+    thumbnailSrc = image || fileUrl || null;
   } else {
-    thumbnailSrc = mediaItem.image;
+    thumbnailSrc = image;
   }
 
-  // Recompute card rect when hovered (and on scroll/resize while hovered)
-  const updateBaseRect = () => {
-    if (!cardRef.current) return;
-    const rect = cardRef.current.getBoundingClientRect();
-    // decide initial position based on available space
-    const spaceBelow = window.innerHeight - rect.bottom;
-    const newPos = spaceBelow > 240 ? "bottom" : "top";
-    setPosition((prev) => (prev === newPos ? prev : newPos));
-    setBaseRect(rect);
-  };
-
-  // Throttled scroll/resize handler
-  const handleScrollOrResize = () => {
-    if (rAFRef.current) cancelAnimationFrame(rAFRef.current);
-    rAFRef.current = requestAnimationFrame(updateBaseRect);
-  };
-
-  useEffect(() => {
-    if (hovered) {
-      // initial measurement
-      updateBaseRect();
-      // listen capture so nested scroll containers bubble up here
-      window.addEventListener("scroll", handleScrollOrResize, true);
-      window.addEventListener("resize", handleScrollOrResize);
+  // Get appropriate Lucide icon for fallback based on mediaType
+  const renderFallbackIcon = () => {
+    const iconClass = "w-10 h-10 text-brand-gold/80";
+    switch (mediaType) {
+      case "AUDIO":
+        return <Music className={iconClass} />;
+      case "VIDEO":
+        return <Film className={iconClass} />;
+      case "DOCUMENT":
+        return <FileText className={iconClass} />;
+      default:
+        return <ImageIcon className={iconClass} />;
     }
-    return () => {
-      window.removeEventListener("scroll", handleScrollOrResize, true);
-      window.removeEventListener("resize", handleScrollOrResize);
-      if (rAFRef.current) cancelAnimationFrame(rAFRef.current);
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [hovered]);
-
-  // Measure tooltip size after it renders into the DOM
-  useLayoutEffect(() => {
-    if (!hovered || !tooltipInnerRef.current) return;
-    const rect = tooltipInnerRef.current.getBoundingClientRect();
-    // only update if changed (avoids render loops)
-    setTooltipSize((prev) => {
-      if (prev.width !== rect.width || prev.height !== rect.height) {
-        return { width: rect.width, height: rect.height };
-      }
-      return prev;
-    });
-  }, [hovered, title, description, thumbnailSrc, baseRect]);
-
-  // compute final left/top for the portal using measured values
-  const computePortalStyle = () => {
-    if (!baseRect) return { left: 8, top: -9999 }; // off-screen until measured
-
-    const vw = window.innerWidth;
-    const vh = window.innerHeight;
-    const tooltipW = tooltipSize.width || 320;
-    const tooltipH = tooltipSize.height || 0;
-    const margin = 12;
-
-    // center tooltip horizontally on card
-    let left = Math.round(baseRect.left + baseRect.width / 2 - tooltipW / 2);
-    left = Math.max(8, Math.min(left, vw - tooltipW - 8));
-
-    // compute vertical placement based on current position
-    let top;
-    if (position === "bottom") {
-      top = Math.round(baseRect.bottom + margin);
-      // if it would overflow bottom, try flipping
-      if (top + tooltipH > vh - 8) {
-        const flippedTop = Math.round(baseRect.top - tooltipH - margin);
-        if (flippedTop >= 8) {
-          setPosition("top"); // safe to flip
-          top = flippedTop;
-        } else {
-          // clamp inside viewport
-          top = Math.max(8, vh - tooltipH - 8);
-        }
-      }
-    } else {
-      // position === "top"
-      top = Math.round(baseRect.top - tooltipH - margin);
-      if (top < 8) {
-        const flippedTop = Math.round(baseRect.bottom + margin);
-        if (flippedTop + tooltipH <= vh - 8) {
-          setPosition("bottom");
-          top = flippedTop;
-        } else {
-          top = 8;
-        }
-      }
-    }
-
-    return { left, top };
   };
-
-  const portalStyle = computePortalStyle();
 
   return (
     <div
-      ref={cardRef}
-      className={`relative overflow-visible bg-card border border-border rounded-2xl shadow-md transition-all duration-300 hover:shadow-xl hover:-translate-y-1 group ${className}`}
-      onMouseEnter={() => {
-        setHovered(true);
-        // ensure immediate rect capture
-        updateBaseRect();
-      }}
-      onMouseLeave={() => setHovered(false)}
+      className={`relative overflow-hidden bg-slate-900/60 border border-white/10 rounded-2xl shadow-sm transition-all duration-300 hover:shadow-[0_12px_24px_rgba(16,185,129,0.15)] hover:border-emerald-500/50 hover:-translate-y-1.5 group backdrop-blur-md ${className}`}
     >
-      {/* --- rest of your card markup unchanged --- */}
       <Link
         href={`/media/${id}`}
         target="_blank"
         rel="noopener noreferrer"
-        className="block"
+        className="block cursor-pointer"
       >
-        <div className="relative w-full aspect-[4/3] rounded-t-2xl overflow-hidden bg-muted">
-          {thumbnailSrc ? (
-            <>
-              {/* Blurry background */}
-              <Image
-                src={thumbnailSrc}
-                alt={`${title} blurred background`}
-                fill
-                className="object-cover scale-110 blur-md opacity-60"
-                priority
-              />
-              {/* Foreground image (keeps full aspect, no crop) */}
-              <div className="absolute inset-0 flex items-center justify-center">
-                <Image
-                  src={thumbnailSrc}
-                  alt={title}
-                  fill
-                  className="object-contain transition-transform duration-300 group-hover:scale-105"
-                  priority
-                />
-              </div>
-            </>
-          ) : (
-            <div className="w-full h-full flex items-center justify-center text-4xl bg-gradient-to-br from-muted to-muted/80">
-              {/* fallback icon */}
-            </div>
-          )}
+        {/* Media Thumbnail Container */}
+        <div className="relative w-full aspect-[4/3] rounded-t-2xl overflow-hidden bg-slate-950/80 border-b border-white/5">
+          <ArchiveThumbnail
+            src={thumbnailSrc}
+            title={title}
+            mediaType={mediaType}
+            className="w-full h-full"
+            size="lg"
+          />
 
           {/* Hover gradient overlay */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
         </div>
 
+        {/* Content Section */}
         <div className="p-4">
-          <h3 className="text-base font-semibold mb-2 line-clamp-2 text-foreground leading-tight">
+          <h3 className="text-sm font-bold text-white/90 group-hover:text-emerald-400 line-clamp-2 leading-snug transition-colors duration-300 min-h-[2.5rem] tracking-wide font-sans mb-3">
             {title}
           </h3>
 
-          <div className="flex items-center justify-between mb-3">
-            <div className="text-sm text-muted-foreground capitalize font-medium bg-secondary/50 px-3 py-1 rounded-full">
+          <div className="flex items-center justify-between mb-4 gap-2">
+            <div className="text-[10px] font-bold tracking-wider uppercase border border-amber-500/25 text-amber-400 bg-amber-500/5 px-2.5 py-0.5 rounded-full shrink-0">
               {mediaType.toLowerCase()}
             </div>
+            {contributor && (
+              <span className="text-[10px] text-white/50 font-semibold uppercase tracking-wider truncate max-w-[120px]">
+                by {contributor.name || contributor.username}
+              </span>
+            )}
           </div>
 
-          <div className="flex items-center gap-4 text-xs text-muted-foreground">
-            <div className="flex items-center gap-1.5 hover:text-primary transition-colors">
-              <Eye className="w-4 h-4" />
-              <span className="font-medium">{views || 0}</span>
+          {/* Engagement stats */}
+          <div className="flex items-center gap-4 text-xs text-white/55 border-t border-white/5 pt-3">
+            <div className="flex items-center gap-1.5 hover:text-emerald-400 transition-colors">
+              <Eye className="w-4 h-4 text-white/40 group-hover:text-emerald-400" />
+              <span className="font-semibold">{views || 0}</span>
             </div>
-            <div className="flex items-center gap-1.5 hover:text-red-500 transition-colors">
-              <Heart className="w-4 h-4" />
-              <span className="font-medium">0</span>
+            <div className="flex items-center gap-1.5 hover:text-red-400 transition-colors">
+              <Heart className="w-4 h-4 text-white/40" />
+              <span className="font-semibold">0</span>
             </div>
-            <div className="flex items-center gap-1.5 hover:text-blue-500 transition-colors">
-              <MessageCircle className="w-4 h-4" />
-              <span className="font-medium">0</span>
+            <div className="flex items-center gap-1.5 hover:text-blue-400 transition-colors">
+              <MessageCircle className="w-4 h-4 text-white/40" />
+              <span className="font-semibold">0</span>
             </div>
           </div>
         </div>
       </Link>
 
+      {/* Floating Share Button */}
       <div className="absolute top-3 right-3 z-20 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
         <button
           onClick={(e) => {
+            e.preventDefault();
             e.stopPropagation();
             onShare(shareUrl);
           }}
-          className="flex items-center gap-2 text-sm font-medium text-white bg-black/70 hover:bg-black/90 backdrop-blur-sm px-3 py-2 rounded-full shadow-lg transition-all duration-200 hover:scale-105"
+          className="flex items-center gap-1.5 text-xs font-semibold text-white bg-black/45 hover:bg-brand-gold hover:text-black border border-white/10 backdrop-blur-md px-3 py-1.5 rounded-full shadow-md transition-all duration-200 hover:scale-105 cursor-pointer"
         >
-          <Share2 size={14} />
+          <Share2 size={12} />
           <span>Share</span>
         </button>
       </div>
-
-      {/* =========== PORTALLED TOOLTIP =========== */}
-      {hovered &&
-        createPortal(
-          <div
-            // outer wrapper: fixed to viewport
-            className="fixed z-[99999] pointer-events-none"
-            style={{
-              left: portalStyle.left,
-              top: portalStyle.top,
-              width: tooltipSize.width || 320,
-            }}
-          >
-            {/* inner box we measure */}
-            <div
-              ref={tooltipInnerRef}
-              className="pointer-events-auto relative bg-gray-500 text-white border border-gray-300 rounded-xl shadow-xl p-4"
-              style={{ width: tooltipSize.width || 320 }}
-            >
-              {/* arrow (centered) */}
-              <div
-                className="absolute left-1/2 -translate-x-1/2 w-0 h-0 "
-                style={
-                  position === "top"
-                    ? {
-                        borderLeft: "8px solid transparent",
-                        borderRight: "8px solid transparent",
-                        borderTop: "8px solid #6A7282",
-                        bottom: -8,
-                      }
-                    : {
-                        borderLeft: "8px solid transparent",
-                        borderRight: "8px solid transparent",
-                        borderBottom: "8px solid #6A7282",
-                        top: -8,
-                      }
-                }
-              />
-              {/* tooltip content */}
-              {thumbnailSrc && (
-                <div className="relative w-full aspect-video mb-2 rounded-lg overflow-hidden">
-                  {/* Blurry background */}
-                  <Image
-                    src={thumbnailSrc}
-                    alt={`${title} blurred background`}
-                    fill
-                    className="object-cover scale-110 blur-md opacity-60"
-                  />
-                  {/* Foreground image (object-contain so it doesn’t crop) */}
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <Image
-                      src={thumbnailSrc}
-                      alt={title}
-                      fill
-                      className="object-contain"
-                    />
-                  </div>
-                </div>
-              )}
-              <div className="text-sm font-semibold mb-1">{title}</div>
-              <div className="text-xs text-white mb-1 capitalize">
-                {mediaType.toLowerCase()}
-              </div>
-              {description && (
-                <p className="text-xs text-white line-clamp-3">
-                  {description}
-                </p>
-              )}
-            </div>
-          </div>,
-          document.body
-        )}
     </div>
   );
 }

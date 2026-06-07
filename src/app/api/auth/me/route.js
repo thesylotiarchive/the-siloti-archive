@@ -27,6 +27,8 @@ export async function GET(req) {
         email: true,
         role: true,
         name: true,
+        avatarUrl: true,
+        createdAt: true,
       },
     });
 

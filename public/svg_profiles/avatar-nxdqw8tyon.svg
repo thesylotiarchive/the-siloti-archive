@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 256 256" role="img" aria-label="Avatar NXDQw8Tyon">
+  <defs>
+    <linearGradient id="bg" gradientTransform="rotate(171 128 128)">
+      <stop offset="0" stop-color="#00c6ff"/>
+      <stop offset="1" stop-color="#0072ff"/>
+    </linearGradient>
+    <filter id="grain" x="-20%" y="-20%" width="140%" height="140%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="3" seed="9599" />
+      <feColorMatrix type="saturate" values="0" />
+      <feComponentTransfer>
+        <feFuncA type="table" tableValues="0 0.12" />
+      </feComponentTransfer>
+    </filter>
+    <filter id="softShadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feDropShadow dx="0" dy="6" stdDeviation="8" flood-color="rgba(0,0,0,0.2)" />
+    </filter>
+    <clipPath id="clip">
+      <rect x="16" y="16" width="224" height="224" rx="56" />
+    </clipPath>
+  </defs>
+
+  <g clip-path="url(#clip)">
+    <rect x="16" y="16" width="224" height="224" rx="56" fill="url(#bg)"/>
+    <rect x="51" y="36" width="127" height="127" rx="45" fill="#3a7bd5" opacity="0.20757053847424684" transform="rotate(162 114.5 99.5)"/>
+    <rect x="122" y="47" width="110" height="110" rx="22" fill="#3a7bd5" opacity="0.23126101200468838" transform="rotate(119 177 102)"/>
+    <rect x="1" y="122" width="130" height="130" rx="38" fill="#5efce8" opacity="0.3064792774152011" transform="rotate(288 66 187)"/>
+    <rect x="83" y="44" width="124" height="124" rx="21" fill="#3a7bd5" opacity="0.31722177629824727" transform="rotate(337 145 106)"/>
+    <rect x="66" y="49" width="134" height="134" rx="30" fill="#736efe" opacity="0.3179662362020463" transform="rotate(237 133 116)"/>
+    <rect x="141" y="37" width="62" height="62" rx="24" fill="#3a7bd5" opacity="0.3274683830561116" transform="rotate(27 172 68)"/>
+    <rect x="16" y="16" width="224" height="224" rx="56" filter="url(#grain)" opacity="0.7"/>
+
+    <!-- Headwear behind face -->
+    
+
+    <!-- Face -->
+    <g filter="url(#softShadow)">
+      <circle cx="127" cy="134" r="54" fill="rgba(255,255,255,0.55)"/>
+      
+      <!-- Eyebrows -->
+      
+      
+      <!-- Eyes -->
+      
+        <circle cx="110" cy="119" r="8.8" fill="rgba(17,24,39,0.78)"/>
+        <circle cx="144" cy="119" r="8.8" fill="rgba(17,24,39,0.78)"/>
+        <circle cx="111" cy="117" r="4" fill="rgba(255,255,255,0.8)"/>
+        <circle cx="145" cy="117" r="4" fill="rgba(255,255,255,0.8)"/>
+        <circle cx="108" cy="121" r="2" fill="rgba(255,255,255,0.6)"/>
+        <circle cx="142" cy="121" r="2" fill="rgba(255,255,255,0.6)"/>
+      
+      
+      <!-- Mouth -->
+      
+        <path d="M 102 150 Q 127 168 152 150" fill="rgba(17,24,39,0.15)" stroke="rgba(17,24,39,0.7)" stroke-width="4" stroke-linecap="round"/>
+        <path d="M 107 154 L 147 154" stroke="rgba(255,255,255,0.4)" stroke-width="2" stroke-linecap="round"/>
+      
+      
+      <!-- Accessories -->
+      
+    </g>
+    
+    <!-- Headwear in front -->
+    
+  </g>
+
+  <rect x="16" y="16" width="224" height="224" rx="56" fill="none" stroke="rgba(255,255,255,0.35)" stroke-width="2"/>
+</svg>

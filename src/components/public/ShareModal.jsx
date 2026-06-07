@@ -37,7 +37,7 @@ export default function ShareModal({ url, onClose }) {
       <div className="bg-white w-[90%] md:w-full max-w-sm rounded-xl shadow-xl p-6 relative">
         <button
           onClick={onClose}
-          className="absolute top-3 right-3 text-gray-500 hover:text-black"
+          className="absolute top-3 right-3 text-gray-500 hover:text-black cursor-pointer"
         >
           <X size={20} />
         </button>
@@ -49,7 +49,7 @@ export default function ShareModal({ url, onClose }) {
           <span className="truncate text-sm flex-1">{url}</span>
           <button
             onClick={handleCopy}
-            className="text-sm font-medium hover:opacity-75 transition"
+            className="text-sm font-medium hover:opacity-75 transition cursor-pointer"
           >
             {copied ? (
               <div className="flex items-center gap-1 text-green-600">
@@ -69,7 +69,7 @@ export default function ShareModal({ url, onClose }) {
             href={`https://wa.me/?text=${encodeURIComponent(url)}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex flex-col items-center hover:text-green-600"
+            className="flex flex-col items-center hover:text-green-600 cursor-pointer"
           >
             <MessageCircle size={20} />
             WhatsApp
@@ -78,7 +78,7 @@ export default function ShareModal({ url, onClose }) {
             href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex flex-col items-center hover:text-blue-500"
+            className="flex flex-col items-center hover:text-blue-500 cursor-pointer"
           >
             <Twitter size={20} />
             Twitter
@@ -87,7 +87,7 @@ export default function ShareModal({ url, onClose }) {
             href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex flex-col items-center hover:text-blue-700"
+            className="flex flex-col items-center hover:text-blue-700 cursor-pointer"
           >
             <Facebook size={20} />
             Facebook

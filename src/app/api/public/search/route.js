@@ -94,6 +94,22 @@ export async function GET(req) {
               }
             : {}),
         },
+        include: {
+          tags: true,
+          contributor: {
+            select: {
+              id: true,
+              name: true,
+              username: true,
+            }
+          },
+          folder: {
+            select: {
+              id: true,
+              name: true,
+            }
+          }
+        },
         orderBy: { createdAt: "desc" },
         skip: (page - 1) * limit,
         take: limit,
@@ -105,10 +121,40 @@ export async function GET(req) {
       let mediaItems = [];
       let collections = [];
 
+      const mediaInclude = {
+        tags: true,
+        contributor: {
+          select: {
+            id: true,
+            name: true,
+            username: true,
+          }
+        },
+        folder: {
+          select: {
+            id: true,
+            name: true,
+          }
+        }
+      };
+
+      const folderInclude = {
+        mediaItems: { where: { status: "PUBLISHED" } },
+        children: { where: { status: "PUBLISHED" } },
+        createdBy: {
+          select: {
+            id: true,
+            name: true,
+            username: true,
+          }
+        }
+      };
+
       if (q) {
         // ---- MEDIA ----
         const mediaStarts = await prisma.mediaItem.findMany({
           where: { ...filters, title: { startsWith: q, mode: "insensitive" } },
+          include: mediaInclude,
           orderBy: { createdAt: "desc" },
         });
 
@@ -118,6 +164,7 @@ export async function GET(req) {
             title: { contains: q, mode: "insensitive" },
             NOT: { title: { startsWith: q, mode: "insensitive" } },
           },
+          include: mediaInclude,
           orderBy: { createdAt: "desc" },
         });
 
@@ -130,10 +177,7 @@ export async function GET(req) {
             name: { startsWith: q, mode: "insensitive" },
             ...(collectionId ? { parentId: collectionId } : { parentId: null }),
           },
-          include: {
-            mediaItems: { where: { status: "PUBLISHED" } },
-            children: { where: { status: "PUBLISHED" } },
-          },
+          include: folderInclude,
           orderBy: { createdAt: "desc" },
         });
 
@@ -144,10 +188,7 @@ export async function GET(req) {
             NOT: { name: { startsWith: q, mode: "insensitive" } },
             ...(collectionId ? { parentId: collectionId } : { parentId: null }),
           },
-          include: {
-            mediaItems: { where: { status: "PUBLISHED" } },
-            children: { where: { status: "PUBLISHED" } },
-          },
+          include: folderInclude,
           orderBy: { createdAt: "desc" },
         });
 
@@ -156,6 +197,7 @@ export async function GET(req) {
         // ---- Non-search mode ----
         mediaItems = await prisma.mediaItem.findMany({
           where: filters,
+          include: mediaInclude,
           orderBy: { createdAt: "desc" },
         });
 
@@ -165,10 +207,7 @@ export async function GET(req) {
             ...(collectionId ? { parentId: collectionId } : { parentId: null }),
           },
           orderBy: { createdAt: "desc" },
-          include: {
-            mediaItems: { where: { status: "PUBLISHED" } },
-            children: { where: { status: "PUBLISHED" } },
-          },
+          include: folderInclude,
         });
       }
 
@@ -178,6 +217,13 @@ export async function GET(req) {
         id: folder.id,
         name: folder.name,
         imageUrl: folder.image,
+        description: folder.description,
+        createdAt: folder.createdAt,
+        contributor: folder.createdBy ? {
+          id: folder.createdBy.id,
+          name: folder.createdBy.name,
+          username: folder.createdBy.username,
+        } : null,
         itemCount: (folder.children?.length || 0) + (folder.mediaItems?.length || 0),
         type: "collection",
       }));

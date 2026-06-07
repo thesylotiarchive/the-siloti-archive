@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Eye, EyeOff, Loader2 } from "lucide-react";
+import { Eye, EyeOff, Loader2, ShieldCheck, Mail, Lock } from "lucide-react";
 
 export default function AdminLoginPage() {
   const router = useRouter();
@@ -36,72 +36,96 @@ export default function AdminLoginPage() {
   };
 
   return (
-    <main className="min-h-screen flex items-center justify-center bg-background text-foreground">
-      <form
-        onSubmit={handleSubmit}
-        className="bg-card text-card-foreground border border-border p-6 rounded-xl w-[90%] max-w-md space-y-4 shadow-md"
-      >
-        {/* Logo + Title */}
-        <div className="flex flex-col items-center space-y-2">
-          <img
-            src="/logo.png" // put your logo in public/logo.png
-            alt="Logo"
-            className="w-12 h-12"
-          />
-          <h1 className="text-2xl font-bold">Sylheti Archive Admin</h1>
-          <p className="text-sm text-muted-foreground">Sign in to continue</p>
+    <main className="min-h-screen bg-slate-950 text-white relative overflow-hidden flex items-center justify-center px-4 selection:bg-emerald-400 selection:text-slate-950">
+      {/* Background glows */}
+      <div className="absolute top-0 left-1/4 w-[500px] h-[300px] bg-emerald-400/5 blur-[150px] rounded-full pointer-events-none"></div>
+      <div className="absolute bottom-0 right-1/4 w-[500px] h-[300px] bg-blue-500/5 blur-[150px] rounded-full pointer-events-none"></div>
+
+      <div className="relative z-10 w-full max-w-md bg-white/[0.02] border border-white/10 rounded-[2rem] p-8 sm:p-10 backdrop-blur-md shadow-2xl">
+        <div className="flex flex-col items-center mb-8">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-white/5 border border-white/10 rounded-full mb-4">
+            <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
+            <span className="text-[10px] font-bold uppercase tracking-widest text-emerald-300">Admin Access</span>
+          </div>
+          <h2 className="text-3xl font-light tracking-tight text-center text-white mb-2 leading-tight">
+            Sylheti Archive <span className="font-serif italic font-bold bg-gradient-to-r from-emerald-400 via-blue-400 to-amber-300 bg-clip-text text-transparent">Admin</span>
+          </h2>
+          <p className="text-white/50 text-xs sm:text-sm font-light text-center">Sign in to access your administrative dashboard.</p>
         </div>
 
-        {/* Error message */}
-        {error && <p className="text-destructive text-sm">{error}</p>}
-
-        {/* Email input */}
-        <input
-          type="email"
-          name="email"
-          placeholder="Admin Email"
-          onChange={handleChange}
-          value={form.email}
-          required
-          className="w-full p-2 border border-input rounded-md bg-background text-foreground focus:ring-2 focus:ring-primary"
-        />
-
-        {/* Password input with toggle */}
-        <div className="relative">
-          <input
-            type={showPassword ? "text" : "password"}
-            name="password"
-            placeholder="Password"
-            onChange={handleChange}
-            value={form.password}
-            required
-            className="w-full p-2 border border-input rounded-md bg-background text-foreground focus:ring-2 focus:ring-primary pr-10"
-          />
-          <button
-            type="button"
-            onClick={() => setShowPassword(!showPassword)}
-            className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
-          >
-            {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-          </button>
-        </div>
-
-        {/* Submit button */}
-        <button
-          type="submit"
-          disabled={loading}
-          className="w-full flex items-center justify-center gap-2 bg-primary text-primary-foreground p-2 rounded-md hover:opacity-90 disabled:opacity-70 disabled:cursor-not-allowed"
-        >
-          {loading ? (
-            <>
-              <Loader2 className="animate-spin" size={18} />
-              Signing in...
-            </>
-          ) : (
-            "Sign In"
+        <form onSubmit={handleSubmit} className="space-y-5">
+          {error && (
+            <div className="p-3.5 bg-red-500/10 border border-red-500/20 text-red-400 rounded-xl text-center text-xs font-semibold">
+              {error}
+            </div>
           )}
-        </button>
-      </form>
+
+          {/* Admin Email or Username Input */}
+          <div className="space-y-1.5">
+            <label className="text-[10px] uppercase tracking-wider text-white/40 block font-semibold pl-1">
+              Admin Email or Username
+            </label>
+            <div className="relative">
+              <input
+                type="text"
+                name="email"
+                placeholder="admin@example.com or username"
+                onChange={handleChange}
+                value={form.email}
+                required
+                className="w-full bg-white/5 border border-white/10 rounded-xl py-3.5 pl-11 pr-4 text-sm text-white placeholder-white/35 focus:outline-none focus:border-emerald-400 transition-colors"
+              />
+              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-white/30 pointer-events-none">
+                <Mail className="w-4 h-4" />
+              </span>
+            </div>
+          </div>
+
+          {/* Password Input */}
+          <div className="space-y-1.5">
+            <label className="text-[10px] uppercase tracking-wider text-white/40 block font-semibold pl-1">
+              Password
+            </label>
+            <div className="relative">
+              <input
+                type={showPassword ? "text" : "password"}
+                name="password"
+                placeholder="••••••••"
+                onChange={handleChange}
+                value={form.password}
+                required
+                className="w-full bg-white/5 border border-white/10 rounded-xl py-3.5 pl-11 pr-12 text-sm text-white placeholder-white/35 focus:outline-none focus:border-emerald-400 transition-colors"
+              />
+              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-white/30 pointer-events-none">
+                <Lock className="w-4 h-4" />
+              </span>
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-white/40 hover:text-white transition-colors"
+              >
+                {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+              </button>
+            </div>
+          </div>
+
+          {/* Submit Button */}
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full py-3.5 bg-gradient-to-r from-emerald-500 to-blue-600 hover:from-emerald-400 hover:to-blue-500 text-white font-bold rounded-xl transition-all duration-300 shadow-lg shadow-emerald-500/10 cursor-pointer active:scale-95 text-sm flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {loading ? (
+              <>
+                <Loader2 className="animate-spin w-4 h-4" />
+                <span>Signing in...</span>
+              </>
+            ) : (
+              <span>Sign In</span>
+            )}
+          </button>
+        </form>
+      </div>
     </main>
   );
 }

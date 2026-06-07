@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { getUserFromRequest } from "@/lib/auth-helpers";
+import { invalidatePattern } from "@/lib/cache";
 
 export async function POST(request, { params }) {
   const user = await getUserFromRequest(request);
@@ -28,6 +29,10 @@ export async function POST(request, { params }) {
         approvedBy: true,
       },
     });
+
+    // Invalidate caches
+    await invalidatePattern("blog:detail:*");
+    await invalidatePattern("blogs:list:*");
 
     return NextResponse.json(publishedBlog);
   } catch (error) {

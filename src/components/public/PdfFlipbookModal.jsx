@@ -60,7 +60,7 @@ export default function PdfFlipbookModal({ isOpen = true, onClose, pages = [], p
       <div className="fixed inset-0 flex justify-center items-center p-4">
         <Dialog.Panel className="relative bg-white rounded-lg shadow-lg max-w-5xl w-full h-auto overflow-hidden">
           <button
-            className="absolute top-4 right-4 text-gray-600 hover:text-gray-900"
+            className="absolute top-4 right-4 text-gray-600 hover:text-gray-900 cursor-pointer"
             onClick={onClose}
           >
             <X className="w-6 h-6" />

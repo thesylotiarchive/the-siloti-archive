@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { getUserFromRequest } from "@/lib/auth-helpers";
+import { invalidatePattern } from "@/lib/cache";
 
 // GET /api/admin/blogs?page=1&limit=6
 export async function GET(request) {
@@ -66,6 +67,9 @@ export async function POST(request) {
         createdById: user.id,
       },
     });
+
+    // Invalidate blogs list cache
+    await invalidatePattern("blogs:list:*");
 
     return NextResponse.json(newBlog, { status: 201 });
   } catch (error) {

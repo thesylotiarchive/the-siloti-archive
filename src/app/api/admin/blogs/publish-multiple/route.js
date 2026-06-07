@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { getUserFromRequest } from "@/lib/auth-helpers";
+import { invalidatePattern } from "@/lib/cache";
 
 export async function PATCH(req) {
   try {
@@ -25,6 +26,10 @@ export async function PATCH(req) {
         publishedAt: new Date(),
       },
     });
+
+    // Invalidate caches
+    await invalidatePattern("blog:detail:*");
+    await invalidatePattern("blogs:list:*");
 
     return NextResponse.json({ success: true, count: updatedBlogs.count });
   } catch (err) {

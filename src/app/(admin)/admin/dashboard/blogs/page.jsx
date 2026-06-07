@@ -8,6 +8,8 @@ import { Button } from "@/components/ui/button";
 import { format } from "date-fns";
 import { useAuth } from "@/lib/context/AuthContext";
 
+import { FileText } from "lucide-react";
+
 export default function BlogListPage() {
   const { me, authLoading } = useAuth();
   const [blogs, setBlogs] = useState([]);
@@ -83,22 +85,21 @@ export default function BlogListPage() {
   function Skeleton({ className }) {
     return (
       <div
-        className={`animate-pulse bg-gray-300 dark:bg-gray-700 rounded-md ${className}`}
+        className={`animate-pulse bg-slate-200 rounded-xl ${className}`}
       />
     );
   }
 
   function BlogCardSkeleton() {
     return (
-      <div className="flex items-start gap-4 border rounded-lg p-4 shadow-sm bg-white w-full animate-pulse">
-        <Skeleton className="w-32 h-24 flex-shrink-0" />
-        <div className="flex-1 space-y-2">
-          <Skeleton className="h-6 w-3/4" />
-          <Skeleton className="h-4 w-1/3" />
-          <Skeleton className="h-4 w-full" />
-          <Skeleton className="h-4 w-5/6" />
+      <div className="flex flex-col border border-slate-200/60 rounded-[2rem] p-6 bg-white/40 shadow-sm animate-pulse w-full">
+        <div className="w-full h-44 bg-slate-100 rounded-xl mb-4" />
+        <div className="space-y-2.5 flex-1">
+          <div className="h-3 w-1/3 bg-slate-100 rounded" />
+          <div className="h-5 w-3/4 bg-slate-100 rounded" />
+          <div className="h-4 w-full bg-slate-100 rounded" />
+          <div className="h-4 w-5/6 bg-slate-100 rounded" />
         </div>
-        <Skeleton className="w-6 h-6 rounded-full" />
       </div>
     );
   }
@@ -119,79 +120,97 @@ export default function BlogListPage() {
   );
 
   if (authLoading) {
-    return <p>Loading user...</p>;
+    return (
+      <div className="flex flex-col items-center justify-center py-12 space-y-4">
+        <div className="w-8 h-8 border-4 border-emerald-500/80 border-t-transparent rounded-full animate-spin"></div>
+        <p className="text-sm text-slate-400 font-medium animate-pulse">Loading user...</p>
+      </div>
+    );
   }
 
   return (
-    <main className="max-w-6xl mx-auto p-4 sm:p-6">
-      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-6 gap-4">
-        <h1 className="text-2xl font-bold">Blogs</h1>
+    <main className="max-w-6xl mx-auto">
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-6 gap-4 border-b border-slate-200/50 pb-5">
+        <div>
+          <h1 className="text-3xl font-light tracking-tight">
+            <span className="bg-gradient-to-r from-slate-950 via-slate-800 to-slate-700 bg-clip-text text-transparent font-serif italic font-bold">
+              Blogs & Articles
+            </span>
+          </h1>
+          <p className="text-sm text-slate-600 mt-1">Publish and manage administrative news, research, and stories.</p>
+        </div>
         <Link href="/admin/dashboard/blogs/new">
-          <Button className={"cursor-pointer"}>➕ New Blog</Button>
+          <Button className="px-5 py-2 text-sm font-bold bg-gradient-to-r from-emerald-500 to-blue-600 hover:from-emerald-400 hover:to-blue-500 text-white rounded-xl shadow-sm transition-all duration-300 active:scale-[0.98] cursor-pointer">➕ New Blog</Button>
         </Link>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {blogs.map((blog, i) => (
           <Card
             key={blog.id}
             ref={i === blogs.length - 1 ? lastBlogRef : null}
-            className="relative flex flex-col border p-4 shadow-sm bg-white"
+            className="relative flex flex-col border border-slate-200/60 rounded-[2rem] p-6 bg-white/70 backdrop-blur-md shadow-sm transition-all duration-300 group hover:shadow-md hover:border-emerald-500/30"
           >
             {/* Floating Status Badge */}
             <div
-              className={`absolute top-6 right-6 px-2 py-1 text-xs font-semibold rounded-full shadow-md
+              className={`absolute top-8 right-8 px-2.5 py-0.5 text-[9px] font-bold tracking-wider uppercase rounded-full border shadow-sm z-10
                 ${
                   blog.status === "PUBLISHED"
-                    ? "bg-green-100 text-green-700"
+                    ? "bg-emerald-50 text-emerald-700 border-emerald-200/80"
                     : blog.status === "DRAFT"
-                    ? "bg-yellow-100 text-yellow-700"
-                    : "bg-red-100 text-red-700"
+                    ? "bg-amber-50 text-amber-700 border-amber-200/80"
+                    : "bg-red-50 text-red-700 border-red-200/80"
                 }`}
             >
               {blog.status}
             </div>
 
-            {blog.bannerUrl ? (
-              <img
-                src={blog.bannerUrl}
-                alt={blog.title}
-                className="w-full h-48 object-cover rounded-md mb-4"
-              />
-            ) : (
-              <div className="w-full h-48 bg-muted rounded-md mb-4" />
-            )}
+            <div className="w-full h-44 relative overflow-hidden rounded-xl bg-slate-50 border border-slate-100 mb-4 shrink-0 transition-transform duration-300 overflow-hidden shadow-inner">
+              {blog.bannerUrl ? (
+                <img
+                  src={blog.bannerUrl}
+                  alt={blog.title}
+                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-103"
+                />
+              ) : (
+                <div className="w-full h-full flex items-center justify-center bg-slate-50">
+                  <FileText className="w-10 h-10 text-emerald-600/70" />
+                </div>
+              )}
+            </div>
 
             <div className="flex flex-col flex-1">
-            <h2
-              className="text-lg font-semibold line-clamp-2 text-foreground hover:text-blue-600 cursor-pointer transition-colors"
-            >
-              <Link href={`/admin/dashboard/blogs/${blog.id}/view`}>
-                {blog.title}
-              </Link>
-            </h2>
-              <p className="text-sm text-muted-foreground mt-1">
-                {blog.author || "Unknown Author"} ·{" "}
-                {format(new Date(blog.createdAt), "PPP")}
-              </p>
-              <p className="text-sm text-muted-foreground mt-2 line-clamp-3">
+              <div className="flex items-center gap-1.5 text-[10px] font-bold text-emerald-700 tracking-widest uppercase mb-1.5">
+                <span>{blog.author || "Unknown Author"}</span>
+                <span className="text-slate-300">•</span>
+                <span>{format(new Date(blog.createdAt), "PPP")}</span>
+              </div>
+
+              <h2
+                className="text-base font-bold text-slate-800 group-hover:text-emerald-700 leading-snug tracking-wide line-clamp-2 transition-colors duration-300 cursor-pointer mb-2"
+              >
+                <Link href={`/admin/dashboard/blogs/${blog.id}/view`}>
+                  {blog.title}
+                </Link>
+              </h2>
+              <p className="text-xs sm:text-sm text-slate-500 line-clamp-2 leading-relaxed">
                 {blog.content?.replace(/[#_*>\n]/g, "").slice(0, 140) ||
                   "No preview available..."}
               </p>
 
               {/* Actions */}
-              <div className="mt-4 flex flex-wrap gap-2 justify-start">
+              <div className="mt-auto pt-4 border-t border-slate-100 flex flex-wrap gap-2 justify-start">
                 <Link href={`/admin/dashboard/blogs/${blog.id}/view`}>
-                  <Button className={"cursor-pointer"} variant="secondary" size="sm">View</Button>
+                  <Button className="text-xs font-semibold px-3 py-1.5 h-auto rounded-xl cursor-pointer bg-slate-100 hover:bg-slate-200 text-slate-700 transition-all duration-200" variant="secondary" size="sm">View</Button>
                 </Link>
                 <Link href={`/admin/dashboard/blogs/${blog.id}/edit`}>
-                  <Button className={"cursor-pointer"} variant="outline" size="sm">Edit</Button>
+                  <Button className="text-xs font-semibold px-3 py-1.5 h-auto rounded-xl cursor-pointer border border-slate-200 text-slate-600 hover:bg-slate-50 transition-all duration-200" variant="outline" size="sm">Edit</Button>
                 </Link>
 
                 {/* Only Admin + Superadmin can delete */}
                 {(me?.role === "ADMIN" || me?.role === "SUPERADMIN") && (
                   <Button
-                    className={"cursor-pointer"}
+                    className="text-xs font-semibold px-3 py-1.5 h-auto rounded-xl cursor-pointer bg-red-50 text-red-600 hover:bg-red-100 transition-all duration-200 border border-red-200/50"
                     variant="destructive"
                     size="sm"
                     onClick={() => handleDelete(blog.id)}
@@ -204,7 +223,7 @@ export default function BlogListPage() {
                 {(me?.role === "ADMIN" || me?.role === "SUPERADMIN") && blog.status === "DRAFT" && (
                   <Button
                     variant="default"
-                    className={"cursor-pointer"}
+                    className="text-xs font-semibold px-3 py-1.5 h-auto rounded-xl cursor-pointer bg-gradient-to-r from-emerald-500 to-blue-600 hover:from-emerald-400 hover:to-blue-500 text-white shadow-sm transition-all duration-300 active:scale-[0.98]"
                     size="sm"
                     onClick={() => handlePublish(blog.id)}
                     disabled={publishingId === blog.id}
@@ -222,7 +241,9 @@ export default function BlogListPage() {
       </div>
 
       {!hasMore && !loading && blogs.length === 0 && (
-        <p className="text-muted-foreground text-center mt-10">No blogs found.</p>
+        <div className="text-center py-16 bg-white/50 border border-slate-200/40 rounded-[2rem] shadow-sm max-w-xl mx-auto mt-10">
+          <p className="text-slate-400 font-medium">No blogs found.</p>
+        </div>
       )}
     </main>
   );

@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { getUserFromRequest } from "@/lib/auth-helpers";
+import { invalidateCache, invalidatePattern } from "@/lib/cache";
 
 // PATCH /api/admin/folders/[id] => Update folder
 export async function PATCH(req, { params }) {
@@ -26,6 +27,10 @@ export async function PATCH(req, { params }) {
         status,
       },
     });
+
+    // Invalidate collections cache
+    await invalidateCache(`collection:detail:${params.id}`);
+    await invalidatePattern("collections:parent:*");
 
     return NextResponse.json(updated);
   } catch (err) {
@@ -96,6 +101,10 @@ export async function DELETE(req, { params }) {
     }
 
     await deleteFolderRecursively(folderId);
+
+    // Invalidate collections cache
+    await invalidateCache(`collection:detail:${folderId}`);
+    await invalidatePattern("collections:parent:*");
 
     return NextResponse.json({ success: true });
   } catch (err) {

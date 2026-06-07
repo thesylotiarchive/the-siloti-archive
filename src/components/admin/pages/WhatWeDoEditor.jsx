@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 
@@ -126,36 +126,67 @@ export default function WhatWeDoEditor() {
     }
   };
 
-  if (loading) return <div className="p-6">Loading...</div>;
-  if (!page) return <div className="p-6">Page not found</div>;
+  if (loading) {
+    return (
+      <div className="flex flex-col items-center justify-center py-12 space-y-4">
+        <div className="w-8 h-8 border-4 border-emerald-500/80 border-t-transparent rounded-full animate-spin"></div>
+        <p className="text-sm text-slate-400 font-medium animate-pulse">Loading content...</p>
+      </div>
+    );
+  }
+
+  if (!page) {
+    return (
+      <div className="text-center py-16 bg-white/50 border border-slate-200/40 rounded-[2rem] shadow-sm max-w-xl mx-auto mt-10">
+        <p className="text-red-500 font-medium">Page not found</p>
+      </div>
+    );
+  }
 
   return (
-    <div className="p-6 max-w-5xl mx-auto space-y-10">
-      <h1 className="text-2xl font-bold">Edit What We Do Page</h1>
+    <div className="max-w-4xl mx-auto space-y-6">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-6 gap-4 border-b border-slate-200/50 pb-5">
+        <div>
+          <h1 className="text-3xl font-light tracking-tight">
+            <span className="bg-gradient-to-r from-slate-950 via-slate-800 to-slate-700 bg-clip-text text-transparent font-serif italic font-bold">
+              Edit What We Do
+            </span>
+          </h1>
+          <p className="text-sm text-slate-600 mt-1">
+            Configure service offerings, descriptive bullets, icons, and hero highlights.
+          </p>
+        </div>
+      </div>
 
       {/* Hero Section */}
-      <section className="p-4 border rounded bg-gray-50 space-y-4">
-        <h2 className="font-semibold text-lg">Hero Section</h2>
-        <div>
-          <label className="block text-sm font-medium mb-1">Heading</label>
+      <section className="p-6 border border-slate-200/60 rounded-[2rem] bg-white/70 backdrop-blur-md space-y-5 shadow-sm">
+        <h2 className="text-xl font-bold tracking-tight bg-gradient-to-r from-slate-950 via-slate-800 to-slate-700 bg-clip-text text-transparent font-serif italic pb-2 border-b border-slate-100">
+          Hero Section
+        </h2>
+        
+        <div className="space-y-1">
+          <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Heading</label>
           <input
-            className="border p-2 w-full rounded"
+            className="w-full px-3.5 py-2 border border-slate-200 focus:border-emerald-400 focus:ring-1 focus:ring-emerald-400/50 rounded-xl bg-white/60 text-slate-900 text-sm shadow-inner transition-all duration-200 outline-none"
             value={page.sections.hero.heading}
             onChange={(e) => updateHero("heading", e.target.value)}
           />
         </div>
-        <div>
-          <label className="block text-sm font-medium mb-1">Subheading</label>
+
+        <div className="space-y-1">
+          <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Subheading</label>
           <input
-            className="border p-2 w-full rounded"
+            className="w-full px-3.5 py-2 border border-slate-200 focus:border-emerald-400 focus:ring-1 focus:ring-emerald-400/50 rounded-xl bg-white/60 text-slate-900 text-sm shadow-inner transition-all duration-200 outline-none"
             value={page.sections.hero.subheading}
             onChange={(e) => updateHero("subheading", e.target.value)}
           />
         </div>
-        <div>
-          <label className="block text-sm font-medium mb-1">Description</label>
+
+        <div className="space-y-1">
+          <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Description</label>
           <textarea
-            className="border p-2 w-full rounded resize-none"
+            className="w-full px-3.5 py-2 border border-slate-200 focus:border-emerald-400 focus:ring-1 focus:ring-emerald-400/50 rounded-xl bg-white/60 text-slate-900 text-sm shadow-inner transition-all duration-200 resize-none outline-none min-h-[90px]"
             value={page.sections.hero.description}
             onChange={(e) => {
               updateHero("description", e.target.value);
@@ -166,48 +197,51 @@ export default function WhatWeDoEditor() {
         </div>
       </section>
 
-      {/* Services */}
+      {/* Services Section */}
       <section className="space-y-6">
-        <h2 className="text-lg font-semibold">Services</h2>
+        <h2 className="text-xs font-bold text-slate-700 uppercase tracking-wider pl-1">Services List</h2>
+        
         {page.sections.services.map((service, i) => (
           <div
             key={i}
-            className="p-4 border rounded-lg bg-white shadow-sm space-y-4"
+            className="p-6 border border-slate-200/60 rounded-[2rem] bg-white/70 backdrop-blur-md space-y-6 shadow-sm"
           >
-            <div className="flex justify-between items-center">
-              <h3 className="font-medium">Service {i + 1}</h3>
+            <div className="flex justify-between items-center pb-2 border-b border-slate-100">
+              <h3 className="text-lg font-bold text-slate-800 font-serif italic">Service #{i + 1}</h3>
               <Button
                 variant="destructive"
                 onClick={() => removeService(i)}
-                className="px-2 py-1"
+                className="px-4 py-1.5 text-xs font-semibold rounded-xl bg-red-50 text-red-600 hover:bg-red-100 border border-red-200/50 cursor-pointer transition-all duration-200"
               >
-                Remove
+                Remove Service
               </Button>
             </div>
 
-            <div>
-              <label className="block text-sm mb-1">Title</label>
-              <input
-                className="border p-2 w-full rounded"
-                value={service.title}
-                onChange={(e) => updateService(i, "title", e.target.value)}
-              />
+            <div className="grid gap-4 md:grid-cols-3">
+              <div className="md:col-span-2 space-y-1">
+                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Title</label>
+                <input
+                  className="w-full px-3.5 py-2 border border-slate-200 focus:border-emerald-400 focus:ring-1 focus:ring-emerald-400/50 rounded-xl bg-white/60 text-slate-900 text-sm shadow-inner transition-all duration-200 outline-none"
+                  value={service.title}
+                  onChange={(e) => updateService(i, "title", e.target.value)}
+                />
+              </div>
+
+              <div className="space-y-1">
+                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Icon (Emoji or SVG)</label>
+                <input
+                  className="w-full px-3.5 py-2 border border-slate-200 focus:border-emerald-400 focus:ring-1 focus:ring-emerald-400/50 rounded-xl bg-white/60 text-slate-900 text-sm shadow-inner transition-all duration-200 outline-none text-center"
+                  placeholder="e.g. 🌍"
+                  value={service.icon}
+                  onChange={(e) => updateService(i, "icon", e.target.value)}
+                />
+              </div>
             </div>
 
-            <div>
-              <label className="block text-sm mb-1">Icon</label>
-              <input
-                className="border p-2 w-full rounded"
-                placeholder="e.g. 🌍"
-                value={service.icon}
-                onChange={(e) => updateService(i, "icon", e.target.value)}
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm mb-1">Summary</label>
+            <div className="space-y-1">
+              <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Summary</label>
               <textarea
-                className="border p-2 w-full rounded resize-none"
+                className="w-full px-3.5 py-2 border border-slate-200 focus:border-emerald-400 focus:ring-1 focus:ring-emerald-400/50 rounded-xl bg-white/60 text-slate-900 text-sm shadow-inner transition-all duration-200 resize-none outline-none min-h-[70px]"
                 value={service.summary}
                 onChange={(e) => {
                   updateService(i, "summary", e.target.value);
@@ -217,32 +251,32 @@ export default function WhatWeDoEditor() {
               />
             </div>
 
-            <div>
-              <label className="block text-sm font-medium mb-2">Bullets</label>
+            {/* Bullets Sub-section */}
+            <div className="space-y-3 pt-2 border-t border-slate-100/80">
+              <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider pl-1">Key Features / Bullets</label>
+              
               {service.bullets.map((b, j) => (
-                <div key={j} className="flex gap-2 mb-2">
+                <div key={j} className="flex gap-3 items-center">
                   <textarea
-                    className="border p-2 flex-1 rounded resize-none"
+                    className="w-full px-3.5 py-2 border border-slate-200 focus:border-emerald-400 focus:ring-1 focus:ring-emerald-400/50 rounded-xl bg-white/60 text-slate-900 text-sm shadow-inner transition-all duration-200 resize-none outline-none min-h-[36px]"
                     value={b}
-                    onChange={(e) =>
-                      updateBullet(i, j, e.target.value)
-                    }
+                    onChange={(e) => updateBullet(i, j, e.target.value)}
                     onInput={autoResize}
                     rows={1}
                   />
-                  <Button
-                    variant="destructive"
+                  <button
                     onClick={() => removeBullet(i, j)}
-                    className="px-2 py-1"
+                    className="w-8 h-8 flex items-center justify-center rounded-xl bg-red-50 text-red-600 hover:bg-red-100 border border-red-200/50 cursor-pointer shrink-0 transition-all duration-200"
                   >
                     ✕
-                  </Button>
+                  </button>
                 </div>
               ))}
+              
               <Button
                 variant="secondary"
                 onClick={() => addBullet(i)}
-                className="px-3 py-1"
+                className="text-xs font-semibold px-4.5 py-2 h-auto rounded-xl cursor-pointer border border-slate-200 text-slate-700 bg-white hover:bg-slate-50 transition-all duration-200 shadow-sm"
               >
                 + Add Bullet
               </Button>
@@ -251,18 +285,18 @@ export default function WhatWeDoEditor() {
         ))}
 
         <Button
-          variant="secondary"
+          variant="outline"
           onClick={addService}
-          className="px-3 py-1"
+          className="text-xs font-semibold px-5 py-2.5 h-auto rounded-xl cursor-pointer border border-slate-200 text-slate-700 bg-white hover:bg-slate-50 transition-all duration-200 shadow-sm"
         >
           + Add Service
         </Button>
       </section>
 
-      {/* Save Button */}
-      <div className="pt-6">
+      {/* Save Panel */}
+      <div className="pt-4 border-t border-slate-200/40">
         <Button
-          className="px-3 py-1"
+          className="px-6 py-2.5 text-sm font-bold bg-gradient-to-r from-emerald-500 to-blue-600 hover:from-emerald-400 hover:to-blue-500 text-white rounded-xl shadow-sm transition-all duration-300 active:scale-[0.98] cursor-pointer disabled:opacity-50"
           onClick={handleSave}
           variant="default"
           disabled={saving}

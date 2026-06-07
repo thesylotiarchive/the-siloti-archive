@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
+import { invalidateCache } from "@/lib/cache";
 
 export async function GET(req, { params }) {
   try {
@@ -25,6 +26,9 @@ export async function PATCH(req, { params }) {
         sections: body.sections,
       },
     });
+
+    // Invalidate the cache for this page
+    await invalidateCache(`page:${slug}`);
 
     return NextResponse.json(updatedPage, { status: 200 });
   } catch (err) {

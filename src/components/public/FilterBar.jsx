@@ -31,23 +31,23 @@ export default function FilterSidebar({ activeFilters, onChange }) {
   };
 
   return (
-    <aside className="w-64 shrink-0 border-r bg-muted/30 dark:bg-gray-900 p-4 rounded-lg h-fit">
-      <h2 className="text-lg font-semibold mb-4">Filters</h2>
+    <aside className="w-64 shrink-0 border border-white/10 bg-slate-900/40 backdrop-blur-md p-5 rounded-2xl h-fit text-white">
+      <h2 className="text-lg font-bold tracking-wide mb-4">Filters</h2>
 
       {/* Media Type */}
       <div className="mb-6">
-        <h3 className="text-sm font-medium mb-3">Media Type</h3>
-        <ul className="space-y-2">
+        <h3 className="text-xs uppercase tracking-widest text-white/55 font-bold mb-3">Media Type</h3>
+        <ul className="space-y-2.5">
           {filters.mediaType.map((f) => (
-            <li key={f} className="flex items-center space-x-2">
+            <li key={f} className="flex items-center space-x-2.5">
               <input
                 type="checkbox"
                 id={`mediaType-${f}`}
                 checked={selected.mediaType?.includes(f)}
                 onChange={() => handleCheckboxChange("mediaType", f)}
-                className="rounded border-gray-300 text-primary focus:ring-primary"
+                className="w-4 h-4 rounded border-white/20 bg-slate-950 text-emerald-500 focus:ring-emerald-500/50 cursor-pointer accent-emerald-500"
               />
-              <label htmlFor={`mediaType-${f}`} className="text-sm">
+              <label htmlFor={`mediaType-${f}`} className="text-sm text-white/85 cursor-pointer select-none font-medium hover:text-white transition-colors duration-150">
                 {f}
               </label>
             </li>
