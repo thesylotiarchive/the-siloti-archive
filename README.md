@@ -12,16 +12,7 @@ The Sylheti Archive is a digital repository and research platform designed to pr
 * **Caching**: [Upstash Redis](https://upstash.com/) (resilient REST connection API)
 * **Email Service**: [Nodemailer](https://nodemailer.com/) (Gmail integration)
 * **Uploads**: [UploadThing](https://uploadthing.com/) for media file hosting
-
----
-
-## ⚡ Resilient Caching Architecture
-
-We have integrated an Upstash Redis caching layer to offload heavy aggregation and database query operations (like recursive folder counting and content renders).
-
-* **Zero-Risk Postgres Fallback**: All cache requests are wrapped in robust, silent try-catch blocks. If your Upstash free tier command limits are exceeded (`500,000 requests/month`) or Redis goes offline, the system will **automatically route queries back to PostgreSQL via Prisma directly** without throwing errors or causing downtime.
-* **Timing & Origin Logs**: Every server data fetch prints console telemetry showing the precise timing and data source (e.g. `[CACHE HIT] Source: Upstash Redis` or `[CACHE MISS] Source: PostgreSQL Database`), showing before and after fetch timestamps so you can trace optimization gains.
-* **Automatic Cache Invalidation**: The admin endpoints automatically trigger key deletions (`invalidateCache` or `invalidatePattern` for patterns like `blogs:list:*` and `collections:parent:*`) on create, edit, delete, and publish events to guarantee real-time data consistency.
+* **Alerts & Dialogs**: [SweetAlert2](https://sweetalert2.github.io/) for smooth contributor confirmations
 
 ---
 
@@ -29,14 +20,14 @@ We have integrated an Upstash Redis caching layer to offload heavy aggregation a
 
 ```
 ├── prisma/                    # Prisma Database Schema and Seed Scripts
-├── public/                    # Static Assets (Logos, Icons, Local Files)
+├── public/                    # Static Assets (Logos, Icons, SVG presets)
 ├── src/
 │   ├── app/                   # Next.js App Router Pages and API Handlers
 │   │   ├── (admin)/           # Admin Console and Editors Dashboard
 │   │   ├── (collection)/      # Archive Search, Collection Detail, and Media Views
 │   │   ├── (home1 - home5)/   # Alternative Home landing pages
 │   │   ├── (pdf-viewer)/      # Standalone PDF manuscript reader
-│   │   ├── (public)/          # Public static sections (About, Donate, Contact, Blogs)
+│   │   ├── (public)/          # Public sections (About, Donate, Contact, Blogs, Profile)
 │   │   └── api/               # API Routes (divided into public/ and admin/)
 │   ├── components/            # Reusable UI Components
 │   │   ├── public/            # Shared Public components (Cards, Navbars, Renderers)
@@ -57,27 +48,80 @@ We have integrated an Upstash Redis caching layer to offload heavy aggregation a
 * **`/collection/[id]`** — **Collection Folder** *(Dynamic)*: Category subfolders and media items inside folder `id`.
 * **`/contact`** — **Contact Us**: Address details, inquiry forms, and contact points.
 * **`/donate`** — **Donate**: Domestic bank transfer details, UPI QR codes, and PayPal checkout portal.
-* **`/home1` - `/home5`** — Alternative landing themes.
-* **`/login`** — **Sign In**: User account login page.
+* **`/login`** — **Sign In**: User account login page (supports Email or Username login).
 * **`/media/[id]`** — **Media Details** *(Dynamic)*: Premium view page for individual items (audio playback, video stream, image preview, or PDF frames).
 * **`/pdf-viewer`** — **PDF Reader**: Standalone fullscreen viewer page for digital manuscripts.
 * **`/people`** — **People / Team**: Gallery list of the archive team and contributors.
 * **`/people/[id]`** — **Profile** *(Dynamic)*: Individual curator profile and submissions.
-* **`/reports`** — **Reports & Publications**: Downloads and downloads of field documentations and publications.
+* **`/profile`** — **My Profile**: Secure dashboard to update name, email, password, and custom avatars.
+* **`/reports`** — **Reports & Publications**: Downloads of field documentations and publications.
 * **`/search`** — **Search Archive**: Unified search containing live queries, filters, categories, and tags.
-* **`/signup`** — **Create Account**: Contributor account registration page.
-* **`/submit`** — **Submit Item**: Media upload and submission form for user contributions.
+* **`/signup`** — **Create Account**: Contributor account registration page with custom preset avatar picker.
+* **`/submit`** — **Submit Item**: Unified contribution hub for contributors to upload folders, blogs, or media files and track review states.
 * **`/what-we-do`** — **What We Do**: Details of core linguistic, research, and documentation initiatives.
+
+---
+
+## 🌟 Platform Feature Breakdown
+
+### 🏛️ Original Core Features
+1. **Static Content Pages**: Public informational routes including About Us, What We Do, Reports, Contact, and Donate.
+2. **Generic Database Models**: Base schema configuration for Users, Roles, Blogs, Folders, and Media Items.
+3. **Public Collection Browsing**: Nested collection folder tree navigation and search capabilities.
+4. **Basic Authentication**: Standard Sign-in/Sign-up session flows.
+
+---
+
+### 🚀 New Features Added by Basir (`Engineer-BK`)
+
+Basir has upgraded the archive into a premium, performance-optimized curation platform with the following major implementations:
+
+#### 1. Resilient Caching Architecture (Upstash Redis & PostgreSQL Fallback)
+* **Why Caching was Implemented**: To ensure sub-second response times for read-heavy operations. Fetching deep nested collection trees, page content blocks, and statistics counts was previously hammering the database, slowing down page loads. Memory-caching these responses drastically reduces database overhead.
+* **Core Caching Utility (`cache.js`)**: Encapsulates data fetching through `getCachedData(key, fetchFn, ttl)`. It first polls Upstash Redis.
+* **Seamless PostgreSQL Fallback**: If Upstash hits command quotas, experiences connection issues, or goes offline, the utility **silently catches the error** and routes query execution directly back to PostgreSQL via Prisma.
+* **Console Telemetry Logs**: Prints precise logging in the console showing execution durations and data origin. Example output:
+  ```
+  [CACHE HIT] Source: Upstash Redis
+    Key:         "collections:parent:root"
+    Before Time: 23:03:06.950
+    After Time:  23:03:07.395
+    Duration:    444.16ms (PostgreSQL query avoided)
+  ```
+* **Cache Invalidation**: Triggers key deletions (`invalidateCache` / `invalidatePattern`) automatically on admin actions (creating, updating, deleting, or publishing folder/media/blog records) to guarantee real-time data sync.
+
+#### 2. Unified Public Submissions Dashboard (`/submit`)
+* **Multi-type Form Switcher**: A segmented control allowing contributors to submit **[ Media Items | Folders | Blog Articles ]**.
+* **Automated File Parsing**: Uploading files (PDF, Audio, Images) automatically parses filenames to set the title input, strips file extensions, and auto-detects and checks matching Media Types (e.g. `.mp3` ➔ `AUDIO`).
+* **YouTube and URL Metadata Scraper Proxy**:
+  - Implemented `/api/public/metadata` proxy on URL field focus-out/blur.
+  - Automatically scrapes the webpage's meta headers to pre-fill Title, Description, and extracts high-resolution YouTube thumbnails.
+  - Displays a glassmorphic loading screen (*"Fetching details... please wait..."*) during scraper parsing.
+* **Creator Attribute**: Pushed schema updates to Neon DB to support custom `author` fields on submissions.
+
+#### 3. Curation Review Pipeline & Feedback System
+* **Submission Curation List**: Contributors can view their aggregated submitted drafts and check their status (**Pending**, **Approved**, or **Rejected**) in real time.
+* **Rejection Reason Comments**: Administrators can reject dynamic drafts from their inbox and input a rejection reason. The feedback is rendered dynamically to the contributor on their submissions dashboard.
+* **Pending Deletion**: Contributors can safely delete their pending (`DRAFT`) or rejected contributions. SweetAlert2 confirmation dialogs prevent accidental deletion.
+
+#### 4. Custom Profile Management (`/profile`)
+* **Avatar Preset Picker**: Added 15 beautiful preset SVG icons (stored in `public/svg_profiles`) that users can select as their profile picture on signup or profile pages.
+* **Device Image Uploads**: Supports uploading custom profile pictures from devices using UploadThing.
+* **Signup Fallback**: Automatically assigns a random SVG preset avatar to the user's database record on registration if they do not choose one.
+* **Dual Login Mode**: Users can log in using either their **Email** or **Username** seamlessly.
+* **Profile Settings Editor**: A private portal to update Name, Email, Profile Picture, and change Passwords. Form inputs include interactive `Eye` and `EyeOff` toggles to display/hide password text.
+
+#### 5. Premium Glassmorphic Light-Mode Admin UI/UX
+* **Admin Dashboard Overhaul**: Transformed 12 dashboard paths into a premium light glassmorphic styling, incorporating translucent panels (`bg-white/70 backdrop-blur-md`), background glow spheres, and active navigation highlights.
+* **Contrast Enhancements**: Updated all description lists, helper text, and subtitles from low-contrast styles (`text-slate-400`/`text-slate-500`) to highly visible **`text-slate-600`** to guarantee WCAG compliance and legibility.
+* **Cancel button controls**: Injected **Cancel** buttons on blog creators, editors, and folder modals to allow easy navigation.
 
 ---
 
 ## 🚀 Getting Started
 
-### 1. Prerequisites
-Make sure you have [Node.js](https://nodejs.org/) installed (v18+ recommended).
-
-### 2. Environment Setup
-Create a `.env` file in the root directory and configure the following variables:
+### 1. Environment Setup
+Create a `.env` file in the root directory and configure the variables:
 
 ```env
 # Database (Neon PostgreSQL)
@@ -105,36 +149,18 @@ UPSTASH_REDIS_REST_URL="https://your-db-name.upstash.io"
 UPSTASH_REDIS_REST_TOKEN="your_upstash_token"
 ```
 
-### 3. Install Dependencies
+### 2. Install Dependencies
 ```bash
 npm install
 ```
 
-### 4. Run Development Server
+### 3. Run Development Server
 ```bash
 npm run dev
 ```
-Open [http://localhost:3000](http://localhost:3000) to view the application.
 
----
-
-## 🗄️ Database Management
-
-### Start Prisma Studio
-To visually inspect and manage your tables, run:
+### 4. Database Controls
 ```bash
-npx prisma studio
-```
-Navigate to [http://localhost:5555](http://localhost:5555) to view and edit database entries.
-
-### Database Migrations
-If you modify `prisma/schema.prisma`:
-```bash
-npx prisma migrate dev --name <migration_name>
-```
-
-### Seed Database
-To populate the database with seed pages or categories:
-```bash
-npx prisma db seed
+npx prisma studio       # Starts visual schema explorer on http://localhost:5555
+npx prisma db seed      # Seed static system structures
 ```
