@@ -25,7 +25,7 @@ export async function POST(req) {
       },
     });
 
-    if (!user || (user.role !== 'ADMIN' && user.role !== 'SUPERADMIN' && user.role !== 'CONTRIBUTOR')) {
+    if (!user || (user.role !== 'ADMIN' && user.role !== 'SUPERADMIN')) {
       return new Response(JSON.stringify({ error: 'Access denied' }), {
         status: 403,
       });

@@ -33,7 +33,12 @@ export async function GET(req, { params }) {
       return NextResponse.json({ error: "Person not found" }, { status: 404 });
     }
 
-    return NextResponse.json(foundPerson);
+    const telemetry = page?._cacheTelemetry;
+    return NextResponse.json(foundPerson, {
+      headers: {
+        "x-cache-log": telemetry ? encodeURIComponent(telemetry) : ""
+      }
+    });
   } catch (error) {
     console.error(error);
     return NextResponse.json({ error: "Failed to fetch person" }, { status: 500 });

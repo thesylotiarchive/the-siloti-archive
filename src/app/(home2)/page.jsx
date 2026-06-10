@@ -99,7 +99,7 @@ export default function Home2Page() {
               className="cursor-pointer group relative inline-flex items-center justify-center gap-2 font-semibold px-7 py-3.5 text-base rounded-full transition-all duration-300 ease-in-out transform hover:scale-[1.03] active:scale-95 bg-white/10 hover:bg-white/15 text-white border border-white/20 hover:border-white/40 backdrop-blur-md"
             >
               <Heart className="w-4.5 h-4.5 transition-all text-rose-400 group-hover:scale-110" />
-              <span>Support Our Work</span>
+              <span>Donate</span>
             </button>
           </div>
 

@@ -39,6 +39,8 @@ export async function getCachedData(key, fetchFromDb, ttlSeconds = 600) {
     const endTime = performance.now();
     const duration = (endTime - startTime).toFixed(2);
     
+    const telemetry = `[CACHE HIT] Source: Upstash Redis\n  Key:         "${key}"\n  Before Time: ${formatTime(beforeTime)}\n  After Time:  ${formatTime(afterTime)}\n  Duration:    ${duration}ms (PostgreSQL query avoided)`;
+
     console.log(
       `\x1b[36m[CACHE HIT]\x1b[0m Source: \x1b[1mUpstash Redis\x1b[0m\n` +
       `  Key:         "${key}"\n` +
@@ -46,6 +48,15 @@ export async function getCachedData(key, fetchFromDb, ttlSeconds = 600) {
       `  After Time:  ${formatTime(afterTime)}\n` +
       `  Duration:    ${duration}ms (PostgreSQL query avoided)\n`
     );
+
+    if (data && typeof data === "object") {
+      Object.defineProperty(data, "_cacheTelemetry", {
+        value: telemetry,
+        writable: true,
+        enumerable: true,
+        configurable: true
+      });
+    }
     return data;
   }
 
@@ -66,6 +77,8 @@ export async function getCachedData(key, fetchFromDb, ttlSeconds = 600) {
   }
 
   const totalTime = (performance.now() - startTime).toFixed(2);
+  const telemetry = `[CACHE MISS] Source: PostgreSQL Database\n  Key:         "${key}"\n  Before Time: ${formatTime(dbBeforeTime)}\n  After Time:  ${formatTime(dbAfterTime)}\n  DB Duration: ${dbDuration}ms\n  Total Time:  ${totalTime}ms (Includes Redis set attempt)`;
+
   console.log(
     `\x1b[33m[CACHE MISS]\x1b[0m Source: \x1b[1mPostgreSQL Database\x1b[0m\n` +
     `  Key:         "${key}"\n` +
@@ -74,6 +87,15 @@ export async function getCachedData(key, fetchFromDb, ttlSeconds = 600) {
     `  DB Duration: ${dbDuration}ms\n` +
     `  Total Time:  ${totalTime}ms (Includes Redis set attempt)\n`
   );
+
+  if (data && typeof data === "object") {
+    Object.defineProperty(data, "_cacheTelemetry", {
+      value: telemetry,
+      writable: true,
+      enumerable: true,
+      configurable: true
+    });
+  }
 
   return data;
 }

@@ -30,6 +30,21 @@ export async function POST(request, { params }) {
       },
     });
 
+    if (publishedBlog.createdById) {
+      try {
+        await prisma.notification.create({
+          data: {
+            userId: publishedBlog.createdById,
+            title: "Blog Approved & Published",
+            message: `Your blog article "${publishedBlog.title}" has been approved and published.`,
+            link: `/blogs`,
+          },
+        });
+      } catch (err) {
+        console.error("Failed to create notification for blog publish:", err);
+      }
+    }
+
     // Invalidate caches
     await invalidatePattern("blog:detail:*");
     await invalidatePattern("blogs:list:*");

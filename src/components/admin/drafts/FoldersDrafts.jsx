@@ -5,6 +5,8 @@ import DraftFolderCard from "./DraftFolderCard";
 import { DraftFolderModal } from "./DraftFolderModal";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/lib/context/AuthContext";
+import Swal from "sweetalert2";
+import "sweetalert2/dist/sweetalert2.min.css";
 
 export default function FoldersDrafts() {
   const [folders, setFolders] = useState([]);
@@ -43,17 +45,46 @@ export default function FoldersDrafts() {
       if (!res.ok) throw new Error("Failed to publish selected folders");
       setFolders((prev) => prev.filter((f) => !selectedIds.includes(f.id)));
       setSelectedIds([]);
-      alert("Selected folders published successfully!");
+      
+      await Swal.fire({
+        title: "Published!",
+        text: "Selected folders published successfully!",
+        icon: "success",
+        confirmButtonColor: "#000000",
+        background: "#ffffff",
+        color: "#000000",
+        customClass: { popup: "rounded-3xl border border-slate-200 shadow-2xl" }
+      });
     } catch (err) {
       console.error(err);
-      alert("Failed to publish selected folders. Please try again.");
+      Swal.fire({
+        title: "Error",
+        text: "Failed to publish selected folders. Please try again.",
+        icon: "error",
+        confirmButtonColor: "#000000",
+        background: "#ffffff",
+        color: "#000000",
+        customClass: { popup: "rounded-3xl border border-slate-200 shadow-2xl" }
+      });
     }
   };
   
   // Bulk delete
   const handleDeleteSelected = async () => {
-    const confirmDelete = confirm("Are you sure you want to delete the selected folders?");
-    if (!confirmDelete) return;
+    const confirmDelete = await Swal.fire({
+      title: "Delete Selected?",
+      text: "Are you sure you want to delete the selected folders?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#ef4444",
+      cancelButtonColor: "rgba(0,0,0,0.1)",
+      confirmButtonText: "Yes, delete them",
+      background: "#ffffff",
+      color: "#000000",
+      customClass: { popup: "rounded-3xl border border-slate-200 shadow-2xl" }
+    });
+
+    if (!confirmDelete.isConfirmed) return;
   
     try {
       const res = await fetch("/api/admin/folders/bulk-delete", {
@@ -64,10 +95,27 @@ export default function FoldersDrafts() {
       if (!res.ok) throw new Error("Failed to delete selected folders");
       setFolders((prev) => prev.filter((f) => !selectedIds.includes(f.id)));
       setSelectedIds([]);
-      alert("Selected folders deleted successfully!");
+      
+      await Swal.fire({
+        title: "Deleted",
+        text: "Selected folders deleted successfully!",
+        icon: "success",
+        confirmButtonColor: "#000000",
+        background: "#ffffff",
+        color: "#000000",
+        customClass: { popup: "rounded-3xl border border-slate-200 shadow-2xl" }
+      });
     } catch (err) {
       console.error(err);
-      alert("Failed to delete selected folders. Please try again.");
+      Swal.fire({
+        title: "Error",
+        text: "Failed to delete selected folders. Please try again.",
+        icon: "error",
+        confirmButtonColor: "#000000",
+        background: "#ffffff",
+        color: "#000000",
+        customClass: { popup: "rounded-3xl border border-slate-200 shadow-2xl" }
+      });
     }
   };
   
@@ -80,28 +128,81 @@ export default function FoldersDrafts() {
       if (selectedIds.length > 0) {
         setSelectedIds((prev) => prev.filter((sid) => sid !== id));
       }
-      alert("Folder published successfully!");
+      
+      await Swal.fire({
+        title: "Published!",
+        text: "Folder published successfully!",
+        icon: "success",
+        confirmButtonColor: "#000000",
+        background: "#ffffff",
+        color: "#000000",
+        customClass: { popup: "rounded-3xl border border-slate-200 shadow-2xl" }
+      });
     } catch (err) {
       console.error(err);
-      alert("Failed to publish folder. Please try again.");
+      Swal.fire({
+        title: "Error",
+        text: "Failed to publish folder. Please try again.",
+        icon: "error",
+        confirmButtonColor: "#000000",
+        background: "#ffffff",
+        color: "#000000",
+        customClass: { popup: "rounded-3xl border border-slate-200 shadow-2xl" }
+      });
     }
   };
   
   const handleDeleteFolder = async (id) => {
-    const confirmDelete = confirm("Are you sure you want to delete this folder?");
-    if (!confirmDelete) return;
+    const result = await Swal.fire({
+      title: "Delete Folder?",
+      text: "Provide a comment/reason for deleting this folder:",
+      input: "text",
+      inputPlaceholder: "Comment/reason...",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#ef4444",
+      cancelButtonColor: "rgba(0,0,0,0.1)",
+      confirmButtonText: "Yes, delete it",
+      background: "#ffffff",
+      color: "#000000",
+      customClass: { popup: "rounded-3xl border border-slate-200 shadow-2xl" }
+    });
+
+    if (!result.isConfirmed) return;
+    const comment = result.value || "";
   
     try {
-      const res = await fetch(`/api/admin/folders/${id}`, { method: "DELETE" });
+      const res = await fetch(`/api/admin/folders/${id}`, {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ comment }),
+      });
       if (!res.ok) throw new Error("Failed to delete folder");
       setFolders((prev) => prev.filter((f) => f.id !== id));
       if (selectedIds.length > 0) {
         setSelectedIds((prev) => prev.filter((sid) => sid !== id));
       }
-      alert("Folder deleted successfully!");
+      
+      await Swal.fire({
+        title: "Deleted",
+        text: "Folder deleted successfully!",
+        icon: "success",
+        confirmButtonColor: "#000000",
+        background: "#ffffff",
+        color: "#000000",
+        customClass: { popup: "rounded-3xl border border-slate-200 shadow-2xl" }
+      });
     } catch (err) {
       console.error(err);
-      alert("Failed to delete folder. Please try again.");
+      Swal.fire({
+        title: "Error",
+        text: "Failed to delete folder. Please try again.",
+        icon: "error",
+        confirmButtonColor: "#000000",
+        background: "#ffffff",
+        color: "#000000",
+        customClass: { popup: "rounded-3xl border border-slate-200 shadow-2xl" }
+      });
     }
   };
 

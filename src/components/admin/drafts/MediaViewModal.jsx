@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import Swal from "sweetalert2";
+import "sweetalert2/dist/sweetalert2.min.css";
 
 export function MediaViewModal({ isOpen, onClose, media, me, onUpdate }) {
   const [loading, setLoading] = useState(false);
@@ -16,11 +18,30 @@ export function MediaViewModal({ isOpen, onClose, media, me, onUpdate }) {
     try {
       const res = await fetch(`/api/admin/media/${media.id}/publish`, { method: "PATCH" });
       if (!res.ok) throw new Error("Failed to publish media");
+      
+      await Swal.fire({
+        title: "Published!",
+        text: "Media item has been successfully published.",
+        icon: "success",
+        confirmButtonColor: "#000000",
+        background: "#ffffff",
+        color: "#000000",
+        customClass: { popup: "rounded-3xl border border-slate-200 shadow-2xl" }
+      });
+
       onUpdate?.();
       onClose();
     } catch (err) {
       console.error(err);
-      alert("Failed to publish media item.");
+      Swal.fire({
+        title: "Error",
+        text: "Failed to publish media item.",
+        icon: "error",
+        confirmButtonColor: "#000000",
+        background: "#ffffff",
+        color: "#000000",
+        customClass: { popup: "rounded-3xl border border-slate-200 shadow-2xl" }
+      });
     } finally {
       setLoading(false);
     }
@@ -29,7 +50,15 @@ export function MediaViewModal({ isOpen, onClose, media, me, onUpdate }) {
   const handleReject = async () => {
     if (!media?.id) return;
     if (!reason.trim()) {
-      alert("Please specify a rejection reason.");
+      Swal.fire({
+        title: "Rejection Reason Required",
+        text: "Please specify why this submission is being rejected.",
+        icon: "warning",
+        confirmButtonColor: "#000000",
+        background: "#ffffff",
+        color: "#000000",
+        customClass: { popup: "rounded-3xl border border-slate-200 shadow-2xl" }
+      });
       return;
     }
     setLoading(true);
@@ -40,11 +69,30 @@ export function MediaViewModal({ isOpen, onClose, media, me, onUpdate }) {
         body: JSON.stringify({ reason }),
       });
       if (!res.ok) throw new Error("Failed to reject media");
+
+      await Swal.fire({
+        title: "Rejected",
+        text: "Submission has been declined and feedback logged.",
+        icon: "success",
+        confirmButtonColor: "#000000",
+        background: "#ffffff",
+        color: "#000000",
+        customClass: { popup: "rounded-3xl border border-slate-200 shadow-2xl" }
+      });
+
       onUpdate?.();
       onClose();
     } catch (err) {
       console.error(err);
-      alert("Failed to reject media item.");
+      Swal.fire({
+        title: "Error",
+        text: "Failed to reject media item.",
+        icon: "error",
+        confirmButtonColor: "#000000",
+        background: "#ffffff",
+        color: "#000000",
+        customClass: { popup: "rounded-3xl border border-slate-200 shadow-2xl" }
+      });
     } finally {
       setLoading(false);
     }
@@ -52,18 +100,57 @@ export function MediaViewModal({ isOpen, onClose, media, me, onUpdate }) {
 
   const handleDelete = async () => {
     if (!media?.id) return;
-    const confirmDelete = confirm("Are you sure you want to delete this media?");
-    if (!confirmDelete) return;
+    
+    const result = await Swal.fire({
+      title: "Delete Submission?",
+      text: "Provide a comment/reason for deleting this submission:",
+      input: "text",
+      inputPlaceholder: "Comment/reason...",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#ef4444",
+      cancelButtonColor: "rgba(0,0,0,0.1)",
+      confirmButtonText: "Yes, delete it",
+      background: "#ffffff",
+      color: "#000000",
+      customClass: { popup: "rounded-3xl border border-slate-200 shadow-2xl" }
+    });
+
+    if (!result.isConfirmed) return;
+    const comment = result.value || "";
 
     setLoading(true);
     try {
-      const res = await fetch(`/api/admin/media/${media.id}`, { method: "DELETE" });
+      const res = await fetch(`/api/admin/media/${media.id}`, {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ comment }),
+      });
       if (!res.ok) throw new Error("Failed to delete media");
+
+      await Swal.fire({
+        title: "Deleted",
+        text: "Media submission has been soft-deleted/rejected.",
+        icon: "success",
+        confirmButtonColor: "#000000",
+        background: "#ffffff",
+        color: "#000000",
+        customClass: { popup: "rounded-3xl border border-slate-200 shadow-2xl" }
+      });
+
       onUpdate?.();
       onClose();
     } catch (err) {
       console.error(err);
-      alert("Failed to delete media item.");
+      Swal.fire({
+        title: "Error",
+        text: "Failed to delete media item.",
+        icon: "error",
+        confirmButtonColor: "#000000",
+        background: "#ffffff",
+        color: "#000000",
+        customClass: { popup: "rounded-3xl border border-slate-200 shadow-2xl" }
+      });
     } finally {
       setLoading(false);
     }

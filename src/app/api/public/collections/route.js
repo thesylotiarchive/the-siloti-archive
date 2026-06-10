@@ -75,7 +75,12 @@ export async function GET(req) {
       );
     }, 600); // 10 minutes TTL
 
-    return NextResponse.json(mapped);
+    const telemetry = mapped?._cacheTelemetry;
+    return NextResponse.json(mapped, {
+      headers: {
+        "x-cache-log": telemetry ? encodeURIComponent(telemetry) : ""
+      }
+    });
   } catch (err) {
     console.error("❌ GET /api/public/collections error:", err);
     return NextResponse.json(

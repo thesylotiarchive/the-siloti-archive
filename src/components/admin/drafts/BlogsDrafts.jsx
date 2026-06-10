@@ -4,6 +4,8 @@ import { useState, useEffect } from "react";
 import DraftBlogCard from "./DraftBlogCard";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/lib/context/AuthContext";
+import Swal from "sweetalert2";
+import "sweetalert2/dist/sweetalert2.min.css";
 
 export default function BlogDrafts() {
   const [blogs, setBlogs] = useState([]);
@@ -46,30 +48,79 @@ export default function BlogDrafts() {
       if (!res.ok) throw new Error("Failed to publish blog");
       setBlogs((prev) => prev.filter((b) => b.id !== id));
       setSelectedIds((prev) => prev.filter((sid) => sid !== id));
-      alert("Blog published successfully!");
+      
+      await Swal.fire({
+        title: "Published!",
+        text: "Blog published successfully!",
+        icon: "success",
+        confirmButtonColor: "#000000",
+        background: "#ffffff",
+        color: "#000000",
+        customClass: { popup: "rounded-3xl border border-slate-200 shadow-2xl" }
+      });
     } catch (err) {
       console.error(err);
-      alert("Failed to publish blog. Please try again.");
+      Swal.fire({
+        title: "Error",
+        text: "Failed to publish blog. Please try again.",
+        icon: "error",
+        confirmButtonColor: "#000000",
+        background: "#ffffff",
+        color: "#000000",
+        customClass: { popup: "rounded-3xl border border-slate-200 shadow-2xl" }
+      });
     }
   };
   
   const handleDeleteBlog = async (id) => {
-    const confirmDelete = confirm("Are you sure you want to delete this blog?");
-    if (!confirmDelete) return;
+    const result = await Swal.fire({
+      title: "Delete Blog?",
+      text: "Provide a comment/reason for deleting this blog:",
+      input: "text",
+      inputPlaceholder: "Comment/reason...",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#ef4444",
+      cancelButtonColor: "rgba(0,0,0,0.1)",
+      confirmButtonText: "Yes, delete it",
+      background: "#ffffff",
+      color: "#000000",
+      customClass: { popup: "rounded-3xl border border-slate-200 shadow-2xl" }
+    });
+
+    if (!result.isConfirmed) return;
+    const comment = result.value || "";
   
     try {
-      const res = await fetch(`/api/admin/blogs/bulk-delete`, {
-        method: "POST",
+      const res = await fetch(`/api/admin/blogs/${id}`, {
+        method: "DELETE",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ids: [id] }),
+        body: JSON.stringify({ comment }),
       });
       if (!res.ok) throw new Error("Failed to delete blog");
       setBlogs((prev) => prev.filter((b) => b.id !== id));
       setSelectedIds((prev) => prev.filter((sid) => sid !== id));
-      alert("Blog deleted successfully!");
+      
+      await Swal.fire({
+        title: "Deleted",
+        text: "Blog deleted successfully!",
+        icon: "success",
+        confirmButtonColor: "#000000",
+        background: "#ffffff",
+        color: "#000000",
+        customClass: { popup: "rounded-3xl border border-slate-200 shadow-2xl" }
+      });
     } catch (err) {
       console.error(err);
-      alert("Failed to delete blog. Please try again.");
+      Swal.fire({
+        title: "Error",
+        text: "Failed to delete blog. Please try again.",
+        icon: "error",
+        confirmButtonColor: "#000000",
+        background: "#ffffff",
+        color: "#000000",
+        customClass: { popup: "rounded-3xl border border-slate-200 shadow-2xl" }
+      });
     }
   };
   
@@ -84,16 +135,45 @@ export default function BlogDrafts() {
       if (!res.ok) throw new Error("Failed to bulk publish blogs");
       setBlogs((prev) => prev.filter((b) => !selectedIds.includes(b.id)));
       setSelectedIds([]);
-      alert("Selected blogs published successfully!");
+      
+      await Swal.fire({
+        title: "Published!",
+        text: "Selected blogs published successfully!",
+        icon: "success",
+        confirmButtonColor: "#000000",
+        background: "#ffffff",
+        color: "#000000",
+        customClass: { popup: "rounded-3xl border border-slate-200 shadow-2xl" }
+      });
     } catch (err) {
       console.error(err);
-      alert("Failed to bulk publish blogs. Please try again.");
+      Swal.fire({
+        title: "Error",
+        text: "Failed to bulk publish blogs. Please try again.",
+        icon: "error",
+        confirmButtonColor: "#000000",
+        background: "#ffffff",
+        color: "#000000",
+        customClass: { popup: "rounded-3xl border border-slate-200 shadow-2xl" }
+      });
     }
   };
   
   const handleBulkDelete = async () => {
-    const confirmDelete = confirm("Are you sure you want to delete the selected blogs?");
-    if (!confirmDelete) return;
+    const confirmDelete = await Swal.fire({
+      title: "Delete Selected?",
+      text: "Are you sure you want to delete the selected blogs?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#ef4444",
+      cancelButtonColor: "rgba(0,0,0,0.1)",
+      confirmButtonText: "Yes, delete them",
+      background: "#ffffff",
+      color: "#000000",
+      customClass: { popup: "rounded-3xl border border-slate-200 shadow-2xl" }
+    });
+
+    if (!confirmDelete.isConfirmed) return;
   
     try {
       const res = await fetch("/api/admin/blogs/bulk-delete", {
@@ -104,10 +184,27 @@ export default function BlogDrafts() {
       if (!res.ok) throw new Error("Failed to bulk delete blogs");
       setBlogs((prev) => prev.filter((b) => !selectedIds.includes(b.id)));
       setSelectedIds([]);
-      alert("Selected blogs deleted successfully!");
+      
+      await Swal.fire({
+        title: "Deleted",
+        text: "Selected blogs deleted successfully!",
+        icon: "success",
+        confirmButtonColor: "#000000",
+        background: "#ffffff",
+        color: "#000000",
+        customClass: { popup: "rounded-3xl border border-slate-200 shadow-2xl" }
+      });
     } catch (err) {
       console.error(err);
-      alert("Failed to bulk delete blogs. Please try again.");
+      Swal.fire({
+        title: "Error",
+        text: "Failed to bulk delete blogs. Please try again.",
+        icon: "error",
+        confirmButtonColor: "#000000",
+        background: "#ffffff",
+        color: "#000000",
+        customClass: { popup: "rounded-3xl border border-slate-200 shadow-2xl" }
+      });
     }
   };
 

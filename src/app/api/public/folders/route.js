@@ -8,6 +8,9 @@ export async function POST(req) {
     if (!user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
+    if (user.role !== "CONTRIBUTOR" && user.role !== "ADMIN" && user.role !== "SUPERADMIN") {
+      return NextResponse.json({ error: "Forbidden: Only Contributors and Administrators can submit items" }, { status: 403 });
+    }
 
     const body = await req.json();
     const { name, description, image, parentId } = body;
@@ -24,6 +27,16 @@ export async function POST(req) {
         parentId: parentId || null,
         status: "DRAFT", // Always force user submissions to DRAFT status for curator review
         createdById: user.id,
+      },
+    });
+
+    // Create Notification
+    await prisma.notification.create({
+      data: {
+        userId: user.id,
+        title: "Folder Submission Received",
+        message: `Your collection folder "${name}" has been successfully submitted and is pending curation review.`,
+        link: "/submit",
       },
     });
 

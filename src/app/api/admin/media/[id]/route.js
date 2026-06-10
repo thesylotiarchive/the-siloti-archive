@@ -83,10 +83,47 @@ export async function DELETE(req, { params }) {
       if (!user || (user.role !== 'ADMIN' && user.role !== 'SUPERADMIN')) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
       }
+
+      const body = await req.json().catch(() => ({}));
+      const { comment } = body;
   
-      await prisma.mediaItem.delete({
+      const mediaItem = await prisma.mediaItem.findUnique({
         where: { id: params.id },
       });
+
+      if (!mediaItem) {
+        return NextResponse.json({ error: "Media item not found" }, { status: 404 });
+      }
+
+      // If it's a contributor's submission, soft-delete it by setting status to REJECTED
+      // so it remains in their Submission History.
+      if (mediaItem.contributorId) {
+        const rejectionReason = comment || "Deleted by administrator.";
+        await prisma.mediaItem.update({
+          where: { id: params.id },
+          data: {
+            status: "REJECTED",
+            rejectionReason: rejectionReason,
+            approvedById: null,
+            approvedAt: null,
+          },
+        });
+
+        // Trigger notification
+        await prisma.notification.create({
+          data: {
+            userId: mediaItem.contributorId,
+            title: "Submission Deleted / Rejected",
+            message: `Your submitted media item "${mediaItem.title}" was declined/deleted. Comment: ${rejectionReason}`,
+            link: "/submit",
+          },
+        });
+      } else {
+        // Hard delete if no contributor
+        await prisma.mediaItem.delete({
+          where: { id: params.id },
+        });
+      }
   
       return NextResponse.json({ success: true });
     } catch (err) {

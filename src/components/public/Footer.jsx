@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { FaFacebookF, FaInstagram, FaYoutube } from "react-icons/fa";
 import { Mail, MapPin, Phone, ArrowUpRight, Globe } from "lucide-react";
 
 export default function Footer() {
@@ -51,9 +50,9 @@ export default function Footer() {
             {/* Social Links */}
             <div className="flex items-center gap-3">
               {[
-                { icon: <FaFacebookF />, url: "https://www.facebook.com/profile.php?id=100080464096715", label: "Facebook" },
-                { icon: <FaInstagram />, url: "https://www.instagram.com/sarcc_documentation", label: "Instagram" },
-                { icon: <FaYoutube />, url: "https://www.youtube.com/@silotiarchivercc", label: "YouTube" }
+                { logo: "/svg-logos/facebook-logo.svg", url: "https://www.facebook.com/profile.php?id=100080464096715", label: "Facebook" },
+                { logo: "/svg-logos/instagram-logo.svg", url: "https://www.instagram.com/sarcc_documentation", label: "Instagram" },
+                { logo: "/svg-logos/youtube-logo.svg", url: "https://www.youtube.com/@silotiarchivercc", label: "YouTube" }
               ].map((soc, i) => (
                 <a
                   key={i}
@@ -61,9 +60,15 @@ export default function Footer() {
                   aria-label={soc.label}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-10 h-10 rounded-full flex items-center justify-center bg-white/5 border border-white/10 text-white/70 hover:text-white hover:bg-emerald-400/15 hover:border-emerald-400 transition-all duration-300"
+                  className="w-10 h-10 rounded-full flex items-center justify-center bg-white/5 border border-white/10 text-white/70 hover:text-white hover:bg-emerald-400/15 hover:border-emerald-400 transition-all duration-300 group"
                 >
-                  {soc.icon}
+                  <Image 
+                    src={soc.logo} 
+                    alt={soc.label} 
+                    width={20} 
+                    height={20} 
+                    className="w-5 h-5 object-contain transition-transform duration-300 group-hover:scale-110"
+                  />
                 </a>
               ))}
             </div>

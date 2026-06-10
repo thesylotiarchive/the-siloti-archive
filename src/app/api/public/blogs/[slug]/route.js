@@ -31,7 +31,12 @@ export async function GET(req, { params }) {
       return NextResponse.json({ error: "Blog not found or not published" }, { status: 404 });
     }
 
-    return NextResponse.json(blog);
+    const telemetry = blog?._cacheTelemetry;
+    return NextResponse.json(blog, {
+      headers: {
+        "x-cache-log": telemetry ? encodeURIComponent(telemetry) : ""
+      }
+    });
   } catch (error) {
     console.error("Error fetching blog by slug:", error);
     return NextResponse.json({ error: "Server error" }, { status: 500 });

@@ -26,9 +26,9 @@ export const ourFileRouter = {
   // }),
 
   mediaFileUploader: f({
-    "application/pdf": { maxFileSize: "50MB", maxFileCount: 20 },
+    "application/pdf": { maxFileSize: "5MB", maxFileCount: 20 },
     image: { maxFileSize: "5MB", maxFileCount: 20 },
-    audio: { maxFileSize: "20MB", maxFileCount: 20 },
-    video: { maxFileSize: "100MB", maxFileCount: 20 },
+    audio: { maxFileSize: "5MB", maxFileCount: 20 },
+    video: { maxFileSize: "10MB", maxFileCount: 20 },
   }).onUploadComplete(({ file }) => file),
 };

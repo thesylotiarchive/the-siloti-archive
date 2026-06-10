@@ -20,6 +20,21 @@ export async function PATCH(req, { params }) {
       },
     });
 
+    if (updated.createdById) {
+      try {
+        await prisma.notification.create({
+          data: {
+            userId: updated.createdById,
+            title: "Folder Approved & Published",
+            message: `Your folder submission "${updated.name}" has been approved and published.`,
+            link: `/collection`,
+          },
+        });
+      } catch (err) {
+        console.error("Failed to create notification for folder publish:", err);
+      }
+    }
+
     // Invalidate caches
     await invalidateCache(`collection:detail:${params.id}`);
     await invalidatePattern("collections:parent:*");

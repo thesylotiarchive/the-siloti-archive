@@ -19,6 +19,21 @@ export async function PATCH(req, { params }) {
       },
     });
 
+    if (updated.contributorId) {
+      try {
+        await prisma.notification.create({
+          data: {
+            userId: updated.contributorId,
+            title: "Item Approved & Published",
+            message: `Your media item "${updated.title}" has been approved and published.`,
+            link: `/collection`,
+          },
+        });
+      } catch (err) {
+        console.error("Failed to create notification for media publish:", err);
+      }
+    }
+
     return NextResponse.json(updated);
   } catch (err) {
     console.error("PATCH /admin/media/[id]/publish error", err);

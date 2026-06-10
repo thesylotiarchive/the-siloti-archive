@@ -47,94 +47,94 @@ export default function AdminDashboardPage() {
   };
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-10">
       {/* Page Header */}
       <div>
-        <h1 className="text-3xl font-light tracking-tight">
-          <span className="bg-gradient-to-r from-slate-950 via-slate-800 to-slate-700 bg-clip-text text-transparent font-serif italic font-bold">
-            Dashboard Overview
-          </span>
+        <h1 className="text-3xl font-serif italic font-bold text-slate-950 tracking-tight">
+          Dashboard Overview
         </h1>
-        <p className="text-sm text-slate-600 mt-1">
+        <p className="text-xs text-slate-500 mt-1.5 font-medium">
           Monitor community contributions, user roles, and archive collection statuses.
         </p>
       </div>
 
       {!metrics ? (
-        <div className="flex flex-col items-center justify-center py-20 gap-3">
-          <Loader2 className="w-10 h-10 text-emerald-500 animate-spin" />
-          <span className="text-xs text-slate-400 font-medium">Loading metrics...</span>
+        <div className="flex flex-col items-center justify-center py-24 gap-3">
+          <Loader2 className="w-8 h-8 text-black animate-spin" />
+          <span className="text-xs text-slate-400 font-medium tracking-wide">Loading metrics...</span>
         </div>
       ) : (
-        <div className="space-y-8">
+        <div className="space-y-10">
           {/* Core Metrics Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <Card className="bg-white/70 border-slate-200/60 backdrop-blur-md shadow-sm hover:shadow-md transition-all duration-300 rounded-[2rem] overflow-hidden group">
+            <Card className="bg-white border border-slate-200/80 shadow-xs hover:shadow-md transition-all duration-300 rounded-[1.5rem] overflow-hidden group">
               <CardContent className="p-6 flex items-center justify-between">
                 <div className="space-y-1">
-                  <h2 className="text-xs font-bold uppercase tracking-wider text-slate-400">Total Users</h2>
-                  <p className="text-3xl font-bold text-slate-950">{metrics.users}</p>
+                  <h2 className="text-[10px] font-extrabold uppercase tracking-widest text-slate-500">Total Users</h2>
+                  <p className="text-3xl font-black text-black">{metrics.users}</p>
                 </div>
-                <div className="p-3 bg-blue-50 border border-blue-100 text-blue-600 rounded-2xl group-hover:scale-105 transition-transform">
-                  <Users className="w-6 h-6" />
+                <div className="p-3 bg-black text-white border border-black rounded-xl group-hover:scale-105 transition-transform duration-200">
+                  <Users className="w-5 h-5" />
                 </div>
               </CardContent>
             </Card>
 
-            <Card className="bg-white/70 border-slate-200/60 backdrop-blur-md shadow-sm hover:shadow-md transition-all duration-300 rounded-[2rem] overflow-hidden group">
+            <Card className="bg-white border border-slate-200/80 shadow-xs hover:shadow-md transition-all duration-300 rounded-[1.5rem] overflow-hidden group">
               <CardContent className="p-6 flex items-center justify-between">
                 <div className="space-y-1">
-                  <h2 className="text-xs font-bold uppercase tracking-wider text-slate-400">Admins</h2>
-                  <p className="text-3xl font-bold text-slate-950">{metrics.admins}</p>
+                  <h2 className="text-[10px] font-extrabold uppercase tracking-widest text-slate-500">Admins</h2>
+                  <p className="text-3xl font-black text-black">{metrics.admins}</p>
                 </div>
-                <div className="p-3 bg-red-50 border border-red-100 text-red-600 rounded-2xl group-hover:scale-105 transition-transform">
-                  <Shield className="w-6 h-6" />
+                <div className="p-3 bg-black text-white border border-black rounded-xl group-hover:scale-105 transition-transform duration-200">
+                  <Shield className="w-5 h-5" />
                 </div>
               </CardContent>
             </Card>
 
-            <Card className="bg-white/70 border-slate-200/60 backdrop-blur-md shadow-sm hover:shadow-md transition-all duration-300 rounded-[2rem] overflow-hidden group">
+            <Card className="bg-white border border-slate-200/80 shadow-xs hover:shadow-md transition-all duration-300 rounded-[1.5rem] overflow-hidden group">
               <CardContent className="p-6 flex items-center justify-between">
                 <div className="space-y-1">
-                  <h2 className="text-xs font-bold uppercase tracking-wider text-slate-400">Collections</h2>
-                  <p className="text-3xl font-bold text-slate-950">{metrics.collections}</p>
+                  <h2 className="text-[10px] font-extrabold uppercase tracking-widest text-slate-500">Collections</h2>
+                  <p className="text-3xl font-black text-black">{metrics.collections}</p>
                 </div>
-                <div className="p-3 bg-emerald-50 border border-emerald-100 text-emerald-600 rounded-2xl group-hover:scale-105 transition-transform">
-                  <Folder className="w-6 h-6" />
+                <div className="p-3 bg-black text-white border border-black rounded-xl group-hover:scale-105 transition-transform duration-200">
+                  <Folder className="w-5 h-5" />
                 </div>
               </CardContent>
             </Card>
 
-            <Card className="bg-white/70 border-slate-200/60 backdrop-blur-md shadow-sm hover:shadow-md transition-all duration-300 rounded-[2rem] overflow-hidden group">
+            <Card className="bg-white border border-slate-200/80 shadow-xs hover:shadow-md transition-all duration-300 rounded-[1.5rem] overflow-hidden group">
               <CardContent className="p-6 flex items-center justify-between">
                 <div className="space-y-1">
-                  <h2 className="text-xs font-bold uppercase tracking-wider text-slate-400">Total Media Items</h2>
-                  <p className="text-3xl font-bold text-slate-950">{metrics.mediaItems}</p>
+                  <h2 className="text-[10px] font-extrabold uppercase tracking-widest text-slate-500">Total Media Items</h2>
+                  <p className="text-3xl font-black text-black">{metrics.mediaItems}</p>
                 </div>
-                <div className="p-3 bg-purple-50 border border-purple-100 text-purple-600 rounded-2xl group-hover:scale-105 transition-transform">
-                  <Sparkles className="w-6 h-6" />
+                <div className="p-3 bg-black text-white border border-black rounded-xl group-hover:scale-105 transition-transform duration-200">
+                  <Sparkles className="w-5 h-5" />
                 </div>
               </CardContent>
             </Card>
           </div>
 
           {/* Media Types Grid Section */}
-          <div className="space-y-4">
-            <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400 pl-1">Media Types breakdown</h3>
+          <div className="space-y-5">
+            <h3 className="text-[10px] font-extrabold uppercase tracking-widest text-slate-500 pl-1">Media Types breakdown</h3>
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
               {metrics.mediaCounts &&
                 Object.entries(metrics.mediaCounts).map(([type, count]) => {
                   const Icon = getMediaTypeIcon(type);
                   return (
-                    <Card key={type} className="bg-white/50 border-slate-200/60 backdrop-blur-md shadow-sm hover:shadow-md transition-all duration-300 rounded-2xl overflow-hidden group">
-                      <CardContent className="p-5 flex flex-col items-center text-center justify-center space-y-2">
-                        <div className="p-2 bg-slate-100 text-slate-600 rounded-xl group-hover:bg-emerald-50 group-hover:text-emerald-600 transition-colors">
-                          <Icon className="w-5 h-5" />
+                    <Card key={type} className="bg-white border border-slate-200/80 shadow-xs hover:shadow-md transition-all duration-300 rounded-xl overflow-hidden group">
+                      <CardContent className="p-5 flex flex-col items-center text-center justify-center space-y-3">
+                        <div className="p-2.5 bg-slate-50 border border-slate-200 text-slate-800 rounded-xl group-hover:bg-black group-hover:text-white group-hover:border-black transition-all duration-300">
+                          <Icon className="w-4 h-4" />
                         </div>
-                        <h4 className="text-[11px] font-bold text-slate-400 uppercase tracking-wide">
-                          {type}
-                        </h4>
-                        <p className="text-2xl font-bold text-slate-950">{count}</p>
+                        <div className="space-y-0.5">
+                          <h4 className="text-[9px] font-extrabold text-slate-400 uppercase tracking-widest">
+                            {type}
+                          </h4>
+                          <p className="text-xl font-black text-slate-900">{count}</p>
+                        </div>
                       </CardContent>
                     </Card>
                   );

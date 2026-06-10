@@ -76,11 +76,44 @@ export async function DELETE(request, { params }) {
   }
 
   const { id } = params;
+  const body = await request.json().catch(() => ({}));
+  const { comment } = body;
 
   try {
-    await prisma.blog.delete({
-      where: { id },
-    });
+    const blog = await prisma.blog.findUnique({ where: { id } });
+    if (!blog) {
+      return NextResponse.json({ error: "Blog not found" }, { status: 404 });
+    }
+
+    // If it's a contributor's submission, soft-delete it by setting status to REJECTED
+    // so it remains in their Submission History.
+    if (blog.createdById) {
+      const rejectionReason = comment || "Deleted by administrator.";
+      await prisma.blog.update({
+        where: { id },
+        data: {
+          status: "REJECTED",
+          rejectionReason: rejectionReason,
+          approvedById: null,
+          approvedAt: null,
+        },
+      });
+
+      // Trigger notification
+      await prisma.notification.create({
+        data: {
+          userId: blog.createdById,
+          title: "Submission Deleted / Rejected",
+          message: `Your submitted blog article "${blog.title}" was declined/deleted. Comment: ${rejectionReason}`,
+          link: "/submit",
+        },
+      });
+    } else {
+      // Hard delete if no creator
+      await prisma.blog.delete({
+        where: { id },
+      });
+    }
 
     // Invalidate caches
     await invalidatePattern("blog:detail:*");

@@ -5,6 +5,8 @@ import { useSearchParams } from "next/navigation";
 import ImageUploaderWithToggle from "../ImageUploaderWithToggle";
 import { UploadDropzone } from "@/lib/uploadthing";
 import { Switch } from "../ui/switch";
+import Swal from "sweetalert2";
+import "sweetalert2/dist/sweetalert2.min.css";
 
 export default function BulkMediaModal({ isOpen, onClose, onSuccess, me }) {
   const searchParams = useSearchParams();
@@ -148,7 +150,15 @@ export default function BulkMediaModal({ isOpen, onClose, onSuccess, me }) {
 
       if (!res.ok) {
         await cleanupAllUploads();
-        alert("Failed to save media items.");
+        Swal.fire({
+          title: "Error",
+          text: "Failed to save media items.",
+          icon: "error",
+          confirmButtonColor: "#000000",
+          background: "#ffffff",
+          color: "#000000",
+          customClass: { popup: "rounded-3xl border border-slate-200 shadow-2xl" }
+        });
         return;
       }
 
@@ -157,7 +167,15 @@ export default function BulkMediaModal({ isOpen, onClose, onSuccess, me }) {
     } catch (err) {
       console.error(err);
       await cleanupAllUploads();
-      alert("Failed to save media items.");
+      Swal.fire({
+        title: "Error",
+        text: "Failed to save media items.",
+        icon: "error",
+        confirmButtonColor: "#000000",
+        background: "#ffffff",
+        color: "#000000",
+        customClass: { popup: "rounded-3xl border border-slate-200 shadow-2xl" }
+      });
     } finally {
       setIsSaving(false);
     }
@@ -255,7 +273,15 @@ export default function BulkMediaModal({ isOpen, onClose, onSuccess, me }) {
               onUploadError={(err) => {
                 console.error("❌ Upload error:", err);
                 setIsUploadingAny(false);
-                alert("Upload failed.");
+                Swal.fire({
+                  title: "Upload Failed",
+                  text: err.message || "One or more files exceed the maximum size limits (10MB for videos, 5MB for audio, pdfs, and images).",
+                  icon: "error",
+                  confirmButtonColor: "#000000",
+                  background: "#ffffff",
+                  color: "#000000",
+                  customClass: { popup: "rounded-3xl border border-slate-200 shadow-2xl" }
+                });
               }}
             />
           </div>

@@ -49,6 +49,8 @@ model User {
   createdBlogs     Blog[]        @relation("UserCreatedBlogs")
   approvedBlogs    Blog[]        @relation("UserApprovedBlogs")
 
+  notifications       Notification[]
+  contributorRequests ContributorRequest[]
 }
 
 enum MediaType {
@@ -204,4 +206,32 @@ model Page {
   sections  Json     // flexible content storage (title, subtitles, text, stats, etc.)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+enum RequestStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title     String
+  message   String
+  link      String?  // Optional redirect link
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
+
+model ContributorRequest {
+  id        String        @id @default(cuid())
+  userId    String
+  user      User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  status    RequestStatus @default(PENDING)
+  message   String?       // Optional note from user
+  feedback  String?       // Optional feedback from admin on reject/approve
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
 }

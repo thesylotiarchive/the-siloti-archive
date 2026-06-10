@@ -113,8 +113,8 @@ export default function ImageUploaderWithToggle({
           endpoint={endpoint}
           appearance={{
             button:
-              "bg-primary text-primary-foreground px-4 py-2 rounded-md text-sm font-medium hover:bg-primary/90 transition-colors",
-            allowedContent: "text-xs text-muted-foreground mt-1",
+              "bg-black hover:bg-slate-900 text-white px-4 py-2 rounded-xl text-xs font-bold transition-colors shadow-sm cursor-pointer ut-readying:bg-slate-800 ut-uploading:bg-slate-850",
+            allowedContent: "text-[10px] text-slate-500 mt-1.5 font-medium",
           }}
           onUploadBegin={() => setIsUploading?.(true)}
           onClientUploadComplete={async (res) => {
@@ -136,10 +136,10 @@ export default function ImageUploaderWithToggle({
               title: "Upload Failed",
               text: "Something went wrong while uploading your image. Please try again.",
               icon: "error",
-              confirmButtonColor: "#ef4444",
-              background: "#0f172a",
-              color: "#fff",
-              customClass: { popup: "rounded-3xl border border-white/10 shadow-2xl" }
+              confirmButtonColor: "#000000",
+              background: "#ffffff",
+              color: "#000000",
+              customClass: { popup: "rounded-3xl border border-slate-200 shadow-2xl" }
             });
             console.error(error);
             setIsUploading?.(false);

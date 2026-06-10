@@ -32,7 +32,7 @@ export function Navbar() {
   };
 
   return (
-    <header className="w-full border-b border-slate-200/50 px-6 md:px-10 py-3.5 bg-white/60 backdrop-blur-md flex items-center justify-between shadow-sm relative z-40">
+    <header className="w-full px-6 md:px-10 py-3.5 bg-white flex items-center justify-between relative z-40">
       {/* Title or Logo */}
       <div className="flex items-center gap-2">
         <div className="flex items-center gap-2 md:hidden">
@@ -45,7 +45,7 @@ export function Navbar() {
           />
           <span className="text-sm font-bold text-slate-800">The Siloti Archive</span>
         </div>
-        <h1 className="hidden md:block text-lg font-serif italic font-bold bg-gradient-to-r from-slate-900 via-slate-800 to-slate-700 bg-clip-text text-transparent">
+        <h1 className="hidden md:block text-lg font-serif italic font-bold text-slate-950">
           Admin Dashboard
         </h1>
       </div>

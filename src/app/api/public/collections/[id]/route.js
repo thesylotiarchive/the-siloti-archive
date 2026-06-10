@@ -29,12 +29,17 @@ export async function GET(req, { params }) {
       return NextResponse.json({ error: "Collection not found" }, { status: 404 });
     }
 
+    const telemetry = folder?._cacheTelemetry;
     return NextResponse.json({
       id: folder.id,
       name: folder.name,
       imageUrl: folder.image,
       description: folder.description, // optional
       parent: folder.parent,
+    }, {
+      headers: {
+        "x-cache-log": telemetry ? encodeURIComponent(telemetry) : ""
+      }
     });
   } catch (err) {
     console.error("GET /api/public/collections/[id] error", err);

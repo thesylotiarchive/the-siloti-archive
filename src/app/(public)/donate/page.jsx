@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import clsx from 'clsx';
 import toast from 'react-hot-toast';
 import 'sweetalert2/dist/sweetalert2.min.css';
 import { 
@@ -208,23 +209,63 @@ export default function DonationPage() {
         {/* Tab Selection */}
         <div className="flex justify-center gap-2 mb-12 border-b border-white/5 pb-9">
           {[
-            { id: 'bank', label: 'Bank Transfer', icon: <Building2 className="w-4 h-4" /> },
-            { id: 'upi', label: 'UPI QR', icon: <QrCode className="w-4 h-4" /> },
-            { id: 'paypal', label: 'PayPal Checkout', icon: <DollarSign className="w-4 h-4" /> }
-          ].map((tab) => (
-            <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
-              className={`flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold transition-all duration-300 cursor-pointer ${
-                activeTab === tab.id
-                  ? 'bg-emerald-400 text-slate-950 shadow-lg shadow-emerald-400/10'
-                  : 'bg-white/5 border border-white/5 hover:bg-white/10 text-white/70'
-              }`}
-            >
-              {tab.icon}
-              <span>{tab.label}</span>
-            </button>
-          ))}
+            { 
+              id: 'bank', 
+              label: 'Bank Transfer', 
+              icon: () => (
+                <Image 
+                  src="/bank/Bank.svg" 
+                  alt="Bank Transfer" 
+                  width={16} 
+                  height={16} 
+                  className="w-4 h-4 object-contain transition-all duration-300" 
+                />
+              )
+            },
+            { 
+              id: 'upi', 
+              label: 'UPI QR', 
+              icon: (isActive) => (
+                <Image 
+                  src="/bank/QR_code_svg.svg" 
+                  alt="UPI QR" 
+                  width={16} 
+                  height={16} 
+                  className={clsx("w-4 h-4 object-contain transition-all duration-300", isActive ? "brightness-0" : "brightness-0 invert opacity-75")} 
+                />
+              )
+            },
+            { 
+              id: 'paypal', 
+              label: 'PayPal Checkout', 
+              icon: (isActive) => (
+                <Image 
+                  src="/bank/PayPal_Logo_Icon_2014.svg" 
+                  alt="PayPal" 
+                  width={16} 
+                  height={16} 
+                  className="w-4 h-4 object-contain" 
+                />
+              )
+            }
+          ].map((tab) => {
+            const isActive = activeTab === tab.id;
+            return (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                className={clsx(
+                  "flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold transition-all duration-300 cursor-pointer",
+                  isActive
+                    ? 'bg-emerald-400 text-slate-950 shadow-lg shadow-emerald-400/10'
+                    : 'bg-white/5 border border-white/5 hover:bg-white/10 text-white/70'
+                )}
+              >
+                {tab.icon(isActive)}
+                <span>{tab.label}</span>
+              </button>
+            );
+          })}
         </div>
 
         {/* Dynamic Options Grid */}
@@ -237,8 +278,14 @@ export default function DonationPage() {
             {activeTab === 'bank' && (
               <div className="bg-white/[0.01] border border-white/10 rounded-[2rem] p-8 sm:p-10 backdrop-blur-md animate-fadeIn">
                 <div className="flex items-center gap-4 mb-6">
-                  <div className="w-12 h-12 rounded-2xl bg-emerald-400/10 border border-emerald-400/20 flex items-center justify-center text-emerald-400">
-                    <Building2 className="w-5 h-5" />
+                  <div className="w-12 h-12 rounded-2xl bg-emerald-400/10 border border-emerald-400/20 flex items-center justify-center">
+                    <Image 
+                      src="/bank/Bank.svg" 
+                      alt="Bank Transfer Logo" 
+                      width={20} 
+                      height={20} 
+                      className="w-5 h-5 object-contain" 
+                    />
                   </div>
                   <div>
                     <h3 className="text-xl font-semibold">Direct Bank Transfer</h3>
@@ -294,8 +341,14 @@ export default function DonationPage() {
               <div className="bg-white/[0.01] border border-white/10 rounded-[2rem] p-8 sm:p-10 backdrop-blur-md animate-fadeIn">
                 <div className="flex items-center justify-between flex-wrap gap-4 mb-6 border-b border-white/5 pb-4">
                   <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-2xl bg-emerald-400/10 border border-emerald-400/20 flex items-center justify-center text-emerald-400">
-                      <QrCode className="w-5 h-5" />
+                    <div className="w-12 h-12 rounded-2xl bg-emerald-400/10 border border-emerald-400/20 flex items-center justify-center">
+                      <Image 
+                        src="/bank/QR_code_svg.svg" 
+                        alt="UPI QR Logo" 
+                        width={20} 
+                        height={20} 
+                        className="w-5 h-5 object-contain brightness-0 invert" 
+                      />
                     </div>
                     <div>
                       <h3 className="text-xl font-semibold">Scan UPI QR Code</h3>
@@ -410,8 +463,14 @@ export default function DonationPage() {
             {activeTab === 'paypal' && (
               <div className="bg-white/[0.01] border border-white/10 rounded-[2rem] p-8 sm:p-10 backdrop-blur-md animate-fadeIn">
                 <div className="flex items-center gap-4 mb-6">
-                  <div className="w-12 h-12 rounded-2xl bg-emerald-400/10 border border-emerald-400/20 flex items-center justify-center text-emerald-400">
-                    <DollarSign className="w-5 h-5" />
+                  <div className="w-12 h-12 rounded-2xl bg-emerald-400/10 border border-emerald-400/20 flex items-center justify-center">
+                    <Image 
+                      src="/bank/PayPal_Logo_Icon_2014.svg" 
+                      alt="PayPal Logo" 
+                      width={20} 
+                      height={20} 
+                      className="w-5 h-5 object-contain" 
+                    />
                   </div>
                   <div>
                     <h3 className="text-xl font-semibold">PayPal Checkout</h3>

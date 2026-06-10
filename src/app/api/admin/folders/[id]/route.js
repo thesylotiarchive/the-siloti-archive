@@ -94,13 +94,41 @@ export async function DELETE(req, { params }) {
     }
 
     const folderId = params.id;
+    const body = await req.json().catch(() => ({}));
+    const { comment } = body;
 
     const folder = await prisma.folder.findUnique({ where: { id: folderId } });
     if (!folder) {
       return NextResponse.json({ error: "Folder not found" }, { status: 404 });
     }
 
-    await deleteFolderRecursively(folderId);
+    // If it's a contributor's submission, soft-delete it by setting status to REJECTED
+    // so it remains in their Submission History.
+    if (folder.createdById) {
+      const rejectionReason = comment || "Deleted by administrator.";
+      await prisma.folder.update({
+        where: { id: folderId },
+        data: {
+          status: "REJECTED",
+          rejectionReason: rejectionReason,
+          approvedById: null,
+          approvedAt: null,
+        },
+      });
+
+      // Trigger notification
+      await prisma.notification.create({
+        data: {
+          userId: folder.createdById,
+          title: "Submission Deleted / Rejected",
+          message: `Your submitted collection folder "${folder.name}" was declined/deleted. Comment: ${rejectionReason}`,
+          link: "/submit",
+        },
+      });
+    } else {
+      // Hard delete if no creator
+      await deleteFolderRecursively(folderId);
+    }
 
     // Invalidate collections cache
     await invalidateCache(`collection:detail:${folderId}`);

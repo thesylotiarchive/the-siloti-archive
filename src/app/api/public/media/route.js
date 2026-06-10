@@ -51,6 +51,9 @@ export async function POST(req) {
     if (!user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
+    if (user.role !== "CONTRIBUTOR" && user.role !== "ADMIN" && user.role !== "SUPERADMIN") {
+      return NextResponse.json({ error: "Forbidden: Only Contributors and Administrators can submit items" }, { status: 403 });
+    }
 
     const body = await req.json();
     const { title, description, image, mediaUrl, mediaType, language, author } = body;
@@ -73,6 +76,16 @@ export async function POST(req) {
         status: "DRAFT", // Always force user submissions to DRAFT status for curator review
         fileUrl: isExternal ? null : (mediaUrl || null),
         externalLink: isExternal ? mediaUrl : null,
+      },
+    });
+
+    // Create Notification
+    await prisma.notification.create({
+      data: {
+        userId: user.id,
+        title: "Media Submission Received",
+        message: `Your media item "${title}" has been successfully submitted and is pending curation review.`,
+        link: "/submit",
       },
     });
 

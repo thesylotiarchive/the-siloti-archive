@@ -6,6 +6,8 @@ import { Button } from "@/components/ui/button";
 import { DraftMediaItemModal } from "./DraftMediaItemModal";
 import { useAuth } from "@/lib/context/AuthContext";
 import { MediaViewModal } from "./MediaViewModal";
+import Swal from "sweetalert2";
+import "sweetalert2/dist/sweetalert2.min.css";
 
 export default function MediaDrafts() {
   const [mediaList, setMediaList] = useState([]);
@@ -46,72 +48,171 @@ export default function MediaDrafts() {
   }, []);
 
   // Individual actions
-const handlePublishMedia = async (id) => {
-  try {
-    const res = await fetch(`/api/admin/media/${id}/publish`, { method: "PATCH" });
-    if (!res.ok) throw new Error("Failed to publish media");
-    setMediaList((prev) => prev.filter((m) => m.id !== id));
-    if (selectedIds.length > 0) setSelectedIds((prev) => prev.filter((sid) => sid !== id));
-    alert("Media published successfully!");
-  } catch (err) {
-    console.error(err);
-    alert("Failed to publish media. Please try again.");
-  }
-};
+  const handlePublishMedia = async (id) => {
+    try {
+      const res = await fetch(`/api/admin/media/${id}/publish`, { method: "PATCH" });
+      if (!res.ok) throw new Error("Failed to publish media");
+      setMediaList((prev) => prev.filter((m) => m.id !== id));
+      if (selectedIds.length > 0) setSelectedIds((prev) => prev.filter((sid) => sid !== id));
+      
+      await Swal.fire({
+        title: "Published!",
+        text: "Media published successfully!",
+        icon: "success",
+        confirmButtonColor: "#000000",
+        background: "#ffffff",
+        color: "#000000",
+        customClass: { popup: "rounded-3xl border border-slate-200 shadow-2xl" }
+      });
+    } catch (err) {
+      console.error(err);
+      Swal.fire({
+        title: "Error",
+        text: "Failed to publish media. Please try again.",
+        icon: "error",
+        confirmButtonColor: "#000000",
+        background: "#ffffff",
+        color: "#000000",
+        customClass: { popup: "rounded-3xl border border-slate-200 shadow-2xl" }
+      });
+    }
+  };
 
-const handleDeleteMedia = async (id) => {
-  const confirmDelete = confirm("Are you sure you want to delete this media?");
-  if (!confirmDelete) return;
-
-  try {
-    const res = await fetch(`/api/admin/media/${id}`, { method: "DELETE" });
-    if (!res.ok) throw new Error("Failed to delete media");
-    setMediaList((prev) => prev.filter((m) => m.id !== id));
-    if (selectedIds.length > 0) setSelectedIds((prev) => prev.filter((sid) => sid !== id));
-    alert("Media deleted successfully!");
-  } catch (err) {
-    console.error(err);
-    alert("Failed to delete media. Please try again.");
-  }
-};
-
-// Bulk actions
-const handleBulkPublish = async () => {
-  try {
-    const res = await fetch("/api/admin/media/publish-multiple", {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ ids: selectedIds }),
+  const handleDeleteMedia = async (id) => {
+    const result = await Swal.fire({
+      title: "Delete Media?",
+      text: "Provide a comment/reason for deleting this media:",
+      input: "text",
+      inputPlaceholder: "Comment/reason...",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#ef4444",
+      cancelButtonColor: "rgba(0,0,0,0.1)",
+      confirmButtonText: "Yes, delete it",
+      background: "#ffffff",
+      color: "#000000",
+      customClass: { popup: "rounded-3xl border border-slate-200 shadow-2xl" }
     });
-    if (!res.ok) throw new Error("Failed to bulk publish media");
-    setMediaList((prev) => prev.filter((m) => !selectedIds.includes(m.id)));
-    setSelectedIds([]);
-    alert("Selected media items published successfully!");
-  } catch (err) {
-    console.error(err);
-    alert("Failed to bulk publish media. Please try again.");
-  }
-};
 
-const handleBulkDelete = async () => {
-  const confirmDelete = confirm("Are you sure you want to delete the selected media?");
-  if (!confirmDelete) return;
+    if (!result.isConfirmed) return;
+    const comment = result.value || "";
 
-  try {
-    const res = await fetch("/api/admin/media/bulk-delete", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ ids: selectedIds }),
+    try {
+      const res = await fetch(`/api/admin/media/${id}`, {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ comment }),
+      });
+      if (!res.ok) throw new Error("Failed to delete media");
+      setMediaList((prev) => prev.filter((m) => m.id !== id));
+      if (selectedIds.length > 0) setSelectedIds((prev) => prev.filter((sid) => sid !== id));
+      
+      await Swal.fire({
+        title: "Deleted",
+        text: "Media deleted successfully!",
+        icon: "success",
+        confirmButtonColor: "#000000",
+        background: "#ffffff",
+        color: "#000000",
+        customClass: { popup: "rounded-3xl border border-slate-200 shadow-2xl" }
+      });
+    } catch (err) {
+      console.error(err);
+      Swal.fire({
+        title: "Error",
+        text: "Failed to delete media. Please try again.",
+        icon: "error",
+        confirmButtonColor: "#000000",
+        background: "#ffffff",
+        color: "#000000",
+        customClass: { popup: "rounded-3xl border border-slate-200 shadow-2xl" }
+      });
+    }
+  };
+
+  // Bulk actions
+  const handleBulkPublish = async () => {
+    try {
+      const res = await fetch("/api/admin/media/publish-multiple", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ids: selectedIds }),
+      });
+      if (!res.ok) throw new Error("Failed to bulk publish media");
+      setMediaList((prev) => prev.filter((m) => !selectedIds.includes(m.id)));
+      setSelectedIds([]);
+      
+      await Swal.fire({
+        title: "Published!",
+        text: "Selected media items published successfully!",
+        icon: "success",
+        confirmButtonColor: "#000000",
+        background: "#ffffff",
+        color: "#000000",
+        customClass: { popup: "rounded-3xl border border-slate-200 shadow-2xl" }
+      });
+    } catch (err) {
+      console.error(err);
+      Swal.fire({
+        title: "Error",
+        text: "Failed to bulk publish media. Please try again.",
+        icon: "error",
+        confirmButtonColor: "#000000",
+        background: "#ffffff",
+        color: "#000000",
+        customClass: { popup: "rounded-3xl border border-slate-200 shadow-2xl" }
+      });
+    }
+  };
+
+  const handleBulkDelete = async () => {
+    const confirmDelete = await Swal.fire({
+      title: "Delete Selected?",
+      text: "Are you sure you want to delete the selected media?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#ef4444",
+      cancelButtonColor: "rgba(0,0,0,0.1)",
+      confirmButtonText: "Yes, delete them",
+      background: "#ffffff",
+      color: "#000000",
+      customClass: { popup: "rounded-3xl border border-slate-200 shadow-2xl" }
     });
-    if (!res.ok) throw new Error("Failed to bulk delete media");
-    setMediaList((prev) => prev.filter((m) => !selectedIds.includes(m.id)));
-    setSelectedIds([]);
-    alert("Selected media items deleted successfully!");
-  } catch (err) {
-    console.error(err);
-    alert("Failed to bulk delete media. Please try again.");
-  }
-};
+
+    if (!confirmDelete.isConfirmed) return;
+
+    try {
+      const res = await fetch("/api/admin/media/bulk-delete", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ids: selectedIds }),
+      });
+      if (!res.ok) throw new Error("Failed to bulk delete media");
+      setMediaList((prev) => prev.filter((m) => !selectedIds.includes(m.id)));
+      setSelectedIds([]);
+      
+      await Swal.fire({
+        title: "Deleted",
+        text: "Selected media items deleted successfully!",
+        icon: "success",
+        confirmButtonColor: "#000000",
+        background: "#ffffff",
+        color: "#000000",
+        customClass: { popup: "rounded-3xl border border-slate-200 shadow-2xl" }
+      });
+    } catch (err) {
+      console.error(err);
+      Swal.fire({
+        title: "Error",
+        text: "Failed to bulk delete media. Please try again.",
+        icon: "error",
+        confirmButtonColor: "#000000",
+        background: "#ffffff",
+        color: "#000000",
+        customClass: { popup: "rounded-3xl border border-slate-200 shadow-2xl" }
+      });
+    }
+  };
 
   if (loading) return (
     <div className="flex flex-col items-center justify-center py-12 space-y-4">

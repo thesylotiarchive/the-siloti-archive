@@ -149,7 +149,7 @@ export default function PublicSidebar({ isOpen, onClose }) {
           {!loading && user && (
             <>
               {/* Admin Panel Link */}
-              {(user.role === 'ADMIN' || user.role === 'SUPERADMIN' || user.role === 'CONTRIBUTOR') && (
+              {(user.role === 'ADMIN' || user.role === 'SUPERADMIN') && (
                 <Link
                   href="/admin/dashboard"
                   onClick={onClose}

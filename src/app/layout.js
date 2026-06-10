@@ -59,6 +59,26 @@ export default function RootLayout({ children }) {
       >
         {children}
         <Analytics />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                var origFetch = window.fetch;
+                window.fetch = function() {
+                  return origFetch.apply(this, arguments).then(function(response) {
+                    try {
+                      var cacheLog = response.headers.get('x-cache-log');
+                      if (cacheLog) {
+                        console.log("%c" + decodeURIComponent(cacheLog), "color: #0ea5e9; font-weight: bold; background: #0f172a; padding: 6px 10px; border-radius: 6px; line-height: 1.5; font-family: monospace;");
+                      }
+                    } catch (e) {}
+                    return response;
+                  });
+                };
+              })();
+            `
+          }}
+        />
       </body>
     </html>
   );

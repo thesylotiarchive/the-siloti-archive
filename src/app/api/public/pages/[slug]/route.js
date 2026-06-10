@@ -18,7 +18,13 @@ export async function GET(req, { params }) {
       return NextResponse.json({ error: "Page not found" }, { status: 404 });
     }
 
-    return NextResponse.json(page, { status: 200 }); // ✅ ensures JSON
+    const telemetry = page?._cacheTelemetry;
+    return NextResponse.json(page, {
+      status: 200,
+      headers: {
+        "x-cache-log": telemetry ? encodeURIComponent(telemetry) : ""
+      }
+    });
   } catch (error) {
     console.error("Page API error:", error);
     return NextResponse.json({ error: "Server error" }, { status: 500 });

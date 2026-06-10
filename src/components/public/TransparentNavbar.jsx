@@ -9,6 +9,7 @@ import clsx from 'clsx';
 import { Menu, Search, Bookmark, Grid3X3, LogOut, LayoutDashboard, ChevronDown, User as UserIcon } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import PublicSidebar from '@/components/public/PublicSidebar';
+import NotificationBell from '@/components/public/NotificationBell';
 
 export default function TransparentNavbar() {
   const pathname = usePathname();
@@ -115,6 +116,7 @@ export default function TransparentNavbar() {
           <Link href="/collection" className="p-2 hover:bg-white/10 rounded-full transition-colors duration-200 cursor-pointer" title="Archive Collections">
             <Bookmark className="w-5 h-5 opacity-90 hover:opacity-100" />
           </Link>
+          {!loading && user && <NotificationBell />}
 
           {/* User Session Handler */}
           {!loading && (
@@ -138,7 +140,7 @@ export default function TransparentNavbar() {
                 </button>
                 {dropdownOpen && (
                   <div className="absolute right-0 mt-2 w-48 bg-slate-900 border border-white/10 text-white rounded-xl p-1 shadow-2xl backdrop-blur-md z-50">
-                    {(user.role === 'ADMIN' || user.role === 'SUPERADMIN' || user.role === 'CONTRIBUTOR') && (
+                    {(user.role === 'ADMIN' || user.role === 'SUPERADMIN') && (
                       <Link
                         href="/admin/dashboard"
                         onClick={() => setDropdownOpen(false)}

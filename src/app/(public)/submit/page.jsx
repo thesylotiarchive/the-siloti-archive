@@ -21,7 +21,9 @@ import {
   Lock,
   Folder,
   BookOpen,
-  Loader2
+  Loader2,
+  Clock,
+  ShieldAlert
 } from "lucide-react";
 import { toast } from "react-hot-toast";
 
@@ -65,6 +67,26 @@ export default function SubmitPage() {
   const [user, setUser] = useState(null);
   const [checkingAuth, setCheckingAuth] = useState(true);
 
+  const [contributorRequest, setContributorRequest] = useState(null);
+  const [fetchingRequest, setFetchingRequest] = useState(false);
+  const [requestMessage, setRequestMessage] = useState("");
+  const [isSubmittingRequest, setIsSubmittingRequest] = useState(false);
+
+  const fetchRequestStatus = async () => {
+    setFetchingRequest(true);
+    try {
+      const res = await fetch("/api/public/contributor-request");
+      if (res.ok) {
+        const data = await res.json();
+        setContributorRequest(data.request);
+      }
+    } catch (err) {
+      console.error("Failed to fetch request status", err);
+    } finally {
+      setFetchingRequest(false);
+    }
+  };
+
   useEffect(() => {
     fetch("/api/auth/me")
       .then((res) => {
@@ -74,6 +96,19 @@ export default function SubmitPage() {
       .then((data) => {
         if (data && data.user) {
           setUser(data.user);
+          if (data.user.role === "VIEWER") {
+            fetch("/api/public/contributor-request")
+              .then((res) => {
+                if (res.ok) return res.json();
+                return null;
+              })
+              .then((reqData) => {
+                if (reqData) {
+                  setContributorRequest(reqData.request);
+                }
+              })
+              .catch((err) => console.error("Failed to fetch request status on mount", err));
+          }
         }
       })
       .catch((err) => console.error("Auth check error:", err))
@@ -359,6 +394,46 @@ export default function SubmitPage() {
     }
   };
 
+  const handleRequestSubmit = async (e) => {
+    e.preventDefault();
+    setIsSubmittingRequest(true);
+    try {
+      const res = await fetch("/api/public/contributor-request", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: requestMessage }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        Swal.fire({
+          title: "Request Submitted!",
+          text: "Your request to become a Contributor has been sent to the administrators.",
+          icon: "success",
+          confirmButtonColor: "#10b981",
+          background: "#0f172a",
+          color: "#fff",
+          customClass: { popup: "rounded-3xl border border-white/10 shadow-2xl" }
+        });
+        setContributorRequest(data.request);
+        setRequestMessage("");
+      } else {
+        throw new Error(data.error || "Failed to submit request");
+      }
+    } catch (err) {
+      Swal.fire({
+        title: "Submission Failed",
+        text: err.message || "An error occurred. Please try again.",
+        icon: "error",
+        confirmButtonColor: "#ef4444",
+        background: "#0f172a",
+        color: "#fff",
+        customClass: { popup: "rounded-3xl border border-white/10 shadow-2xl" }
+      });
+    } finally {
+      setIsSubmittingRequest(false);
+    }
+  };
+
   return (
     <section className="relative z-10 w-full min-h-[calc(100vh-220px)] flex flex-col items-center pt-28 pb-20 px-6 selection:bg-emerald-400 selection:text-slate-950">
       {/* Background glows */}
@@ -415,8 +490,117 @@ export default function SubmitPage() {
         </div>
 
         {activeTab === "submit" ? (
-          <div className="bg-white/[0.02] border border-white/10 rounded-[2rem] p-8 sm:p-10 backdrop-blur-md shadow-2xl relative overflow-hidden">
-            {isScraping && (
+          !user ? (
+            <div className="bg-white/[0.02] border border-white/10 rounded-[2rem] p-8 sm:p-10 backdrop-blur-md shadow-2xl min-h-[300px]">
+              <div className="text-center py-12 flex flex-col items-center space-y-4">
+                <div className="w-12 h-12 bg-white/5 border border-white/10 rounded-2xl flex items-center justify-center text-white/40">
+                  <Lock className="w-5 h-5" />
+                </div>
+                <h3 className="text-lg font-medium text-white">Archive Submission Lock</h3>
+                <p className="text-xs text-white/50 max-w-sm leading-relaxed">
+                  Please log in to submit items to the archive and track their curation process.
+                </p>
+                <button
+                  type="button"
+                  onClick={() => router.push("/login")}
+                  className="px-5 py-2 bg-emerald-500 hover:bg-emerald-400 text-slate-950 text-xs font-bold rounded-xl transition-all active:scale-95 shadow-lg shadow-emerald-500/10 cursor-pointer"
+                >
+                  Sign In Now
+                </button>
+              </div>
+            </div>
+          ) : user.role === "VIEWER" ? (
+            <div className="bg-white/[0.02] border border-white/10 rounded-[2rem] p-8 sm:p-10 backdrop-blur-md shadow-2xl min-h-[300px]">
+              {fetchingRequest ? (
+                <div className="flex flex-col items-center justify-center py-16 gap-3">
+                  <Loader2 className="w-8 h-8 text-emerald-400 animate-spin" />
+                  <span className="text-xs text-white/50">Checking contributor request status...</span>
+                </div>
+              ) : contributorRequest && contributorRequest.status === "PENDING" ? (
+                <div className="text-center py-12 flex flex-col items-center space-y-6">
+                  <div className="w-14 h-14 bg-amber-500/10 border border-amber-500/20 text-amber-400 rounded-2xl flex items-center justify-center animate-pulse">
+                    <Clock className="w-6 h-6" />
+                  </div>
+                  <div className="space-y-2">
+                    <h3 className="text-xl font-semibold text-white">Curation Access Request Pending</h3>
+                    <p className="text-xs text-white/50 max-w-md mx-auto leading-relaxed">
+                      Thank you! Your request to become a Contributor is currently being reviewed by our administrators. You will receive an in-app notification once a decision has been made.
+                    </p>
+                  </div>
+                  {contributorRequest.message && (
+                    <div className="max-w-md w-full bg-white/5 border border-white/5 rounded-xl p-4 text-left">
+                      <span className="text-[9px] text-white/40 font-bold uppercase tracking-wider block mb-1">Your Request Message:</span>
+                      <p className="text-xs text-white/70 italic">"{contributorRequest.message}"</p>
+                    </div>
+                  )}
+                  <button
+                    type="button"
+                    onClick={fetchRequestStatus}
+                    className="px-4 py-2 bg-white/10 hover:bg-white/15 border border-white/10 text-white text-xs font-semibold rounded-xl transition-colors cursor-pointer"
+                  >
+                    Refresh Status
+                  </button>
+                </div>
+              ) : (
+                <div className="space-y-6">
+                  <div className="flex items-start gap-4 p-5 bg-rose-500/10 border border-rose-500/20 rounded-2xl text-rose-400">
+                    <ShieldAlert className="w-6 h-6 shrink-0 mt-0.5" />
+                    <div className="space-y-1">
+                      <h4 className="text-sm font-semibold text-white">Contributor Role Required</h4>
+                      <p className="text-xs text-white/60 leading-relaxed">
+                        To maintain the integrity and curation standards of the Sylheti Archive, direct contributions are restricted to verified contributors. Submit a request to the archive curators to promote your account.
+                      </p>
+                    </div>
+                  </div>
+
+                  {contributorRequest && contributorRequest.status === "REJECTED" && (
+                    <div className="bg-red-500/5 border border-red-500/15 rounded-xl p-4 text-xs space-y-1.5">
+                      <div className="flex items-center gap-2 text-red-400 font-bold uppercase tracking-wide text-[10px]">
+                        <span>Previous Request Rejected</span>
+                        <span>•</span>
+                        <span>{new Date(contributorRequest.updatedAt).toLocaleDateString()}</span>
+                      </div>
+                      <p className="text-white/80 font-light leading-relaxed">
+                        Feedback: <span className="italic font-normal">"{contributorRequest.feedback || "No feedback comments specified."}"</span>
+                      </p>
+                    </div>
+                  )}
+
+                  <form onSubmit={handleRequestSubmit} className="space-y-4 pt-2">
+                    <div className="space-y-1.5">
+                      <label className="text-[10px] uppercase tracking-wider text-white/55 block font-bold pl-1">
+                        Why would you like to contribute?
+                      </label>
+                      <textarea
+                        placeholder="Briefly describe what materials you plan to contribute (e.g. books, recordings, photographs) and your research or connection to the Sylheti community..."
+                        value={requestMessage}
+                        onChange={(e) => setRequestMessage(e.target.value)}
+                        rows={4}
+                        required
+                        className="w-full bg-white/5 border border-white/10 rounded-xl py-3.5 px-4 text-sm text-white placeholder-white/20 focus:outline-none focus:border-emerald-400 transition-colors resize-none"
+                      />
+                    </div>
+                    <button
+                      type="submit"
+                      disabled={isSubmittingRequest || !requestMessage.trim()}
+                      className="w-full py-3 bg-gradient-to-r from-emerald-500 to-blue-600 hover:from-emerald-400 hover:to-blue-500 text-white font-bold rounded-xl shadow-lg transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed text-xs"
+                    >
+                      {isSubmittingRequest ? (
+                        <>
+                          <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                          <span>Submitting Request...</span>
+                        </>
+                      ) : (
+                        <span>Submit Contributor Request</span>
+                      )}
+                    </button>
+                  </form>
+                </div>
+              )}
+            </div>
+          ) : (
+            <div className="bg-white/[0.02] border border-white/10 rounded-[2rem] p-8 sm:p-10 backdrop-blur-md shadow-2xl relative overflow-hidden">
+              {isScraping && (
               <div className="absolute inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex flex-col items-center justify-center space-y-4">
                 <Loader2 className="w-10 h-10 text-emerald-400 animate-spin" />
                 <div className="text-center">
@@ -560,8 +744,8 @@ export default function SubmitPage() {
                             ) : (
                               <>
                                 <Upload className="w-6 h-6 text-white/30" />
-                                <div className="text-xs text-white/50">
-                                  Upload PDF, Image, Audio, or Video (Max 50MB)
+                                <div className="text-xs text-white/50 text-center px-4">
+                                  Upload PDF, Image, Audio (Max 5MB) or Video (Max 10MB)
                                 </div>
                                 <UploadButton
                                   endpoint="mediaFileUploader"
@@ -994,6 +1178,7 @@ export default function SubmitPage() {
               </button>
             </form>
           </div>
+          )
         ) : (
           /* History Container */
           <div className="bg-white/[0.02] border border-white/10 rounded-[2rem] p-8 sm:p-10 backdrop-blur-md shadow-2xl min-h-[300px]">

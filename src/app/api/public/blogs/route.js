@@ -33,7 +33,12 @@ export async function GET(req) {
       return { blogs, total };
     }, 3600); // 1 hour TTL
 
-    return NextResponse.json(result);
+    const telemetry = result?._cacheTelemetry;
+    return NextResponse.json(result, {
+      headers: {
+        "x-cache-log": telemetry ? encodeURIComponent(telemetry) : ""
+      }
+    });
   } catch (err) {
     console.error("Public blog fetch error:", err);
     return NextResponse.json({ error: "Failed to load blogs." }, { status: 500 });
@@ -45,6 +50,9 @@ export async function POST(req) {
     const user = await getUserFromRequest(req);
     if (!user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+    if (user.role !== "CONTRIBUTOR" && user.role !== "ADMIN" && user.role !== "SUPERADMIN") {
+      return NextResponse.json({ error: "Forbidden: Only Contributors and Administrators can submit items" }, { status: 403 });
     }
 
     const body = await req.json();
@@ -75,6 +83,16 @@ export async function POST(req) {
         bannerUrl: bannerUrl || null,
         status: "DRAFT", // Always force user submissions to DRAFT status for curator review
         createdById: user.id,
+      },
+    });
+
+    // Create Notification
+    await prisma.notification.create({
+      data: {
+        userId: user.id,
+        title: "Blog Article Submitted",
+        message: `Your blog article draft "${title}" has been successfully submitted and is pending curation review.`,
+        link: "/submit",
       },
     });
 

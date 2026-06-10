@@ -116,6 +116,21 @@ Basir has upgraded the archive into a premium, performance-optimized curation pl
 * **Contrast Enhancements**: Updated all description lists, helper text, and subtitles from low-contrast styles (`text-slate-400`/`text-slate-500`) to highly visible **`text-slate-600`** to guarantee WCAG compliance and legibility.
 * **Cancel button controls**: Injected **Cancel** buttons on blog creators, editors, and folder modals to allow easy navigation.
 
+#### 6. Site-wide Notification & Contributor Request System
+* **Contributor requests flow**: Automatically assigns `VIEWER` role on registration and locks down `/submit` page. Standard viewers can submit a request statement to gain contributor privileges.
+* **Admin Requests Curation**: Admins can approve or decline requests directly at `/admin/dashboard/requests` with custom feedback comments.
+* **Notification Bell**: Site-wide bell in the navbars displaying unread notification items, redirection links, and dynamic counts.
+* **Role Enforcement**: Restricts access to admin routing (`/admin/*`) and endpoints (`/api/admin/*`) strictly to `ADMIN` and `SUPERADMIN` roles.
+
+#### 7. Luxury Black & White Admin UI/UX & SweetAlert2 Overhaul
+* **Monochrome luxury theme**: Replaced green gradients and glowing backdrops with a crisp print-inspired black-and-white theme. Renders off-white backgrounds, pure white cards with generous gaps, and active sidebar items in solid black capsules.
+* **SweetAlert2 Curation**: Replaced all native browser alert, confirm, and prompt boxes across the drafts inbox and curation tables with SweetAlert2. Capture soft-deletion reasons and decline statements directly inside styled `Swal.fire` textareas.
+* **File Upload button styling**: Re-styled `Choose File` upload buttons inside form grids to solid black to prevent them from blending into white backdrops.
+
+#### 8. File Size Restrictions & Client Cache Logs
+* **Targeted size boundaries**: Implemented limits in `uploadthing.config.js` restricting video uploads to `10MB` and audio, PDF, and image uploads to `5MB`. Updated all frontend helper texts.
+* **Client-side Cache Telemetry**: Injected server cache performance logs into response headers (`x-cache-log`). Built a global interceptor in `layout.js` that intercepts headers and prints formatted Hit/Miss metrics and latencies directly in the browser console.
+
 ---
 
 ## 🚀 Getting Started
