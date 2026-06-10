@@ -38,6 +38,7 @@ export default function PublicSidebar({ isOpen, onClose }) {
   const router = useRouter();
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [hoverTimeout, setHoverTimeout] = useState(null);
 
   // Fetch authentication state
   useEffect(() => {
@@ -52,7 +53,31 @@ export default function PublicSidebar({ isOpen, onClose }) {
       .finally(() => setLoading(false));
   }, [isOpen]);
 
+  // Clean up hover timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (hoverTimeout) clearTimeout(hoverTimeout);
+    };
+  }, [hoverTimeout]);
+
+  const handleMouseEnter = (href) => {
+    if (hoverTimeout) clearTimeout(hoverTimeout);
+    const timeout = setTimeout(() => {
+      router.push(href);
+      onClose();
+    }, 180); // 180ms delay prevents accidental navigation during quick sweeps
+    setHoverTimeout(timeout);
+  };
+
+  const handleMouseLeave = () => {
+    if (hoverTimeout) {
+      clearTimeout(hoverTimeout);
+      setHoverTimeout(null);
+    }
+  };
+
   const handleLogout = async () => {
+    if (hoverTimeout) clearTimeout(hoverTimeout);
     await fetch("/api/auth/logout", { method: "POST" });
     setUser(null);
     onClose();
@@ -68,33 +93,33 @@ export default function PublicSidebar({ isOpen, onClose }) {
     >
       {/* Backdrop overlay */}
       <div 
-        className="fixed inset-0 bg-slate-950/40 backdrop-blur-sm"
+        className="fixed inset-0 bg-slate-950/45 backdrop-blur-sm"
         onClick={onClose}
       />
 
       {/* Sidebar container */}
       <div 
         className={clsx(
-          "relative flex flex-col w-[290px] h-full bg-white text-slate-800 p-6 shadow-2xl z-10 transition-transform duration-300 ease-out rounded-r-[2rem] border-r border-slate-200/50",
+          "relative flex flex-col w-[220px] h-full bg-slate-950/95 text-white p-5 shadow-2xl z-10 transition-transform duration-300 ease-out border-r border-white/10 backdrop-blur-md rounded-none overflow-hidden",
           isOpen ? "translate-x-0" : "-translate-x-full"
         )}
       >
         {/* Header (Hamburger icon + App Title) */}
-        <div className="flex items-center gap-4 py-2 mb-6 border-b border-slate-100 select-none shrink-0">
+        <div className="flex items-center gap-3 py-1.5 mb-5 border-b border-white/10 select-none shrink-0">
           <button 
             onClick={onClose} 
             type="button"
-            className="p-2 hover:bg-slate-100 rounded-full transition-colors cursor-pointer outline-none"
+            className="p-1.5 hover:bg-white/10 rounded-full transition-colors cursor-pointer outline-none"
           >
-            <Menu className="w-6 h-6 text-slate-800" />
+            <Menu className="w-5 h-5 text-white" />
           </button>
-          <span className="font-extrabold text-[20px] tracking-tight text-slate-900">
+          <span className="font-extrabold text-[16px] tracking-tight bg-gradient-to-r from-emerald-400 via-blue-400 to-amber-300 bg-clip-text text-transparent">
             Sylheti Archive
           </span>
         </div>
 
         {/* Navigation items list */}
-        <nav className="flex-1 overflow-y-auto space-y-1.5 custom-scrollbar pr-1">
+        <nav className="flex-1 space-y-1 overflow-hidden select-none">
           {publicNavItems.map((item) => {
             const isActive = item.href === '/' ? pathname === '/' : pathname.startsWith(item.href);
             const Icon = item.icon;
@@ -103,14 +128,16 @@ export default function PublicSidebar({ isOpen, onClose }) {
                 key={item.href}
                 href={item.href}
                 onClick={onClose}
+                onMouseEnter={() => handleMouseEnter(item.href)}
+                onMouseLeave={handleMouseLeave}
                 className={clsx(
-                  "flex items-center gap-4 px-4 py-3 rounded-xl transition-all duration-200 cursor-pointer font-medium text-[15px] group",
+                  "flex items-center gap-3 px-3 py-2 rounded-lg transition-all duration-200 cursor-pointer font-medium text-[14px] group",
                   isActive
-                    ? "bg-[#3f66f2] text-white shadow-lg shadow-blue-600/10 font-bold"
-                    : "text-slate-600 hover:text-slate-900 hover:bg-slate-50"
+                    ? "bg-emerald-400 text-slate-950 font-bold shadow-md shadow-emerald-400/20"
+                    : "text-white/70 hover:text-white hover:bg-white/5"
                 )}
               >
-                <Icon className={clsx("w-5 h-5 transition-colors duration-200", isActive ? "text-white" : "text-slate-400 group-hover:text-slate-600")} />
+                <Icon className={clsx("w-4.5 h-4.5 transition-colors duration-200", isActive ? "text-slate-950" : "text-white/50 group-hover:text-emerald-400")} />
                 <span>{item.label}</span>
               </Link>
             );
@@ -118,7 +145,7 @@ export default function PublicSidebar({ isOpen, onClose }) {
         </nav>
 
         {/* Separated footer items */}
-        <div className="mt-auto pt-4 border-t border-slate-100 space-y-1.5 shrink-0">
+        <div className="mt-auto pt-3 border-t border-white/10 space-y-1 shrink-0">
           {!loading && user && (
             <>
               {/* Admin Panel Link */}
@@ -126,14 +153,16 @@ export default function PublicSidebar({ isOpen, onClose }) {
                 <Link
                   href="/admin/dashboard"
                   onClick={onClose}
+                  onMouseEnter={() => handleMouseEnter("/admin/dashboard")}
+                  onMouseLeave={handleMouseLeave}
                   className={clsx(
-                    "flex items-center gap-4 px-4 py-3 rounded-xl transition-all duration-200 cursor-pointer font-medium text-[15px] group",
+                    "flex items-center gap-3 px-3 py-2 rounded-lg transition-all duration-200 cursor-pointer font-medium text-[14px] group",
                     pathname.startsWith("/admin")
-                      ? "bg-[#3f66f2] text-white shadow-lg shadow-blue-600/10 font-bold"
-                      : "text-slate-600 hover:text-slate-900 hover:bg-slate-50"
+                      ? "bg-emerald-400 text-slate-950 font-bold shadow-md shadow-emerald-400/20"
+                      : "text-white/70 hover:text-white hover:bg-white/5"
                   )}
                 >
-                  <LayoutDashboard className={clsx("w-5 h-5 transition-colors duration-200", pathname.startsWith("/admin") ? "text-white" : "text-slate-400 group-hover:text-slate-600")} />
+                  <LayoutDashboard className={clsx("w-4.5 h-4.5 transition-colors duration-200", pathname.startsWith("/admin") ? "text-slate-950" : "text-white/50 group-hover:text-emerald-400")} />
                   <span>Admin Panel</span>
                 </Link>
               )}
@@ -142,14 +171,16 @@ export default function PublicSidebar({ isOpen, onClose }) {
               <Link
                 href="/profile"
                 onClick={onClose}
+                onMouseEnter={() => handleMouseEnter("/profile")}
+                onMouseLeave={handleMouseLeave}
                 className={clsx(
-                  "flex items-center gap-4 px-4 py-3 rounded-xl transition-all duration-200 cursor-pointer font-medium text-[15px] group",
+                  "flex items-center gap-3 px-3 py-2 rounded-lg transition-all duration-200 cursor-pointer font-medium text-[14px] group",
                   pathname === "/profile"
-                    ? "bg-[#3f66f2] text-white shadow-lg shadow-blue-600/10 font-bold"
-                    : "text-slate-600 hover:text-slate-900 hover:bg-slate-50"
+                    ? "bg-emerald-400 text-slate-950 font-bold shadow-md shadow-emerald-400/20"
+                    : "text-white/70 hover:text-white hover:bg-white/5"
                 )}
               >
-                <UserIcon className={clsx("w-5 h-5 transition-colors duration-200", pathname === "/profile" ? "text-white" : "text-slate-400 group-hover:text-slate-600")} />
+                <UserIcon className={clsx("w-4.5 h-4.5 transition-colors duration-200", pathname === "/profile" ? "text-slate-950" : "text-white/50 group-hover:text-emerald-400")} />
                 <span>My Profile</span>
               </Link>
 
@@ -157,9 +188,9 @@ export default function PublicSidebar({ isOpen, onClose }) {
               <button
                 onClick={handleLogout}
                 type="button"
-                className="flex items-center gap-4 w-full px-4 py-3 rounded-xl transition-all duration-200 cursor-pointer font-medium text-[15px] text-rose-500 hover:bg-rose-50/50 hover:text-rose-600 group"
+                className="flex items-center gap-3 w-full px-3 py-2 rounded-lg transition-all duration-200 cursor-pointer font-medium text-[14px] text-rose-400 hover:bg-rose-500/10 hover:text-rose-300 group"
               >
-                <LogOut className="w-5 h-5 transition-colors duration-200 text-rose-400 group-hover:text-rose-500" />
+                <LogOut className="w-4.5 h-4.5 transition-colors duration-200 text-rose-400 group-hover:text-rose-300" />
                 <span>Logout</span>
               </button>
             </>
@@ -169,7 +200,9 @@ export default function PublicSidebar({ isOpen, onClose }) {
             <Link
               href="/login"
               onClick={onClose}
-              className="flex items-center justify-center gap-2 w-full px-4 py-3 rounded-xl transition-all duration-200 cursor-pointer font-bold text-[15px] bg-[#3f66f2] hover:bg-blue-600 text-white shadow-md text-center"
+              onMouseEnter={() => handleMouseEnter("/login")}
+              onMouseLeave={handleMouseLeave}
+              className="flex items-center justify-center gap-2 w-full px-3 py-2.5 rounded-lg transition-all duration-200 cursor-pointer font-bold text-[14px] bg-emerald-400 hover:bg-emerald-300 text-slate-950 shadow-md text-center"
             >
               <span>Sign In</span>
             </Link>
