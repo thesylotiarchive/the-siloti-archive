@@ -59,19 +59,25 @@ export default function PublicSidebar({ isOpen, onClose }) {
     window.location.reload();
   };
 
-  if (!isOpen) return null;
-
   return (
-    <div className="fixed inset-0 z-[100] flex">
+    <div 
+      className={clsx(
+        "fixed inset-0 z-[100] flex transition-all duration-300",
+        isOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+      )}
+    >
       {/* Backdrop overlay */}
       <div 
-        className="fixed inset-0 bg-slate-950/40 backdrop-blur-sm transition-opacity duration-300"
+        className="fixed inset-0 bg-slate-950/40 backdrop-blur-sm"
         onClick={onClose}
       />
 
       {/* Sidebar container */}
       <div 
-        className="relative flex flex-col w-[290px] h-full bg-white text-slate-800 p-6 shadow-2xl z-10 transition-transform transform duration-300 rounded-r-[2rem] border-r border-slate-200/50 translate-x-0"
+        className={clsx(
+          "relative flex flex-col w-[290px] h-full bg-white text-slate-800 p-6 shadow-2xl z-10 transition-transform duration-300 ease-out rounded-r-[2rem] border-r border-slate-200/50",
+          isOpen ? "translate-x-0" : "-translate-x-full"
+        )}
       >
         {/* Header (Hamburger icon + App Title) */}
         <div className="flex items-center gap-4 py-2 mb-6 border-b border-slate-100 select-none shrink-0">
@@ -90,7 +96,7 @@ export default function PublicSidebar({ isOpen, onClose }) {
         {/* Navigation items list */}
         <nav className="flex-1 overflow-y-auto space-y-1.5 custom-scrollbar pr-1">
           {publicNavItems.map((item) => {
-            const isActive = pathname === item.href;
+            const isActive = item.href === '/' ? pathname === '/' : pathname.startsWith(item.href);
             const Icon = item.icon;
             return (
               <Link
@@ -98,13 +104,13 @@ export default function PublicSidebar({ isOpen, onClose }) {
                 href={item.href}
                 onClick={onClose}
                 className={clsx(
-                  "flex items-center gap-4 px-4 py-3 rounded-xl transition-all duration-200 cursor-pointer font-medium text-[15px]",
+                  "flex items-center gap-4 px-4 py-3 rounded-xl transition-all duration-200 cursor-pointer font-medium text-[15px] group",
                   isActive
                     ? "bg-[#3f66f2] text-white shadow-lg shadow-blue-600/10 font-bold"
-                    : "text-slate-500 hover:text-slate-900 hover:bg-slate-50"
+                    : "text-slate-600 hover:text-slate-900 hover:bg-slate-50"
                 )}
               >
-                <Icon className={clsx("w-5 h-5", isActive ? "text-white" : "text-slate-400 group-hover:text-slate-600")} />
+                <Icon className={clsx("w-5 h-5 transition-colors duration-200", isActive ? "text-white" : "text-slate-400 group-hover:text-slate-600")} />
                 <span>{item.label}</span>
               </Link>
             );
@@ -121,13 +127,13 @@ export default function PublicSidebar({ isOpen, onClose }) {
                   href="/admin/dashboard"
                   onClick={onClose}
                   className={clsx(
-                    "flex items-center gap-4 px-4 py-2.5 rounded-xl transition-all duration-200 cursor-pointer font-medium text-[14px]",
+                    "flex items-center gap-4 px-4 py-3 rounded-xl transition-all duration-200 cursor-pointer font-medium text-[15px] group",
                     pathname.startsWith("/admin")
                       ? "bg-[#3f66f2] text-white shadow-lg shadow-blue-600/10 font-bold"
-                      : "text-slate-500 hover:text-slate-900 hover:bg-slate-50"
+                      : "text-slate-600 hover:text-slate-900 hover:bg-slate-50"
                   )}
                 >
-                  <LayoutDashboard className="w-4.5 h-4.5 text-slate-400" />
+                  <LayoutDashboard className={clsx("w-5 h-5 transition-colors duration-200", pathname.startsWith("/admin") ? "text-white" : "text-slate-400 group-hover:text-slate-600")} />
                   <span>Admin Panel</span>
                 </Link>
               )}
@@ -137,13 +143,13 @@ export default function PublicSidebar({ isOpen, onClose }) {
                 href="/profile"
                 onClick={onClose}
                 className={clsx(
-                  "flex items-center gap-4 px-4 py-2.5 rounded-xl transition-all duration-200 cursor-pointer font-medium text-[14px]",
+                  "flex items-center gap-4 px-4 py-3 rounded-xl transition-all duration-200 cursor-pointer font-medium text-[15px] group",
                   pathname === "/profile"
                     ? "bg-[#3f66f2] text-white shadow-lg shadow-blue-600/10 font-bold"
-                    : "text-slate-500 hover:text-slate-900 hover:bg-slate-50"
+                    : "text-slate-600 hover:text-slate-900 hover:bg-slate-50"
                 )}
               >
-                <UserIcon className="w-4.5 h-4.5 text-slate-400" />
+                <UserIcon className={clsx("w-5 h-5 transition-colors duration-200", pathname === "/profile" ? "text-white" : "text-slate-400 group-hover:text-slate-600")} />
                 <span>My Profile</span>
               </Link>
 
@@ -151,9 +157,9 @@ export default function PublicSidebar({ isOpen, onClose }) {
               <button
                 onClick={handleLogout}
                 type="button"
-                className="flex items-center gap-4 w-full px-4 py-2.5 rounded-xl transition-all duration-200 cursor-pointer font-medium text-[14px] text-red-500 hover:bg-red-50 hover:text-red-600"
+                className="flex items-center gap-4 w-full px-4 py-3 rounded-xl transition-all duration-200 cursor-pointer font-medium text-[15px] text-rose-500 hover:bg-rose-50/50 hover:text-rose-600 group"
               >
-                <LogOut className="w-4.5 h-4.5" />
+                <LogOut className="w-5 h-5 transition-colors duration-200 text-rose-400 group-hover:text-rose-500" />
                 <span>Logout</span>
               </button>
             </>
@@ -163,7 +169,7 @@ export default function PublicSidebar({ isOpen, onClose }) {
             <Link
               href="/login"
               onClick={onClose}
-              className="flex items-center justify-center gap-2 w-full px-4 py-3 rounded-xl transition-all duration-200 cursor-pointer font-bold text-[14px] bg-[#3f66f2] hover:bg-blue-600 text-white shadow-md text-center"
+              className="flex items-center justify-center gap-2 w-full px-4 py-3 rounded-xl transition-all duration-200 cursor-pointer font-bold text-[15px] bg-[#3f66f2] hover:bg-blue-600 text-white shadow-md text-center"
             >
               <span>Sign In</span>
             </Link>
