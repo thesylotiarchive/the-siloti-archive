@@ -157,7 +157,7 @@ export default function ArchiveViewManager({ items = [], onShare, isLoading }) {
   };
 
   const activeViewClass = "bg-emerald-400 text-slate-950 font-bold border-emerald-400 shadow-lg scale-105 shadow-emerald-400/10";
-  const inactiveViewClass = "text-white/45 hover:bg-white/5 border-transparent hover:text-white transition-all";
+  const inactiveViewClass = "text-slate-500 dark:text-white/45 hover:bg-slate-100 dark:hover:bg-white/5 border-transparent hover:text-slate-800 dark:hover:text-white transition-all";
 
   // Prevent hydration mismatch
   if (!mounted) {
@@ -171,29 +171,29 @@ export default function ArchiveViewManager({ items = [], onShare, isLoading }) {
   return (
     <div className="w-full flex flex-col gap-6">
       {/* VIEW TOGGLE BAR */}
-      <div className="w-full flex flex-col sm:flex-row items-center justify-between gap-4 pb-4 border-b border-white/5">
+      <div className="w-full flex flex-col sm:flex-row items-center justify-between gap-4 pb-4 border-b border-slate-200 dark:border-white/5">
         {/* Left Side: Sort Dropdown */}
         <div className="flex items-center gap-3 w-full sm:w-auto font-sans">
-          <label htmlFor="archive-sort-select" className="text-sm font-semibold tracking-wide text-white/45 shrink-0">
+          <label htmlFor="archive-sort-select" className="text-sm font-semibold tracking-wide text-slate-500 dark:text-white/45 shrink-0">
             Sort by:
           </label>
           <select
             id="archive-sort-select"
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value)}
-            className="cursor-pointer bg-white/5 border border-white/10 rounded-xl px-3 py-1.5 text-sm font-medium focus:outline-none focus:border-emerald-400 text-white/80 shadow-sm transition-all duration-200"
+            className="cursor-pointer bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl px-3 py-1.5 text-sm font-medium focus:outline-none focus:border-emerald-400 text-slate-700 dark:text-white/80 shadow-sm transition-all duration-200"
           >
-            <option value="createdAt-desc" className="bg-slate-950 text-white">Newest Added</option>
-            <option value="createdAt-asc" className="bg-slate-950 text-white">Oldest Added</option>
-            <option value="title-asc" className="bg-slate-950 text-white">Title (A-Z)</option>
-            <option value="title-desc" className="bg-slate-950 text-white">Title (Z-A)</option>
-            <option value="views-desc" className="bg-slate-950 text-white">Most Viewed</option>
-            <option value="views-asc" className="bg-slate-950 text-white">Least Viewed</option>
+            <option value="createdAt-desc" className="bg-white dark:bg-slate-950 text-slate-800 dark:text-white">Newest Added</option>
+            <option value="createdAt-asc" className="bg-white dark:bg-slate-950 text-slate-800 dark:text-white">Oldest Added</option>
+            <option value="title-asc" className="bg-white dark:bg-slate-950 text-slate-800 dark:text-white">Title (A-Z)</option>
+            <option value="title-desc" className="bg-white dark:bg-slate-950 text-slate-800 dark:text-white">Title (Z-A)</option>
+            <option value="views-desc" className="bg-white dark:bg-slate-950 text-slate-800 dark:text-white">Most Viewed</option>
+            <option value="views-asc" className="bg-white dark:bg-slate-950 text-slate-800 dark:text-white">Least Viewed</option>
           </select>
         </div>
 
         {/* Right Side: View Layout Buttons */}
-        <div className="flex items-center bg-white/5 p-1.5 rounded-xl border border-white/5 w-fit self-end sm:self-auto shadow-inner">
+        <div className="flex items-center bg-slate-100 dark:bg-white/5 p-1.5 rounded-xl border border-slate-200 dark:border-white/5 w-fit self-end sm:self-auto shadow-inner">
           <button
             onClick={() => handleViewChange("grid")}
             className={`cursor-pointer flex items-center justify-center p-2 rounded-lg border transition-all duration-200 ${
@@ -235,7 +235,7 @@ export default function ArchiveViewManager({ items = [], onShare, isLoading }) {
           className="w-full"
         >
           {sortedItems.length === 0 ? (
-            <div className="text-center py-20 text-neutral-400 dark:text-neutral-500">
+            <div className="text-center py-20 text-slate-500 dark:text-neutral-400">
               No items match the selected archive filters.
             </div>
           ) : viewMode === "grid" ? (
@@ -255,7 +255,7 @@ export default function ArchiveViewManager({ items = [], onShare, isLoading }) {
             </div>
           ) : viewMode === "list" ? (
             /* VIEW 2: ListView */
-            <div className="flex flex-col w-full bg-slate-900/40 border border-white/10 rounded-[2rem] p-4 sm:p-6 shadow-xl backdrop-blur-md">
+            <div className="flex flex-col w-full bg-white/80 dark:bg-slate-900/40 border border-slate-200 dark:border-white/10 rounded-[2rem] p-4 sm:p-6 shadow-xl backdrop-blur-md transition-colors duration-300">
               {sortedItems.map((item, idx) => {
                 const isCollection = item.type === "collection";
                 const itemLink = isCollection ? `/collection/${item.id}` : `/media/${item.id}`;
@@ -264,14 +264,14 @@ export default function ArchiveViewManager({ items = [], onShare, isLoading }) {
                 return (
                   <div
                     key={`${item.type}-${item.id}`}
-                    className="flex flex-col sm:flex-row gap-4 sm:gap-6 py-5 border-b border-white/5 last:border-b-0 items-start group"
+                    className="flex flex-col sm:flex-row gap-4 sm:gap-6 py-5 border-b border-slate-200/60 dark:border-white/5 last:border-b-0 items-start group"
                   >
                     {/* Thumbnail on left */}
                     <Link
                       href={itemLink}
                       target={isCollection ? "_self" : "_blank"}
                       rel={isCollection ? "" : "noopener noreferrer"}
-                      className="cursor-pointer w-20 h-20 sm:w-24 sm:h-24 shrink-0 rounded-xl overflow-hidden relative border border-white/10 bg-slate-900 flex items-center justify-center shadow-inner hover:border-emerald-400/50 transition-all duration-300"
+                      className="cursor-pointer w-20 h-20 sm:w-24 sm:h-24 shrink-0 rounded-xl overflow-hidden relative border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-slate-900 flex items-center justify-center shadow-inner hover:border-emerald-400/50 transition-all duration-300"
                     >
                       <ArchiveThumbnail
                         src={thumbnailSrc}
@@ -290,7 +290,7 @@ export default function ArchiveViewManager({ items = [], onShare, isLoading }) {
                           href={itemLink}
                           target={isCollection ? "_self" : "_blank"}
                           rel={isCollection ? "" : "noopener noreferrer"}
-                          className="cursor-pointer text-base sm:text-lg font-bold text-white/95 hover:text-emerald-400 transition-colors duration-200 line-clamp-1 leading-snug tracking-wide"
+                          className="cursor-pointer text-base sm:text-lg font-bold text-slate-800 dark:text-white/95 hover:text-emerald-400 transition-colors duration-200 line-clamp-1 leading-snug tracking-wide"
                         >
                           {item.title || item.name}
                         </Link>
@@ -302,19 +302,19 @@ export default function ArchiveViewManager({ items = [], onShare, isLoading }) {
 
                       {/* Author */}
                       {item.contributor && (
-                        <div className="text-xs font-semibold uppercase tracking-wider text-emerald-400">
+                        <div className="text-xs font-semibold uppercase tracking-wider text-emerald-600 dark:text-emerald-400">
                           by {item.contributor.name || item.contributor.username}
                         </div>
                       )}
 
                       {/* Published date + view count */}
-                      <div className="text-xs text-white/45 font-medium flex items-center gap-1.5">
+                      <div className="text-xs text-slate-500 dark:text-white/45 font-medium flex items-center gap-1.5">
                         <span>Published {formatDate(item.createdAt)}</span>
                         {!isCollection && (
                           <>
                             <span>•</span>
                             <span className="flex items-center gap-1">
-                              <Eye className="w-3.5 h-3.5 text-white/45" />
+                              <Eye className="w-3.5 h-3.5 text-slate-400 dark:text-white/45" />
                               {item.views || 0} views
                             </span>
                           </>
@@ -322,7 +322,7 @@ export default function ArchiveViewManager({ items = [], onShare, isLoading }) {
                       </div>
 
                       {/* Description */}
-                      <p className="text-sm text-white/60 line-clamp-2 sm:line-clamp-3 leading-relaxed mt-1 font-light">
+                      <p className="text-sm text-slate-650 dark:text-white/60 line-clamp-2 sm:line-clamp-3 leading-relaxed mt-1 font-light">
                         {item.description || "No description provided."}
                       </p>
 
@@ -332,7 +332,7 @@ export default function ArchiveViewManager({ items = [], onShare, isLoading }) {
                         {!isCollection && item.folder && (
                           <Link
                             href={`/collection/${item.folder.id}`}
-                            className="cursor-pointer text-[10px] sm:text-xs font-bold text-emerald-400 hover:text-emerald-350 hover:underline flex items-center gap-1"
+                            className="cursor-pointer text-[10px] sm:text-xs font-bold text-emerald-600 dark:text-emerald-400 hover:text-emerald-500 hover:underline flex items-center gap-1"
                           >
                             <Boxes className="w-3.5 h-3.5" />
                             in {item.folder.name}
@@ -344,7 +344,7 @@ export default function ArchiveViewManager({ items = [], onShare, isLoading }) {
                           <Link
                             key={tag.id}
                             href={`/search?tags=${encodeURIComponent(tag.name)}`}
-                            className="cursor-pointer text-[10px] font-bold px-2.5 py-0.5 rounded bg-emerald-400/10 text-emerald-300 border border-emerald-400/20 hover:bg-emerald-400 hover:text-slate-950 transition-all duration-200"
+                            className="cursor-pointer text-[10px] font-bold px-2.5 py-0.5 rounded bg-emerald-500/10 dark:bg-emerald-400/10 text-emerald-600 dark:text-emerald-300 border border-emerald-500/20 dark:border-emerald-400/20 hover:bg-emerald-400 hover:text-slate-950 transition-all duration-200"
                           >
                             #{tag.name}
                           </Link>
@@ -357,37 +357,37 @@ export default function ArchiveViewManager({ items = [], onShare, isLoading }) {
             </div>
           ) : (
             /* VIEW 3: TableView */
-            <div className="overflow-x-auto w-full border border-white/10 rounded-[2rem] bg-slate-900/40 shadow-xl backdrop-blur-md">
+            <div className="overflow-x-auto w-full border border-slate-200 dark:border-white/10 rounded-[2rem] bg-white/80 dark:bg-slate-900/40 shadow-xl backdrop-blur-md transition-colors duration-300">
               <table className="w-full text-left border-collapse min-w-[700px]">
                 <thead>
-                  <tr className="border-b border-white/10 bg-slate-950/60">
-                    <th className="px-4 py-4 text-[11px] font-bold text-white/55 uppercase tracking-wider w-16">
+                  <tr className="border-b border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-slate-950/60">
+                    <th className="px-4 py-4 text-[11px] font-bold text-slate-500 dark:text-white/55 uppercase tracking-wider w-16">
                       Thum
                     </th>
                     <th
                       onClick={() => handleHeaderSort("title")}
-                      className="cursor-pointer px-4 py-4 text-[11px] font-bold text-white/55 uppercase tracking-wider hover:text-emerald-400 select-none transition-colors duration-200"
+                      className="cursor-pointer px-4 py-4 text-[11px] font-bold text-slate-500 dark:text-white/55 uppercase tracking-wider hover:text-emerald-400 select-none transition-colors duration-200"
                     >
                       Title {getSortIcon("title")}
                     </th>
                     <th
                       onClick={() => handleHeaderSort("creator")}
-                      className="cursor-pointer px-4 py-4 text-[11px] font-bold text-white/55 uppercase tracking-wider hover:text-emerald-400 select-none transition-colors duration-200"
+                      className="cursor-pointer px-4 py-4 text-[11px] font-bold text-slate-500 dark:text-white/55 uppercase tracking-wider hover:text-emerald-400 select-none transition-colors duration-200"
                     >
                       Creator
                     </th>
                     <th
                       onClick={() => handleHeaderSort("published")}
-                      className="cursor-pointer px-4 py-4 text-[11px] font-bold text-white/55 uppercase tracking-wider hover:text-emerald-400 select-none transition-colors duration-200"
+                      className="cursor-pointer px-4 py-4 text-[11px] font-bold text-slate-500 dark:text-white/55 uppercase tracking-wider hover:text-emerald-400 select-none transition-colors duration-200"
                     >
                       Published {getSortIcon("published")}
                     </th>
-                    <th className="px-4 py-4 text-[11px] font-bold text-white/55 uppercase tracking-wider">
+                    <th className="px-4 py-4 text-[11px] font-bold text-slate-500 dark:text-white/55 uppercase tracking-wider">
                       Type
                     </th>
                     <th
                       onClick={() => handleHeaderSort("views")}
-                      className="cursor-pointer px-4 py-4 text-[11px] font-bold text-white/55 uppercase tracking-wider text-right pr-6 hover:text-emerald-400 select-none transition-colors duration-200"
+                      className="cursor-pointer px-4 py-4 text-[11px] font-bold text-slate-500 dark:text-white/55 uppercase tracking-wider text-right pr-6 hover:text-emerald-400 select-none transition-colors duration-200"
                     >
                       Views {getSortIcon("views")}
                     </th>
@@ -402,7 +402,7 @@ export default function ArchiveViewManager({ items = [], onShare, isLoading }) {
                     return (
                       <tr
                         key={`${item.type}-${item.id}`}
-                        className="border-b border-white/5 last:border-b-0 hover:bg-white/5 transition-all duration-200 group"
+                        className="border-b border-slate-200/60 dark:border-white/5 last:border-b-0 hover:bg-slate-50 dark:hover:bg-white/5 transition-all duration-200 group"
                       >
                         {/* Thumbnail */}
                         <td className="px-4 py-3">
@@ -410,7 +410,7 @@ export default function ArchiveViewManager({ items = [], onShare, isLoading }) {
                             href={itemLink}
                             target={isCollection ? "_self" : "_blank"}
                             rel={isCollection ? "" : "noopener noreferrer"}
-                            className="cursor-pointer block w-10 h-10 rounded-lg overflow-hidden relative border border-white/10 bg-slate-900 flex items-center justify-center shadow-inner hover:border-emerald-400/65 transition-all duration-200"
+                            className="cursor-pointer block w-10 h-10 rounded-lg overflow-hidden relative border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-slate-900 flex items-center justify-center shadow-inner hover:border-emerald-400/65 transition-all duration-200"
                           >
                             <ArchiveThumbnail
                               src={thumbnailSrc}
@@ -428,19 +428,19 @@ export default function ArchiveViewManager({ items = [], onShare, isLoading }) {
                             href={itemLink}
                             target={isCollection ? "_self" : "_blank"}
                             rel={isCollection ? "" : "noopener noreferrer"}
-                            className="cursor-pointer text-sm font-semibold text-white/90 hover:text-emerald-400 group-hover:text-emerald-400 transition-colors duration-200 line-clamp-1 max-w-[250px]"
+                            className="cursor-pointer text-sm font-semibold text-slate-800 dark:text-white/90 hover:text-emerald-400 group-hover:text-emerald-400 transition-colors duration-200 line-clamp-1 max-w-[250px]"
                           >
                             {item.title || item.name}
                           </Link>
                         </td>
 
                         {/* Creator */}
-                        <td className="px-4 py-3 text-sm text-white/65 font-medium">
+                        <td className="px-4 py-3 text-sm text-slate-700 dark:text-white/65 font-medium">
                           {item.contributor ? (item.contributor.name || item.contributor.username) : "Siloti Archive"}
                         </td>
 
                         {/* Published */}
-                        <td className="px-4 py-3 text-sm text-white/45">
+                        <td className="px-4 py-3 text-sm text-slate-500 dark:text-white/45">
                           {formatDate(item.createdAt)}
                         </td>
 
@@ -450,9 +450,9 @@ export default function ArchiveViewManager({ items = [], onShare, isLoading }) {
                         </td>
 
                         {/* Weekly Views */}
-                        <td className="px-4 py-3 text-right pr-6 text-sm font-semibold text-white/90">
+                        <td className="px-4 py-3 text-right pr-6 text-sm font-semibold text-slate-800 dark:text-white/90">
                           {isCollection ? (
-                            <span className="text-white/40 font-normal text-xs uppercase tracking-wide">
+                            <span className="text-slate-500 dark:text-white/40 font-normal text-xs uppercase tracking-wide">
                               {item.itemCount || 0} items
                             </span>
                           ) : (

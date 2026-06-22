@@ -47,7 +47,7 @@ export function MediaCard({ mediaItem, onShare, className = "" }) {
 
   return (
     <div
-      className={`relative overflow-hidden bg-slate-900/60 border border-white/10 rounded-2xl shadow-sm transition-all duration-300 hover:shadow-[0_12px_24px_rgba(16,185,129,0.15)] hover:border-emerald-500/50 hover:-translate-y-1.5 group backdrop-blur-md ${className}`}
+      className={`relative overflow-hidden bg-slate-100/50 dark:bg-slate-900/60 border border-slate-200 dark:border-white/10 rounded-2xl shadow-sm transition-all duration-300 hover:shadow-[0_12px_24px_rgba(16,185,129,0.15)] hover:border-emerald-500/50 hover:-translate-y-1.5 group backdrop-blur-md ${className}`}
     >
       <Link
         href={`/media/${id}`}
@@ -56,7 +56,7 @@ export function MediaCard({ mediaItem, onShare, className = "" }) {
         className="block cursor-pointer"
       >
         {/* Media Thumbnail Container */}
-        <div className="relative w-full aspect-[4/3] rounded-t-2xl overflow-hidden bg-slate-950/80 border-b border-white/5">
+        <div className="relative w-full aspect-[4/3] rounded-t-2xl overflow-hidden bg-slate-200/50 dark:bg-slate-950/80 border-b border-slate-200 dark:border-white/5">
           <ArchiveThumbnail
             src={thumbnailSrc}
             title={title}
@@ -71,33 +71,33 @@ export function MediaCard({ mediaItem, onShare, className = "" }) {
 
         {/* Content Section */}
         <div className="p-4">
-          <h3 className="text-sm font-bold text-white/90 group-hover:text-emerald-400 line-clamp-2 leading-snug transition-colors duration-300 min-h-[2.5rem] tracking-wide font-sans mb-3">
+          <h3 className="text-sm font-bold text-slate-800 dark:text-white/90 group-hover:text-emerald-400 line-clamp-2 leading-snug transition-colors duration-300 min-h-[2.5rem] tracking-wide font-sans mb-3">
             {title}
           </h3>
 
           <div className="flex items-center justify-between mb-4 gap-2">
-            <div className="text-[10px] font-bold tracking-wider uppercase border border-amber-500/25 text-amber-400 bg-amber-500/5 px-2.5 py-0.5 rounded-full shrink-0">
+            <div className="text-[10px] font-bold tracking-wider uppercase border border-amber-500/25 text-amber-500 dark:text-amber-400 bg-amber-500/5 px-2.5 py-0.5 rounded-full shrink-0">
               {mediaType.toLowerCase()}
             </div>
             {contributor && (
-              <span className="text-[10px] text-white/50 font-semibold uppercase tracking-wider truncate max-w-[120px]">
+              <span className="text-[10px] text-slate-500 dark:text-white/55 font-semibold uppercase tracking-wider truncate max-w-[120px]">
                 by {contributor.name || contributor.username}
               </span>
             )}
           </div>
 
           {/* Engagement stats */}
-          <div className="flex items-center gap-4 text-xs text-white/55 border-t border-white/5 pt-3">
-            <div className="flex items-center gap-1.5 hover:text-emerald-400 transition-colors">
-              <Eye className="w-4 h-4 text-white/40 group-hover:text-emerald-400" />
+          <div className="flex items-center gap-4 text-xs text-slate-500 dark:text-white/55 border-t border-slate-250 dark:border-white/5 pt-3">
+            <div className="flex items-center gap-1.5 hover:text-emerald-500 hover:dark:text-emerald-400 transition-colors">
+              <Eye className="w-4 h-4 text-slate-400 dark:text-white/40 group-hover:text-emerald-500 group-hover:dark:text-emerald-400" />
               <span className="font-semibold">{views || 0}</span>
             </div>
-            <div className="flex items-center gap-1.5 hover:text-red-400 transition-colors">
-              <Heart className="w-4 h-4 text-white/40" />
+            <div className="flex items-center gap-1.5 hover:text-red-500 hover:dark:text-red-400 transition-colors">
+              <Heart className="w-4 h-4 text-slate-400 dark:text-white/40" />
               <span className="font-semibold">0</span>
             </div>
-            <div className="flex items-center gap-1.5 hover:text-blue-400 transition-colors">
-              <MessageCircle className="w-4 h-4 text-white/40" />
+            <div className="flex items-center gap-1.5 hover:text-blue-500 hover:dark:text-blue-400 transition-colors">
+              <MessageCircle className="w-4 h-4 text-slate-400 dark:text-white/40" />
               <span className="font-semibold">0</span>
             </div>
           </div>
@@ -121,3 +121,4 @@ export function MediaCard({ mediaItem, onShare, className = "" }) {
     </div>
   );
 }
+

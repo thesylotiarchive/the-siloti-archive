@@ -52,17 +52,17 @@ export function MediaDetailRenderer({ media, config }) {
   }, [mediaType, url]);
 
   const renderStats = () => (
-    <div className="flex flex-wrap items-center gap-6 text-white/60 text-sm">
+    <div className="flex flex-wrap items-center gap-6 text-slate-500 dark:text-white/60 text-sm">
       <div className="flex items-center gap-1.5">
-        <Eye className="w-4 h-4 text-blue-400" /> 
+        <Eye className="w-4 h-4 text-blue-500 dark:text-blue-400" /> 
         <span className="font-medium">{views || 0}</span>
       </div>
       <div className="flex items-center gap-1.5">
-        <ThumbsUp className="w-4 h-4 text-emerald-400" /> 
+        <ThumbsUp className="w-4 h-4 text-emerald-500 dark:text-emerald-400" /> 
         <span className="font-medium">{likeCount}</span>
       </div>
       <div className="flex items-center gap-1.5">
-        <MessageCircle className="w-4 h-4 text-purple-400" /> 
+        <MessageCircle className="w-4 h-4 text-purple-505 dark:text-purple-400" /> 
         <span className="font-medium">{commentCount}</span>
       </div>
     </div>
@@ -87,19 +87,19 @@ export function MediaDetailRenderer({ media, config }) {
     switch (mediaType) {
       case "IMAGE":
         return (
-          <div className="bg-white/[0.02] border border-white/10 rounded-[2rem] shadow-2xl backdrop-blur-md overflow-hidden animate-fadeIn">
+          <div className="bg-slate-100/50 dark:bg-white/[0.02] border border-slate-200 dark:border-white/10 rounded-[2rem] shadow-2xl backdrop-blur-md overflow-hidden animate-fadeIn transition-colors duration-300">
             <div className="p-6">
               <div className="flex items-center gap-3 mb-4">
-                <div className="w-10 h-10 rounded-xl bg-purple-950/40 border border-purple-500/20 flex items-center justify-center">
-                  <ImageIcon className="w-5 h-5 text-purple-400" />
+                <div className="w-10 h-10 rounded-xl bg-purple-100 dark:bg-purple-950/40 border border-purple-200 dark:border-purple-500/20 flex items-center justify-center">
+                  <ImageIcon className="w-5 h-5 text-purple-600 dark:text-purple-400" />
                 </div>
-                <h3 className="text-lg font-semibold text-white">Image Preview</h3>
+                <h3 className="text-lg font-semibold text-slate-800 dark:text-white">Image Preview</h3>
               </div>
-              <div className="rounded-2xl overflow-hidden shadow-lg border border-white/10">
+              <div className="rounded-2xl overflow-hidden shadow-lg border border-slate-200 dark:border-white/10">
                 <img
                   src={url}
                   alt={title}
-                  className="w-full max-w-4xl mx-auto rounded-2xl object-contain bg-slate-950/30"
+                  className="w-full max-w-4xl mx-auto rounded-2xl object-contain bg-slate-100 dark:bg-slate-950/30"
                 />
               </div>
             </div>
@@ -108,18 +108,18 @@ export function MediaDetailRenderer({ media, config }) {
 
       case "AUDIO":
         return (
-          <div className="bg-white/[0.02] border border-white/10 rounded-[2rem] shadow-2xl backdrop-blur-md overflow-hidden animate-fadeIn">
+          <div className="bg-slate-100/50 dark:bg-white/[0.02] border border-slate-200 dark:border-white/10 rounded-[2rem] shadow-2xl backdrop-blur-md overflow-hidden animate-fadeIn transition-colors duration-300">
             <div className="p-6 sm:p-8">
               <div className="flex items-center gap-3 mb-6">
-                <div className="w-12 h-12 rounded-xl bg-green-950/40 border border-green-500/20 flex items-center justify-center">
-                  <Volume2 className="w-6 h-6 text-emerald-400" />
+                <div className="w-12 h-12 rounded-xl bg-green-100 dark:bg-green-950/40 border border-green-205 dark:border-green-500/20 flex items-center justify-center">
+                  <Volume2 className="w-6 h-6 text-emerald-600 dark:text-emerald-400" />
                 </div>
                 <div>
-                  <h3 className="text-xl font-semibold text-white">Audio Player</h3>
-                  <p className="text-white/55 text-xs sm:text-sm font-light">High-quality audio playback</p>
+                  <h3 className="text-xl font-semibold text-slate-800 dark:text-white">Audio Player</h3>
+                  <p className="text-slate-500 dark:text-white/55 text-xs sm:text-sm font-light">High-quality audio playback</p>
                 </div>
               </div>
-              <div className="bg-white/5 border border-white/5 rounded-2xl p-6 flex justify-center">
+              <div className="bg-slate-200/40 dark:bg-white/5 border border-slate-200 dark:border-white/5 rounded-2xl p-6 flex justify-center">
                 <audio controls className="w-full max-w-2xl mx-auto block rounded-xl shadow-lg">
                   <source src={url} />
                   Your browser does not support the audio tag.
@@ -131,16 +131,16 @@ export function MediaDetailRenderer({ media, config }) {
 
       case "VIDEO":
         return (
-          <div className="bg-white/[0.02] border border-white/10 rounded-[2rem] shadow-2xl backdrop-blur-md overflow-hidden animate-fadeIn">
+          <div className="bg-slate-100/50 dark:bg-white/[0.02] border border-slate-200 dark:border-white/10 rounded-[2rem] shadow-2xl backdrop-blur-md overflow-hidden animate-fadeIn transition-colors duration-300">
             <div className="p-6">
               <div className="flex items-center gap-3 mb-4">
-                <div className="w-10 h-10 rounded-xl bg-red-950/40 border border-red-500/20 flex items-center justify-center">
-                  <Play className="w-5 h-5 text-red-400" />
+                <div className="w-10 h-10 rounded-xl bg-red-100 dark:bg-red-950/40 border border-red-200 dark:border-red-500/20 flex items-center justify-center">
+                  <Play className="w-5 h-5 text-red-655 dark:text-red-400" />
                 </div>
-                <h3 className="text-lg font-semibold text-white">Video Player</h3>
+                <h3 className="text-lg font-semibold text-slate-800 dark:text-white">Video Player</h3>
               </div>
-              <div className="rounded-2xl overflow-hidden shadow-lg border border-white/10">
-                <video controls className="w-full max-w-4xl mx-auto rounded-2xl bg-slate-950/30">
+              <div className="rounded-2xl overflow-hidden shadow-lg border border-slate-200 dark:border-white/10">
+                <video controls className="w-full max-w-4xl mx-auto rounded-2xl bg-slate-100 dark:bg-slate-950/30">
                   <source src={url} />
                   Your browser does not support the video tag.
                 </video>
@@ -151,14 +151,14 @@ export function MediaDetailRenderer({ media, config }) {
 
       case "PDF":
         return (
-          <div className="bg-white/[0.02] border border-white/10 rounded-[2rem] shadow-2xl backdrop-blur-md overflow-hidden animate-fadeIn">
+          <div className="bg-slate-100/50 dark:bg-white/[0.02] border border-slate-200 dark:border-white/10 rounded-[2rem] shadow-2xl backdrop-blur-md overflow-hidden animate-fadeIn transition-colors duration-300">
             <div className="p-6">
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-blue-950/40 border border-blue-500/20 flex items-center justify-center">
-                    <FileText className="w-5 h-5 text-blue-400" />
+                  <div className="w-10 h-10 rounded-xl bg-blue-100 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-500/20 flex items-center justify-center">
+                    <FileText className="w-5 h-5 text-blue-600 dark:text-blue-400" />
                   </div>
-                  <h3 className="text-lg font-semibold text-white">PDF Document</h3>
+                  <h3 className="text-lg font-semibold text-slate-800 dark:text-white">PDF Document</h3>
                 </div>
                 <button
                   onClick={() => setShowPdfModal(true)}
@@ -167,8 +167,8 @@ export function MediaDetailRenderer({ media, config }) {
                   Fullscreen
                 </button>
               </div>
-              <div className="w-full h-[60vh] md:h-[75vh] rounded-2xl overflow-hidden shadow-lg border border-white/10">
-                <iframe src={url} title="PDF Preview" className="w-full h-full bg-slate-900/50" frameBorder="0" />
+              <div className="w-full h-[60vh] md:h-[75vh] rounded-2xl overflow-hidden shadow-lg border border-slate-200 dark:border-white/10">
+                <iframe src={url} title="PDF Preview" className="w-full h-full bg-slate-100 dark:bg-slate-900/50" frameBorder="0" />
               </div>
             </div>
       
@@ -178,10 +178,10 @@ export function MediaDetailRenderer({ media, config }) {
                 {/* Close Button - Floating */}
                 <button
                   onClick={() => setShowPdfModal(false)}
-                  className="absolute flex items-center gap-2 bottom-6 right-6 px-5 py-2.5 bg-slate-900 border border-white/10 text-white rounded-full shadow-2xl hover:bg-slate-800 transition-colors cursor-pointer text-sm font-semibold"
+                  className="absolute flex items-center gap-2 bottom-6 right-6 px-5 py-2.5 bg-background border border-slate-200 dark:border-white/10 text-foreground rounded-full shadow-2xl hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer text-sm font-semibold"
                   aria-label="Close"
                 >
-                  <Maximize2 className="w-4 h-4 text-emerald-400" />
+                  <Maximize2 className="w-4 h-4 text-emerald-500 dark:text-emerald-400" />
                   <span>Close Fullscreen</span>
                 </button>
 
@@ -198,13 +198,13 @@ export function MediaDetailRenderer({ media, config }) {
 
       case "DOC":
         return (
-          <div className="bg-white/[0.02] border border-white/10 rounded-[2rem] shadow-2xl backdrop-blur-md overflow-hidden animate-fadeIn">
+          <div className="bg-slate-100/50 dark:bg-white/[0.02] border border-slate-200 dark:border-white/10 rounded-[2rem] shadow-2xl backdrop-blur-md overflow-hidden animate-fadeIn transition-colors duration-300">
             <div className="p-8 text-center flex flex-col items-center">
-              <div className="w-20 h-20 rounded-2xl bg-amber-950/40 border border-amber-500/20 flex items-center justify-center mb-6">
-                <FileText className="w-10 h-10 text-amber-400" />
+              <div className="w-20 h-20 rounded-2xl bg-amber-100 dark:bg-amber-950/40 border border-amber-205 dark:border-amber-500/20 flex items-center justify-center mb-6">
+                <FileText className="w-10 h-10 text-amber-600 dark:text-amber-400" />
               </div>
-              <h3 className="text-xl font-semibold text-white mb-2">Document File</h3>
-              <p className="text-white/60 text-sm max-w-md font-light mb-8">
+              <h3 className="text-xl font-semibold text-slate-800 dark:text-white mb-2">Document File</h3>
+              <p className="text-slate-500 dark:text-white/60 text-sm max-w-md font-light mb-8">
                 This document format is not viewable in-browser. Download it to view the content.
               </p>
               <a
@@ -229,7 +229,7 @@ export function MediaDetailRenderer({ media, config }) {
       {renderMediaContent()}
 
       {/* Action Buttons */}
-      <div className="bg-white/[0.02] border border-white/10 rounded-[2rem] backdrop-blur-md p-6 shadow-2xl">
+      <div className="bg-slate-100/50 dark:bg-white/[0.02] border border-slate-200 dark:border-white/10 rounded-[2rem] backdrop-blur-md p-6 shadow-2xl transition-colors duration-300">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           {renderStats()}
           

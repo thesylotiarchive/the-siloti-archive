@@ -6,7 +6,7 @@ import TransparentNavbar from "@/components/public/TransparentNavbar";
 
 export default function Home2Layout({ children }) {
   return (
-    <div className="min-h-screen bg-slate-950 text-white">
+    <div className="min-h-screen bg-background text-foreground transition-colors duration-300">
       <TransparentNavbar />
       <main className="flex-grow">{children}</main>
       <SponsorStrip dark={true} />

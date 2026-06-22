@@ -6,7 +6,7 @@ import Image from 'next/image';
 import { Bell, X, Check, ArrowRight } from 'lucide-react';
 import clsx from 'clsx';
 
-export default function NotificationBell() {
+export default function NotificationBell({ iconColorClass, hoverBgClass }) {
   const router = useRouter();
   const [notifications, setNotifications] = useState([]);
   const [unreadCount, setUnreadCount] = useState(0);
@@ -109,11 +109,11 @@ export default function NotificationBell() {
       {/* Bell Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="relative p-2 hover:bg-white/10 rounded-full transition-colors cursor-pointer outline-none flex items-center justify-center"
+        className={clsx("relative p-2 rounded-full transition-colors cursor-pointer outline-none flex items-center justify-center", hoverBgClass || "hover:bg-white/10")}
         title="Notifications"
         type="button"
       >
-        <Bell className="w-5 h-5 text-white/90 hover:text-white" />
+        <Bell className={clsx("w-5 h-5", iconColorClass || "text-white/90 hover:text-white")} />
         {unreadCount > 0 && (
           <span className="absolute top-1 right-1 min-w-[16px] h-4 px-1 bg-rose-500 text-[9px] font-bold text-white rounded-full flex items-center justify-center shadow-md animate-pulse">
             {unreadCount}

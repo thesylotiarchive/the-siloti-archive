@@ -2,13 +2,11 @@
 
 import Image from "next/image";
 import { useEffect, useState } from "react";
+import { useTheme } from "@/components/ThemeProvider";
 
 export default function SponsorStrip({ dark = false }) {
-  // const links = [
-  //   "https://gbillp.com/",
-  //   "https://masterpeace.org/",
-  //   "#",
-  // ];
+  const { theme } = useTheme();
+  const isDark = theme ? theme === 'dark' : dark;
 
   const links = [
     "https://gbillp.com/",
@@ -38,11 +36,11 @@ export default function SponsorStrip({ dark = false }) {
 
   return (
     <div className={`border-t pt-16 pb-12 overflow-hidden transition-colors duration-300 ${
-      dark ? "bg-slate-950 border-white/5" : "bg-white border-gray-200"
+      isDark ? "bg-slate-950 border-white/5" : "bg-white border-gray-200"
     }`}>
       <div className="w-full mx-auto px-6 text-center">
         <h3 className={`text-xs font-bold mb-8 uppercase tracking-widest ${
-          dark ? "text-emerald-400" : "text-gray-800"
+          isDark ? "text-emerald-400" : "text-gray-800"
         }`}>
           Our Partners
         </h3>
@@ -61,7 +59,7 @@ export default function SponsorStrip({ dark = false }) {
                 target="_blank"
                 rel="noopener noreferrer"
                 className={`shrink-0 transition-all duration-300 p-3 rounded-2xl border ${
-                  dark 
+                  isDark 
                     ? "bg-white/5 border-white/10 hover:border-emerald-400/35 hover:bg-white/[0.08]" 
                     : "bg-white border-gray-200 hover:border-gray-300 shadow-sm"
                 }`}

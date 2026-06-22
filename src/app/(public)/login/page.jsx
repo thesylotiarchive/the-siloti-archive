@@ -39,16 +39,16 @@ export default function LoginPage() {
       <div className="absolute top-0 left-1/4 w-[500px] h-[300px] bg-emerald-400/5 blur-[150px] rounded-full pointer-events-none"></div>
       <div className="absolute bottom-0 right-1/4 w-[500px] h-[300px] bg-blue-500/5 blur-[150px] rounded-full pointer-events-none"></div>
 
-      <div className="relative z-10 w-full max-w-md bg-white/[0.02] border border-white/10 rounded-[2rem] p-8 sm:p-10 backdrop-blur-md shadow-2xl">
+      <div className="relative z-10 w-full max-w-md bg-slate-100/50 dark:bg-white/[0.02] border border-slate-200 dark:border-white/10 rounded-[2rem] p-8 sm:p-10 backdrop-blur-md shadow-2xl transition-colors duration-300">
         <div className="flex flex-col items-center mb-8">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-white/5 border border-white/10 rounded-full mb-4">
-            <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
-            <span className="text-[10px] font-bold uppercase tracking-widest text-emerald-300">Secure Access</span>
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-slate-200/50 dark:bg-white/5 border border-slate-350 dark:border-white/10 rounded-full mb-4 transition-colors duration-300">
+            <ShieldCheck className="w-3.5 h-3.5 text-emerald-500 dark:text-emerald-400" />
+            <span className="text-[10px] font-bold uppercase tracking-widest text-emerald-600 dark:text-emerald-300">Secure Access</span>
           </div>
-          <h2 className="text-3xl font-light tracking-tight text-center text-white mb-2 leading-tight">
+          <h2 className="text-3xl font-light tracking-tight text-center text-slate-800 dark:text-white mb-2 leading-tight">
             Welcome <span className="font-serif italic font-bold bg-gradient-to-r from-emerald-400 via-blue-400 to-amber-300 bg-clip-text text-transparent">Back</span>
           </h2>
-          <p className="text-white/50 text-xs sm:text-sm font-light text-center">Sign in to manage your collections and archive contributions.</p>
+          <p className="text-slate-500 dark:text-white/55 text-xs sm:text-sm font-light text-center">Sign in to manage your collections and archive contributions.</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-5">
@@ -60,7 +60,7 @@ export default function LoginPage() {
 
           {/* Email or Username Input */}
           <div className="space-y-1.5">
-            <label className="text-[10px] uppercase tracking-wider text-white/40 block font-semibold pl-1">
+            <label className="text-[10px] uppercase tracking-wider text-slate-500 dark:text-white/40 block font-semibold pl-1">
               Email or Username
             </label>
             <div className="relative">
@@ -71,9 +71,9 @@ export default function LoginPage() {
                 onChange={handleChange}
                 value={form.email}
                 required
-                className="w-full bg-white/5 border border-white/10 rounded-xl py-3.5 pl-11 pr-4 text-sm text-white placeholder-white/35 focus:outline-none focus:border-emerald-400 transition-colors"
+                className="w-full bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl py-3.5 pl-11 pr-4 text-sm text-slate-805 dark:text-white placeholder-slate-400 dark:placeholder-white/35 focus:outline-none focus:border-emerald-500 focus:dark:border-emerald-400 transition-colors duration-300"
               />
-              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-white/30 pointer-events-none">
+              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 dark:text-white/30 pointer-events-none">
                 <Mail className="w-4 h-4" />
               </span>
             </div>
@@ -82,7 +82,7 @@ export default function LoginPage() {
           {/* Password Input */}
           <div className="space-y-1.5">
             <div className="flex items-center justify-between pl-1">
-              <label className="text-[10px] uppercase tracking-wider text-white/40 block font-semibold">
+              <label className="text-[10px] uppercase tracking-wider text-slate-500 dark:text-white/40 block font-semibold">
                 Password
               </label>
             </div>
@@ -94,15 +94,15 @@ export default function LoginPage() {
                 onChange={handleChange}
                 value={form.password}
                 required
-                className="w-full bg-white/5 border border-white/10 rounded-xl py-3.5 pl-11 pr-12 text-sm text-white placeholder-white/35 focus:outline-none focus:border-emerald-400 transition-colors"
+                className="w-full bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl py-3.5 pl-11 pr-12 text-sm text-slate-805 dark:text-white placeholder-slate-400 dark:placeholder-white/35 focus:outline-none focus:border-emerald-500 focus:dark:border-emerald-400 transition-colors duration-300"
               />
-              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-white/30 pointer-events-none">
+              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 dark:text-white/30 pointer-events-none">
                 <Lock className="w-4 h-4" />
               </span>
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-4 top-1/2 -translate-y-1/2 text-white/40 hover:text-white transition-colors"
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 dark:text-white/40 hover:text-slate-900 hover:dark:text-white transition-colors cursor-pointer"
               >
                 {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
               </button>
@@ -118,7 +118,7 @@ export default function LoginPage() {
           </button>
         </form>
 
-        <div className="text-center text-white/40 text-xs mt-8">
+        <div className="text-center text-slate-500 dark:text-white/40 text-xs mt-8">
           Don't have an account?{" "}
           <Link href="/signup" className="text-emerald-400 hover:text-emerald-300 underline font-semibold transition-colors">
             Sign Up
@@ -127,4 +127,4 @@ export default function LoginPage() {
       </div>
     </section>
   );
-}
+}

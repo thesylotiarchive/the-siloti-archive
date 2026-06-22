@@ -72,16 +72,16 @@ export default function SignupPage() {
       <div className="absolute top-0 left-1/4 w-[500px] h-[300px] bg-emerald-400/5 blur-[150px] rounded-full pointer-events-none"></div>
       <div className="absolute bottom-0 right-1/4 w-[500px] h-[300px] bg-blue-500/5 blur-[150px] rounded-full pointer-events-none"></div>
 
-      <div className="relative z-10 w-full max-w-md bg-white/[0.02] border border-white/10 rounded-[2rem] p-8 sm:p-10 backdrop-blur-md shadow-2xl">
+      <div className="relative z-10 w-full max-w-md bg-slate-100/50 dark:bg-white/[0.02] border border-slate-200 dark:border-white/10 rounded-[2rem] p-8 sm:p-10 backdrop-blur-md shadow-2xl transition-colors duration-300">
         <div className="flex flex-col items-center mb-8">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-white/5 border border-white/10 rounded-full mb-4">
-            <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
-            <span className="text-[10px] font-bold uppercase tracking-widest text-emerald-300">Contributor Portal</span>
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-slate-200/50 dark:bg-white/5 border border-slate-350 dark:border-white/10 rounded-full mb-4 transition-colors duration-300">
+            <ShieldCheck className="w-3.5 h-3.5 text-emerald-505 dark:text-emerald-400" />
+            <span className="text-[10px] font-bold uppercase tracking-widest text-emerald-600 dark:text-emerald-300">Contributor Portal</span>
           </div>
-          <h2 className="text-3xl font-light tracking-tight text-center text-white mb-2 leading-tight">
+          <h2 className="text-3xl font-light tracking-tight text-center text-slate-800 dark:text-white mb-2 leading-tight">
             Create <span className="font-serif italic font-bold bg-gradient-to-r from-emerald-400 via-blue-400 to-amber-300 bg-clip-text text-transparent">Account</span>
           </h2>
-          <p className="text-white/50 text-xs sm:text-sm font-light text-center">Join the archive community and submit field documentations.</p>
+          <p className="text-slate-500 dark:text-white/50 text-xs sm:text-sm font-light text-center">Join the archive community and submit field documentations.</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-5" autoComplete="off">
@@ -93,7 +93,7 @@ export default function SignupPage() {
 
           {/* Name Input */}
           <div className="space-y-1.5">
-            <label className="text-[10px] uppercase tracking-wider text-white/40 block font-semibold pl-1">
+            <label className="text-[10px] uppercase tracking-wider text-slate-500 dark:text-white/40 block font-semibold pl-1">
               Full Name
             </label>
             <div className="relative">
@@ -105,9 +105,9 @@ export default function SignupPage() {
                 value={form.name}
                 required
                 autoComplete="off"
-                className="w-full bg-white/5 border border-white/10 rounded-xl py-3.5 pl-11 pr-4 text-sm text-white placeholder-white/35 focus:outline-none focus:border-emerald-400 transition-colors"
+                className="w-full bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl py-3.5 pl-11 pr-4 text-sm text-slate-805 dark:text-white placeholder-slate-400 dark:placeholder-white/35 focus:outline-none focus:border-emerald-500 focus:dark:border-emerald-400 transition-colors duration-300"
               />
-              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-white/30 pointer-events-none">
+              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 dark:text-white/30 pointer-events-none">
                 <User className="w-4 h-4" />
               </span>
             </div>
@@ -115,7 +115,7 @@ export default function SignupPage() {
 
           {/* Username Input */}
           <div className="space-y-1.5">
-            <label className="text-[10px] uppercase tracking-wider text-white/40 block font-semibold pl-1">
+            <label className="text-[10px] uppercase tracking-wider text-slate-500 dark:text-white/40 block font-semibold pl-1">
               Username
             </label>
             <div className="relative">
@@ -127,9 +127,9 @@ export default function SignupPage() {
                 value={form.username}
                 required
                 autoComplete="off"
-                className="w-full bg-white/5 border border-white/10 rounded-xl py-3.5 pl-11 pr-4 text-sm text-white placeholder-white/35 focus:outline-none focus:border-emerald-400 transition-colors"
+                className="w-full bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl py-3.5 pl-11 pr-4 text-sm text-slate-805 dark:text-white placeholder-slate-400 dark:placeholder-white/35 focus:outline-none focus:border-emerald-500 focus:dark:border-emerald-400 transition-colors duration-300"
               />
-              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-white/30 pointer-events-none">
+              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 dark:text-white/30 pointer-events-none">
                 <User className="w-4 h-4" />
               </span>
             </div>
@@ -137,7 +137,7 @@ export default function SignupPage() {
 
           {/* Email Input */}
           <div className="space-y-1.5">
-            <label className="text-[10px] uppercase tracking-wider text-white/40 block font-semibold pl-1">
+            <label className="text-[10px] uppercase tracking-wider text-slate-500 dark:text-white/40 block font-semibold pl-1">
               Email Address
             </label>
             <div className="relative">
@@ -149,9 +149,9 @@ export default function SignupPage() {
                 value={form.email}
                 required
                 autoComplete="off"
-                className="w-full bg-white/5 border border-white/10 rounded-xl py-3.5 pl-11 pr-4 text-sm text-white placeholder-white/35 focus:outline-none focus:border-emerald-400 transition-colors"
+                className="w-full bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl py-3.5 pl-11 pr-4 text-sm text-slate-805 dark:text-white placeholder-slate-400 dark:placeholder-white/35 focus:outline-none focus:border-emerald-500 focus:dark:border-emerald-400 transition-colors duration-300"
               />
-              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-white/30 pointer-events-none">
+              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 dark:text-white/30 pointer-events-none">
                 <Mail className="w-4 h-4" />
               </span>
             </div>
@@ -159,7 +159,7 @@ export default function SignupPage() {
 
           {/* Password Input */}
           <div className="space-y-1.5">
-            <label className="text-[10px] uppercase tracking-wider text-white/40 block font-semibold pl-1">
+            <label className="text-[10px] uppercase tracking-wider text-slate-500 dark:text-white/40 block font-semibold pl-1">
               Password
             </label>
             <div className="relative">
@@ -171,15 +171,15 @@ export default function SignupPage() {
                 value={form.password}
                 required
                 autoComplete="new-password"
-                className="w-full bg-white/5 border border-white/10 rounded-xl py-3.5 pl-11 pr-12 text-sm text-white placeholder-white/35 focus:outline-none focus:border-emerald-400 transition-colors"
+                className="w-full bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl py-3.5 pl-11 pr-12 text-sm text-slate-805 dark:text-white placeholder-slate-400 dark:placeholder-white/35 focus:outline-none focus:border-emerald-500 focus:dark:border-emerald-400 transition-colors duration-300"
               />
-              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-white/30 pointer-events-none">
+              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 dark:text-white/30 pointer-events-none">
                 <Lock className="w-4 h-4" />
               </span>
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-4 top-1/2 -translate-y-1/2 text-white/40 hover:text-white transition-colors"
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 dark:text-white/40 hover:text-slate-900 hover:dark:text-white transition-colors cursor-pointer"
               >
                 {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
               </button>
@@ -188,7 +188,7 @@ export default function SignupPage() {
 
           {/* Confirm Password Input */}
           <div className="space-y-1.5">
-            <label className="text-[10px] uppercase tracking-wider text-white/40 block font-semibold pl-1">
+            <label className="text-[10px] uppercase tracking-wider text-slate-500 dark:text-white/40 block font-semibold pl-1">
               Confirm Password
             </label>
             <div className="relative">
@@ -200,15 +200,15 @@ export default function SignupPage() {
                 value={form.confirmPassword}
                 required
                 autoComplete="new-password"
-                className="w-full bg-white/5 border border-white/10 rounded-xl py-3.5 pl-11 pr-12 text-sm text-white placeholder-white/35 focus:outline-none focus:border-emerald-400 transition-colors"
+                className="w-full bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl py-3.5 pl-11 pr-12 text-sm text-slate-805 dark:text-white placeholder-slate-400 dark:placeholder-white/35 focus:outline-none focus:border-emerald-500 focus:dark:border-emerald-400 transition-colors duration-300"
               />
-              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-white/30 pointer-events-none">
+              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 dark:text-white/30 pointer-events-none">
                 <Lock className="w-4 h-4" />
               </span>
               <button
                 type="button"
                 onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                className="absolute right-4 top-1/2 -translate-y-1/2 text-white/40 hover:text-white transition-colors"
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 dark:text-white/40 hover:text-white transition-colors cursor-pointer"
               >
                 {showConfirmPassword ? <EyeOff size={16} /> : <Eye size={16} />}
               </button>
@@ -216,16 +216,16 @@ export default function SignupPage() {
           </div>
 
           {/* Profile Picture (Optional) */}
-          <div className="space-y-3.5 border border-white/10 bg-white/[0.01] rounded-2xl p-4">
+          <div className="space-y-3.5 border border-slate-250 dark:border-white/10 bg-slate-200/20 dark:bg-white/[0.01] rounded-2xl p-4 transition-colors duration-300">
             <div className="flex justify-between items-center">
-              <label className="text-[10px] uppercase tracking-wider text-white/40 block font-semibold pl-1">
+              <label className="text-[10px] uppercase tracking-wider text-slate-500 dark:text-white/40 block font-semibold pl-1">
                 Profile Picture (Optional)
               </label>
               {form.avatarUrl && (
                 <button
                   type="button"
                   onClick={() => setForm({ ...form, avatarUrl: "" })}
-                  className="text-[10px] text-emerald-400 hover:text-emerald-300 transition-colors uppercase font-bold"
+                  className="text-[10px] text-emerald-500 dark:text-emerald-400 hover:text-emerald-600 hover:dark:text-emerald-300 transition-colors uppercase font-bold cursor-pointer"
                 >
                   Clear Selection
                 </button>
@@ -234,7 +234,7 @@ export default function SignupPage() {
 
             {/* Avatar Preview */}
             <div className="flex items-center gap-4">
-              <div className="relative w-14 h-14 rounded-full border border-white/15 bg-slate-900/60 overflow-hidden flex items-center justify-center shrink-0">
+              <div className="relative w-14 h-14 rounded-full border border-slate-300 dark:border-white/15 bg-slate-100 dark:bg-slate-900/60 overflow-hidden flex items-center justify-center shrink-0 transition-colors duration-300">
                 {form.avatarUrl ? (
                   <img
                     src={form.avatarUrl}
@@ -242,30 +242,30 @@ export default function SignupPage() {
                     className={`w-full h-full object-cover ${form.avatarUrl.startsWith("/svg_profiles/") ? "scale-[1.3]" : ""}`}
                   />
                 ) : (
-                  <div className="text-white/35 text-[9px] font-medium text-center leading-normal">
+                  <div className="text-slate-400 dark:text-white/35 text-[9px] font-medium text-center leading-normal">
                     Random<br />Default
                   </div>
                 )}
               </div>
               <div className="min-w-0">
-                <p className="text-xs text-white/70 font-semibold truncate">
+                <p className="text-xs text-slate-700 dark:text-white/70 font-semibold truncate">
                   {form.avatarUrl ? "Selected avatar ready" : "No avatar chosen"}
                 </p>
-                <p className="text-[10px] text-white/40 font-light mt-0.5 leading-snug">
+                <p className="text-[10px] text-slate-550 dark:text-white/40 font-light mt-0.5 leading-snug">
                   {form.avatarUrl ? "You can change your avatar choice below." : "A random default SVG avatar will be assigned automatically."}
                 </p>
               </div>
             </div>
 
             {/* Selector Options Tabs */}
-            <div className="grid grid-cols-2 gap-1 bg-white/5 p-1 rounded-xl">
+            <div className="grid grid-cols-2 gap-1 bg-slate-200/50 dark:bg-white/5 p-1 rounded-xl">
               <button
                 type="button"
                 onClick={() => setAvatarTab("svg")}
-                className={`py-1.5 text-[11px] rounded-lg transition-all ${
+                className={`py-1.5 text-[11px] rounded-lg transition-all cursor-pointer ${
                   avatarTab === "svg"
-                    ? "bg-white/10 text-white font-semibold"
-                    : "text-white/40 hover:text-white/70"
+                    ? "bg-white dark:bg-white/10 text-slate-800 dark:text-white font-semibold shadow-sm"
+                    : "text-slate-500 dark:text-white/40 hover:text-slate-800 hover:dark:text-white/70"
                 }`}
               >
                 Choose Avatar
@@ -273,10 +273,10 @@ export default function SignupPage() {
               <button
                 type="button"
                 onClick={() => setAvatarTab("upload")}
-                className={`py-1.5 text-[11px] rounded-lg transition-all ${
+                className={`py-1.5 text-[11px] rounded-lg transition-all cursor-pointer ${
                   avatarTab === "upload"
-                    ? "bg-white/10 text-white font-semibold"
-                    : "text-white/40 hover:text-white/70"
+                    ? "bg-white dark:bg-white/10 text-slate-800 dark:text-white font-semibold shadow-sm"
+                    : "text-slate-500 dark:text-white/40 hover:text-slate-800 hover:dark:text-white/70"
                 }`}
               >
                 Upload Image
@@ -285,16 +285,16 @@ export default function SignupPage() {
 
             {/* Tab Contents */}
             {avatarTab === "svg" ? (
-              <div className="grid grid-cols-5 gap-1.5 max-h-28 overflow-y-auto p-1 scrollbar-thin scrollbar-thumb-white/10 scrollbar-track-transparent">
+              <div className="grid grid-cols-5 gap-1.5 max-h-28 overflow-y-auto p-1 scrollbar-thin scrollbar-thumb-slate-300 dark:scrollbar-thumb-white/10 scrollbar-track-transparent">
                 {SVG_PROFILES.map((svg, idx) => (
                   <button
                     key={idx}
                     type="button"
                     onClick={() => setForm({ ...form, avatarUrl: svg })}
-                    className={`aspect-square rounded-lg p-1 bg-white/5 hover:bg-white/10 border transition-all overflow-hidden ${
+                    className={`aspect-square rounded-lg p-1 bg-slate-200/30 dark:bg-white/5 hover:bg-slate-200/60 hover:dark:bg-white/10 border transition-all overflow-hidden cursor-pointer ${
                       form.avatarUrl === svg
-                        ? "border-emerald-400 bg-emerald-500/10 scale-95"
-                        : "border-white/5"
+                        ? "border-emerald-500 dark:border-emerald-400 bg-emerald-500/10 scale-95"
+                        : "border-slate-200 dark:border-white/5"
                     }`}
                   >
                     <img src={svg} alt={`Avatar ${idx + 1}`} className="w-full h-full object-contain" />
@@ -302,11 +302,11 @@ export default function SignupPage() {
                 ))}
               </div>
             ) : (
-              <div className="flex flex-col items-center justify-center p-3 bg-white/5 border border-dashed border-white/10 rounded-xl min-h-[70px]">
+              <div className="flex flex-col items-center justify-center p-3 bg-slate-200/30 dark:bg-white/5 border border-dashed border-slate-300 dark:border-white/10 rounded-xl min-h-[70px]">
                 {isUploading ? (
                   <div className="flex flex-col items-center gap-1.5">
                     <div className="w-4 h-4 border-2 border-emerald-400/30 border-t-emerald-400 rounded-full animate-spin"></div>
-                    <span className="text-[9px] text-white/50">Uploading image...</span>
+                    <span className="text-[9px] text-slate-400 dark:text-white/50">Uploading image...</span>
                   </div>
                 ) : (
                   <UploadButton
@@ -343,7 +343,7 @@ export default function SignupPage() {
           </button>
         </form>
 
-        <div className="text-center text-white/40 text-xs mt-8">
+        <div className="text-center text-slate-500 dark:text-white/40 text-xs mt-8">
           Already have an account?{" "}
           <Link href="/login" className="text-emerald-400 hover:text-emerald-300 underline font-semibold transition-colors">
             Sign In
@@ -352,4 +352,4 @@ export default function SignupPage() {
       </div>
     </section>
   );
-}
+}

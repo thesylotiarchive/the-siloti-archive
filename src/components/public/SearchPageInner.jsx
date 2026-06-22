@@ -13,16 +13,16 @@ import { useState, useMemo, useEffect, useRef } from "react";
 // ✅ Premium dark glassmorphic skeleton card
 function SkeletonCard() {
   return (
-    <div className="animate-pulse border border-white/5 bg-slate-900/40 rounded-2xl overflow-hidden shadow-sm aspect-[4/3] flex flex-col justify-between">
-      <div className="relative w-full aspect-[4/3] bg-slate-950/80 p-6 flex flex-col items-center justify-center">
+    <div className="animate-pulse border border-slate-200 dark:border-white/5 bg-slate-100/50 dark:bg-slate-900/40 rounded-2xl overflow-hidden shadow-sm aspect-[4/3] flex flex-col justify-between transition-colors duration-300">
+      <div className="relative w-full aspect-[4/3] bg-slate-200/50 dark:bg-slate-950/80 p-6 flex flex-col items-center justify-center">
         {/* Thumbnail fallback skeleton */}
-        <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-white/5 border border-white/10" />
-        <div className="w-2/3 h-4 bg-white/10 rounded-md mt-4" />
-        <div className="w-1/2 h-3 bg-white/5 rounded-md mt-2" />
+        <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-slate-300 dark:bg-white/5 border border-slate-400/20 dark:border-white/10" />
+        <div className="w-2/3 h-4 bg-slate-300 dark:bg-white/10 rounded-md mt-4" />
+        <div className="w-1/2 h-3 bg-slate-200 dark:bg-white/5 rounded-md mt-2" />
       </div>
-      <div className="h-10 bg-slate-950/60 border-t border-white/5 px-4 py-3 flex items-center gap-2">
-        <div className="w-4 h-4 bg-white/5 rounded" />
-        <div className="w-12 h-3 bg-white/10 rounded" />
+      <div className="h-10 bg-slate-100/80 dark:bg-slate-950/60 border-t border-slate-200 dark:border-white/5 px-4 py-3 flex items-center gap-2">
+        <div className="w-4 h-4 bg-slate-300 dark:bg-white/5 rounded" />
+        <div className="w-12 h-3 bg-slate-300 dark:bg-white/10 rounded" />
       </div>
     </div>
   );
@@ -107,7 +107,7 @@ export default function SearchPageInner({ initialQuery }) {
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
               placeholder="Search the archive..."
-              className="w-full px-4 py-2.5 bg-white/5 border border-white/10 rounded-xl text-white placeholder-white/35 focus:outline-none focus:border-emerald-400 focus:ring-1 focus:ring-emerald-400 transition-all duration-200 text-sm font-sans font-light"
+              className="w-full px-4 py-2.5 bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl text-slate-800 dark:text-white placeholder-slate-400 dark:placeholder-white/35 focus:outline-none focus:border-emerald-400 focus:ring-1 focus:ring-emerald-400 transition-all duration-300 text-sm font-sans font-light"
             />
           </div>
 
@@ -122,7 +122,7 @@ export default function SearchPageInner({ initialQuery }) {
             <button
               type="button"
               onClick={() => setFiltersOpen(true)}
-              className="flex-1 lg:hidden px-6 py-2.5 bg-white/5 border border-white/10 hover:bg-white/10 text-white font-bold rounded-xl transition-all duration-300 cursor-pointer shadow-md whitespace-nowrap text-sm"
+              className="flex-1 lg:hidden px-6 py-2.5 bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 hover:bg-slate-200 dark:hover:bg-white/10 text-slate-800 dark:text-white font-bold rounded-xl transition-all duration-300 cursor-pointer shadow-md whitespace-nowrap text-sm"
             >
               Filters
             </button>
@@ -194,10 +194,10 @@ export default function SearchPageInner({ initialQuery }) {
             className="fixed inset-0 bg-black/60 backdrop-blur-sm"
             onClick={() => setFiltersOpen(false)}
           />
-          <div className="relative ml-auto w-72 max-w-full h-full bg-slate-950 border-l border-white/10 shadow-2xl p-6 overflow-y-auto text-white">
+          <div className="relative ml-auto w-72 max-w-full h-full bg-background border-l border-slate-200 dark:border-white/10 shadow-2xl p-6 overflow-y-auto text-foreground transition-colors duration-300">
             <button
               onClick={() => setFiltersOpen(false)}
-              className="mb-4 flex items-center justify-center p-2 rounded-lg bg-white/5 hover:bg-white/10 text-white/70 hover:text-white transition-colors cursor-pointer text-sm font-semibold"
+              className="mb-4 flex items-center justify-center p-2 rounded-lg bg-slate-100 dark:bg-white/5 hover:bg-slate-200 dark:hover:bg-white/10 text-slate-600 dark:text-white/70 hover:text-slate-900 hover:dark:text-white transition-colors cursor-pointer text-sm font-semibold"
             >
               ✕ Close
             </button>

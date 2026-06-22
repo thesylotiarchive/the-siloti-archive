@@ -6,7 +6,7 @@ import { Toaster } from 'react-hot-toast';
 
 export default function PublicLayout({ children }) {
     return (
-      <div className="min-h-screen bg-slate-950 text-white flex flex-col">
+      <div className="min-h-screen bg-background text-foreground flex flex-col transition-colors duration-300">
         <GeneralNavBar/>
         <main className="flex-grow">{children}</main>
         <Footer />

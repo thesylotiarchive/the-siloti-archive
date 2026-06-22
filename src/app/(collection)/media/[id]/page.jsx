@@ -11,15 +11,15 @@ export default async function MediaDetailPage({ params }) {
 
   if (!media || media.error) {
     return (
-      <div className="min-h-screen bg-slate-950 text-white flex items-center justify-center p-6 relative overflow-hidden">
+      <div className="min-h-screen bg-background text-foreground flex items-center justify-center p-6 relative overflow-hidden transition-colors duration-300">
         {/* Background glows */}
         <div className="absolute top-0 left-1/4 w-[500px] h-[300px] bg-emerald-400/5 blur-[150px] rounded-full pointer-events-none"></div>
         <div className="absolute bottom-0 right-1/4 w-[500px] h-[300px] bg-blue-500/5 blur-[150px] rounded-full pointer-events-none"></div>
 
-        <div className="relative z-10 max-w-md w-full bg-white/[0.02] border border-white/10 rounded-[2rem] p-10 text-center backdrop-blur-md shadow-2xl">
+        <div className="relative z-10 max-w-md w-full bg-slate-100/50 dark:bg-white/[0.02] border border-slate-200 dark:border-white/10 rounded-[2rem] p-10 text-center backdrop-blur-md shadow-2xl transition-colors duration-300">
           <div className="text-6xl mb-6">🔍</div>
-          <h2 className="text-2xl font-serif font-bold text-white mb-3">Media Not Found</h2>
-          <p className="text-white/60 font-light mb-8">The media you're looking for doesn't exist or has been removed.</p>
+          <h2 className="text-2xl font-serif font-bold text-slate-800 dark:text-white mb-3">Media Not Found</h2>
+          <p className="text-slate-650 dark:text-white/60 font-light mb-8">The media you're looking for doesn't exist or has been removed.</p>
           <Link href="/collection" className="inline-flex items-center justify-center px-6 py-3 bg-emerald-400 text-slate-950 font-bold rounded-full hover:bg-emerald-300 transition-all cursor-pointer shadow-lg shadow-emerald-400/10 text-sm">
             Back to Collections
           </Link>
@@ -56,7 +56,7 @@ export default async function MediaDetailPage({ params }) {
       <div className="mb-8">
         <Link
           href={`/collection/${media.folderId || ""}`}
-          className="inline-flex items-center gap-2 text-sm font-medium text-white/60 hover:text-emerald-400 transition-colors group"
+          className="inline-flex items-center gap-2 text-sm font-medium text-slate-500 dark:text-white/60 hover:text-emerald-400 transition-colors group"
         >
           <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1" />
           Back to Collection
@@ -64,7 +64,7 @@ export default async function MediaDetailPage({ params }) {
       </div>
 
       {/* Header Section */}
-      <div className="bg-white/[0.02] border border-white/10 rounded-[2rem] shadow-2xl backdrop-blur-md overflow-hidden mb-8">
+      <div className="bg-slate-100/50 dark:bg-white/[0.02] border border-slate-200 dark:border-white/10 rounded-[2rem] shadow-2xl backdrop-blur-md overflow-hidden mb-8 transition-colors duration-300">
         <div className={`h-2 bg-gradient-to-r ${config.color}`} />
         <div className="p-6 sm:p-8">
           <div className="flex flex-col sm:flex-row sm:items-start gap-5">
@@ -79,24 +79,24 @@ export default async function MediaDetailPage({ params }) {
                   {media.mediaType.toLowerCase()}
                 </span>
                 {media.author && (
-                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium text-white/75 bg-white/5 border border-white/5">
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium text-slate-750 bg-slate-150 dark:bg-white/5 border border-slate-200 dark:border-white/5">
                     👤 Creator: {media.author}
                   </span>
                 )}
-                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium text-white/55 bg-white/5 border border-white/5">
-                  <Eye className="w-3 h-3 text-emerald-400" />
+                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium text-slate-500 dark:text-white/55 bg-slate-150 dark:bg-white/5 border border-slate-200 dark:border-white/5">
+                  <Eye className="w-3 h-3 text-emerald-500 dark:text-emerald-400" />
                   {media.views || 0} views
                 </span>
               </div>
 
-              <h1 className="text-2xl sm:text-3xl font-light tracking-tight text-white mb-4 leading-tight">
-                <span className="bg-gradient-to-r from-white via-white to-white/70 bg-clip-text text-transparent font-serif italic font-bold">
+              <h1 className="text-2xl sm:text-3xl font-light tracking-tight text-slate-800 dark:text-white mb-4 leading-tight">
+                <span className="bg-gradient-to-r from-slate-900 via-slate-800 to-slate-700 dark:from-white dark:via-white dark:to-white/70 bg-clip-text text-transparent font-serif italic font-bold">
                   {media.title}
                 </span>
               </h1>
 
               {media.description && (
-                <p className="text-white/75 text-sm sm:text-base leading-relaxed font-light">
+                <p className="text-slate-650 dark:text-white/75 text-sm sm:text-base leading-relaxed font-light">
                   {media.description}
                 </p>
               )}
@@ -107,7 +107,7 @@ export default async function MediaDetailPage({ params }) {
 
       {/* Thumbnail Preview for non-image media */}
       {thumbnailSrc && (
-        <div className="relative w-full h-60 sm:h-72 md:h-96 overflow-hidden rounded-[2rem] border border-white/10 mb-8 shadow-2xl bg-slate-900/40 backdrop-blur-md">
+        <div className="relative w-full h-60 sm:h-72 md:h-96 overflow-hidden rounded-[2rem] border border-slate-200 dark:border-white/10 mb-8 shadow-2xl bg-slate-100/50 dark:bg-slate-900/40 backdrop-blur-md transition-colors duration-300">
           <div
             className="absolute inset-0 bg-cover bg-center blur-2xl scale-110 brightness-50"
             style={{

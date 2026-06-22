@@ -100,20 +100,20 @@ export default function PublicSidebar({ isOpen, onClose }) {
       {/* Sidebar container */}
       <div 
         className={clsx(
-          "relative flex flex-col w-[220px] h-full bg-slate-950/95 text-white p-5 shadow-2xl z-10 transition-transform duration-300 ease-out border-r border-white/10 backdrop-blur-md rounded-none overflow-hidden",
+          "relative flex flex-col w-[220px] h-full bg-white/95 dark:bg-background/95 text-slate-800 dark:text-white p-5 shadow-2xl z-10 transition-transform duration-300 ease-out border-r border-slate-200 dark:border-white/10 backdrop-blur-md rounded-none overflow-hidden",
           isOpen ? "translate-x-0" : "-translate-x-full"
         )}
       >
         {/* Header (Hamburger icon + App Title) */}
-        <div className="flex items-center gap-3 py-1.5 mb-5 border-b border-white/10 select-none shrink-0">
+        <div className="flex items-center gap-3 py-1.5 mb-5 border-b border-slate-200 dark:border-white/10 select-none shrink-0">
           <button 
             onClick={onClose} 
             type="button"
-            className="p-1.5 hover:bg-white/10 rounded-full transition-colors cursor-pointer outline-none"
+            className="p-1.5 hover:bg-slate-100 dark:hover:bg-white/10 rounded-full transition-colors cursor-pointer outline-none"
           >
-            <Menu className="w-5 h-5 text-white" />
+            <Menu className="w-5 h-5 text-slate-800 dark:text-white" />
           </button>
-          <span className="font-extrabold text-[16px] tracking-tight bg-gradient-to-r from-emerald-400 via-blue-400 to-amber-300 bg-clip-text text-transparent">
+          <span className="font-extrabold text-[16px] tracking-tight bg-gradient-to-r from-emerald-500 via-blue-500 to-amber-500 dark:from-emerald-400 dark:via-blue-400 dark:to-amber-300 bg-clip-text text-transparent">
             Sylheti Archive
           </span>
         </div>
@@ -134,18 +134,35 @@ export default function PublicSidebar({ isOpen, onClose }) {
                   "flex items-center gap-3 px-3 py-2 rounded-lg transition-all duration-200 cursor-pointer font-medium text-[14px] group",
                   isActive
                     ? "bg-emerald-400 text-slate-950 font-bold shadow-md shadow-emerald-400/20"
-                    : "text-white/70 hover:text-white hover:bg-white/5"
+                    : "text-slate-600 hover:text-slate-900 hover:bg-slate-100 dark:text-white/70 dark:hover:text-white dark:hover:bg-white/5"
                 )}
               >
-                <Icon className={clsx("w-4.5 h-4.5 transition-colors duration-200", isActive ? "text-slate-950" : "text-white/50 group-hover:text-emerald-400")} />
+                <Icon className={clsx("w-4.5 h-4.5 transition-colors duration-200", isActive ? "text-slate-950" : "text-slate-400 dark:text-white/50 group-hover:text-emerald-600 dark:group-hover:text-emerald-400")} />
                 <span>{item.label}</span>
               </Link>
             );
           })}
+          {!loading && (!user || user.role === 'VIEWER') && (
+            <Link
+              href={!user ? '/signup' : '/submit'}
+              onClick={onClose}
+              onMouseEnter={() => handleMouseEnter(!user ? '/signup' : '/submit')}
+              onMouseLeave={handleMouseLeave}
+              className={clsx(
+                "flex items-center gap-3 px-3 py-2 rounded-lg transition-all duration-200 cursor-pointer font-medium text-[14px] group",
+                (pathname === '/signup' || pathname === '/submit')
+                  ? "bg-emerald-400 text-slate-950 font-bold shadow-md shadow-emerald-400/20"
+                  : "text-slate-600 hover:text-slate-900 hover:bg-slate-100 dark:text-white/70 dark:hover:text-white dark:hover:bg-white/5"
+              )}
+            >
+              <Users className={clsx("w-4.5 h-4.5 transition-colors duration-200", (pathname === '/signup' || pathname === '/submit') ? "text-slate-950" : "text-slate-400 dark:text-white/50 group-hover:text-emerald-600 dark:group-hover:text-emerald-400")} />
+              <span>Become a contributor</span>
+            </Link>
+          )}
         </nav>
 
         {/* Separated footer items */}
-        <div className="mt-auto pt-3 border-t border-white/10 space-y-1 shrink-0">
+        <div className="mt-auto pt-3 border-t border-slate-200 dark:border-white/10 space-y-1 shrink-0">
           {!loading && user && (
             <>
               {/* Admin Panel Link */}
@@ -159,10 +176,10 @@ export default function PublicSidebar({ isOpen, onClose }) {
                     "flex items-center gap-3 px-3 py-2 rounded-lg transition-all duration-200 cursor-pointer font-medium text-[14px] group",
                     pathname.startsWith("/admin")
                       ? "bg-emerald-400 text-slate-950 font-bold shadow-md shadow-emerald-400/20"
-                      : "text-white/70 hover:text-white hover:bg-white/5"
+                      : "text-slate-600 hover:text-slate-900 hover:bg-slate-100 dark:text-white/70 dark:hover:text-white dark:hover:bg-white/5"
                   )}
                 >
-                  <LayoutDashboard className={clsx("w-4.5 h-4.5 transition-colors duration-200", pathname.startsWith("/admin") ? "text-slate-950" : "text-white/50 group-hover:text-emerald-400")} />
+                  <LayoutDashboard className={clsx("w-4.5 h-4.5 transition-colors duration-200", pathname.startsWith("/admin") ? "text-slate-950" : "text-slate-400 dark:text-white/50 group-hover:text-emerald-600 dark:group-hover:text-emerald-400")} />
                   <span>Admin Panel</span>
                 </Link>
               )}
@@ -177,10 +194,10 @@ export default function PublicSidebar({ isOpen, onClose }) {
                   "flex items-center gap-3 px-3 py-2 rounded-lg transition-all duration-200 cursor-pointer font-medium text-[14px] group",
                   pathname === "/profile"
                     ? "bg-emerald-400 text-slate-950 font-bold shadow-md shadow-emerald-400/20"
-                    : "text-white/70 hover:text-white hover:bg-white/5"
+                    : "text-slate-600 hover:text-slate-900 hover:bg-slate-100 dark:text-white/70 dark:hover:text-white dark:hover:bg-white/5"
                 )}
               >
-                <UserIcon className={clsx("w-4.5 h-4.5 transition-colors duration-200", pathname === "/profile" ? "text-slate-950" : "text-white/50 group-hover:text-emerald-400")} />
+                <UserIcon className={clsx("w-4.5 h-4.5 transition-colors duration-200", pathname === "/profile" ? "text-slate-950" : "text-slate-400 dark:text-white/50 group-hover:text-emerald-600 dark:group-hover:text-emerald-400")} />
                 <span>My Profile</span>
               </Link>
 
@@ -188,9 +205,9 @@ export default function PublicSidebar({ isOpen, onClose }) {
               <button
                 onClick={handleLogout}
                 type="button"
-                className="flex items-center gap-3 w-full px-3 py-2 rounded-lg transition-all duration-200 cursor-pointer font-medium text-[14px] text-rose-400 hover:bg-rose-500/10 hover:text-rose-300 group"
+                className="flex items-center gap-3 w-full px-3 py-2 rounded-lg transition-all duration-200 cursor-pointer font-medium text-[14px] text-rose-500 dark:text-rose-400 hover:bg-rose-500/10 hover:text-rose-600 dark:hover:text-rose-300 group"
               >
-                <LogOut className="w-4.5 h-4.5 transition-colors duration-200 text-rose-400 group-hover:text-rose-300" />
+                <LogOut className="w-4.5 h-4.5 transition-colors duration-200 text-rose-500 dark:text-rose-400 group-hover:text-rose-600 dark:group-hover:text-rose-300" />
                 <span>Logout</span>
               </button>
             </>

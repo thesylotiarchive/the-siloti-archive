@@ -6,10 +6,11 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
 import clsx from 'clsx';
-import { Menu, Search, Bookmark, Grid3X3, LogOut, LayoutDashboard, ChevronDown, User as UserIcon } from 'lucide-react';
+import { Menu, Search, Bookmark, Grid3X3, LogOut, LayoutDashboard, ChevronDown, User as UserIcon, Sun, Moon } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import PublicSidebar from '@/components/public/PublicSidebar';
 import NotificationBell from '@/components/public/NotificationBell';
+import { useTheme } from '@/components/ThemeProvider';
 
 export default function TransparentNavbar() {
   const pathname = usePathname();
@@ -19,6 +20,7 @@ export default function TransparentNavbar() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const { theme, toggleTheme } = useTheme();
 
   useEffect(() => {
     if (!dropdownOpen) return;
@@ -63,42 +65,52 @@ export default function TransparentNavbar() {
         .toUpperCase()
     : "U";
 
+  const isLight = theme === 'light';
+
+  const iconColorClass = isLight || scrolled ? "text-slate-800 dark:text-white" : "text-white";
+  const hoverBgClass = isLight || scrolled ? "hover:bg-slate-100 dark:hover:bg-white/10" : "hover:bg-white/10";
+  const logoTitleClass = isLight || scrolled ? "text-slate-900 dark:text-white" : "text-white";
+  const logoSubtitleClass = isLight || scrolled ? "text-slate-500 dark:text-white/60" : "text-white/60";
+  const logoBorderClass = isLight || scrolled ? "border-slate-200 dark:border-white/10" : "border-white/10";
+
   return (
     <>
       <header
         className={clsx(
-          'fixed top-0 left-0 w-full z-50 px-6 py-3 transition-all duration-300 flex items-center justify-between text-white',
+          'fixed top-0 left-0 w-full z-50 px-6 py-3 transition-all duration-300 flex items-center justify-between',
           scrolled
-            ? 'bg-slate-950/65 backdrop-blur-md border-b border-white/10 shadow-lg'
-            : 'bg-gradient-to-b from-slate-950/80 to-transparent'
+            ? 'bg-white/70 dark:bg-background/65 backdrop-blur-md border-b border-slate-200 dark:border-white/10 shadow-lg text-slate-800 dark:text-white'
+            : isLight
+              ? 'bg-gradient-to-b from-white/80 to-transparent text-slate-800'
+              : 'bg-gradient-to-b from-background/80 to-transparent text-white'
         )}
       >
         {/* Left Toggle + Logo Section */}
         <div className="flex items-center gap-3">
           <button
             onClick={() => setSidebarOpen(true)}
-            className="p-2 hover:bg-white/10 rounded-full transition-colors cursor-pointer outline-none"
+            className={clsx("p-2 rounded-full transition-colors cursor-pointer outline-none", hoverBgClass)}
             title="Open Menu"
           >
-            <Menu className="w-6 h-6 text-white" />
+            <Menu className={clsx("w-6 h-6", iconColorClass)} />
           </button>
 
           <Link
             href="/"
-            className="flex items-center gap-3 text-white transition-opacity hover:opacity-90"
+            className="flex items-center gap-3 transition-opacity hover:opacity-90"
           >
             <Image
               src="/logo.png"
               alt="Sylheti Archive Logo"
               width={48}
               height={48}
-              className="rounded-lg w-10 h-10 sm:w-12 sm:h-12 border border-white/10"
+              className={clsx("rounded-lg w-10 h-10 sm:w-12 sm:h-12 border", logoBorderClass)}
             />
             <div className="flex flex-col leading-tight max-w-[180px] sm:max-w-none">
-              <span className="font-extrabold text-[14px] sm:text-[18px] tracking-wide text-white">
+              <span className={clsx("font-extrabold text-[14px] sm:text-[18px] tracking-wide", logoTitleClass)}>
                 Sylheti Archive
               </span>
-              <span className="font-light text-[9px] sm:text-[11px] text-white/60">
+              <span className={clsx("font-light text-[9px] sm:text-[11px]", logoSubtitleClass)}>
                 An Initiative of
               </span>
               <span className="font-semibold text-[8px] sm:text-[11px] leading-snug bg-gradient-to-r from-emerald-400 via-blue-400 to-amber-300 bg-clip-text text-transparent">
@@ -109,14 +121,27 @@ export default function TransparentNavbar() {
         </div>
 
         {/* Right side controls */}
-        <div className="flex items-center gap-2 sm:gap-4 text-white">
-          <Link href="/search" className="p-2 hover:bg-white/10 rounded-full transition-colors duration-200 cursor-pointer" title="Search">
-            <Search className="w-5 h-5 opacity-90 hover:opacity-100" />
+        <div className="flex items-center gap-2 sm:gap-4">
+          <Link href="/search" className={clsx("p-2 rounded-full transition-colors duration-200 cursor-pointer", hoverBgClass)} title="Search">
+            <Search className={clsx("w-5 h-5 opacity-90 hover:opacity-100", iconColorClass)} />
           </Link>
-          <Link href="/collection" className="p-2 hover:bg-white/10 rounded-full transition-colors duration-200 cursor-pointer" title="Archive Collections">
-            <Bookmark className="w-5 h-5 opacity-90 hover:opacity-100" />
+          <Link href="/collection" className={clsx("p-2 rounded-full transition-colors duration-200 cursor-pointer", hoverBgClass)} title="Archive Collections">
+            <Bookmark className={clsx("w-5 h-5 opacity-90 hover:opacity-100", iconColorClass)} />
           </Link>
-          {!loading && user && <NotificationBell />}
+          {!loading && user && <NotificationBell iconColorClass={iconColorClass} hoverBgClass={hoverBgClass} />}
+
+          {/* Theme Toggler */}
+          <button
+            onClick={toggleTheme}
+            className={clsx("p-2 rounded-full transition-colors duration-200 cursor-pointer outline-none", hoverBgClass)}
+            title={theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+          >
+            {theme === 'dark' ? (
+              <Sun className={clsx("w-5 h-5 opacity-90 hover:opacity-100 transition-transform hover:rotate-45", iconColorClass)} />
+            ) : (
+              <Moon className={clsx("w-5 h-5 opacity-90 hover:opacity-100 transition-transform hover:-rotate-12", iconColorClass)} />
+            )}
+          </button>
 
           {/* User Session Handler */}
           {!loading && (
@@ -127,24 +152,24 @@ export default function TransparentNavbar() {
                     e.stopPropagation();
                     setDropdownOpen(!dropdownOpen);
                   }}
-                  className="flex items-center gap-2 focus:outline-none cursor-pointer p-1 rounded-full hover:bg-white/5 transition-colors"
+                  className={clsx("flex items-center gap-2 focus:outline-none cursor-pointer p-1 rounded-full transition-colors", hoverBgClass)}
                 >
-                  <Avatar className="w-8 h-8 border border-white/20">
+                  <Avatar className={clsx("w-8 h-8 border", logoBorderClass)}>
                     <AvatarImage src={user.avatarUrl} alt={user.name || user.username} />
-                    <AvatarFallback className="bg-slate-800 text-white text-xs font-semibold">
+                    <AvatarFallback className={clsx("text-xs font-semibold", isLight || scrolled ? "bg-slate-200 dark:bg-slate-800 text-slate-800 dark:text-white" : "bg-slate-800 text-white")}>
                       {initials}
                     </AvatarFallback>
                   </Avatar>
-                  <span className="hidden md:inline text-sm text-white/90 font-semibold max-w-[100px] truncate">{user.name || user.username}</span>
-                  <ChevronDown className="w-4 h-4 text-white/50 hidden md:block" />
+                  <span className={clsx("hidden md:inline text-sm font-semibold max-w-[100px] truncate", isLight || scrolled ? "text-slate-700 dark:text-white/90" : "text-white/90")}>{user.name || user.username}</span>
+                  <ChevronDown className={clsx("w-4 h-4 hidden md:block", isLight || scrolled ? "text-slate-400 dark:text-white/50" : "text-white/50")} />
                 </button>
                 {dropdownOpen && (
-                  <div className="absolute right-0 mt-2 w-48 bg-slate-900 border border-white/10 text-white rounded-xl p-1 shadow-2xl backdrop-blur-md z-50">
+                  <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 text-slate-800 dark:text-white rounded-xl p-1 shadow-2xl backdrop-blur-md z-50">
                     {(user.role === 'ADMIN' || user.role === 'SUPERADMIN') && (
                       <Link
                         href="/admin/dashboard"
                         onClick={() => setDropdownOpen(false)}
-                        className="flex items-center gap-2 w-full text-left text-sm px-3 py-1.5 hover:bg-white/10 rounded-lg font-medium cursor-pointer transition-colors"
+                        className="flex items-center gap-2 w-full text-left text-sm px-3 py-1.5 hover:bg-slate-100 dark:hover:bg-white/10 rounded-lg font-medium cursor-pointer transition-colors"
                       >
                         <LayoutDashboard className="w-4 h-4" />
                         <span>Admin Panel</span>
@@ -153,7 +178,7 @@ export default function TransparentNavbar() {
                     <Link
                       href="/submit"
                       onClick={() => setDropdownOpen(false)}
-                      className="flex items-center gap-2 w-full text-left text-sm px-3 py-1.5 hover:bg-white/10 rounded-lg font-medium cursor-pointer transition-colors"
+                      className="flex items-center gap-2 w-full text-left text-sm px-3 py-1.5 hover:bg-slate-100 dark:hover:bg-white/10 rounded-lg font-medium cursor-pointer transition-colors"
                     >
                       <Grid3X3 className="w-4 h-4" />
                       <span>Submit Item</span>
@@ -161,7 +186,7 @@ export default function TransparentNavbar() {
                     <Link
                       href="/profile"
                       onClick={() => setDropdownOpen(false)}
-                      className="flex items-center gap-2 w-full text-left text-sm px-3 py-1.5 hover:bg-white/10 rounded-lg font-medium cursor-pointer transition-colors"
+                      className="flex items-center gap-2 w-full text-left text-sm px-3 py-1.5 hover:bg-slate-100 dark:hover:bg-white/10 rounded-lg font-medium cursor-pointer transition-colors"
                     >
                       <UserIcon className="w-4 h-4" />
                       <span>My Profile</span>
@@ -171,7 +196,7 @@ export default function TransparentNavbar() {
                         setDropdownOpen(false);
                         handleLogout();
                       }}
-                      className="flex items-center gap-2 w-full text-left text-sm px-3 py-1.5 hover:bg-white/10 rounded-lg text-red-400 font-medium cursor-pointer transition-colors"
+                      className="flex items-center gap-2 w-full text-left text-sm px-3 py-1.5 hover:bg-slate-100 dark:hover:bg-white/10 rounded-lg text-red-500 dark:text-red-400 font-medium cursor-pointer transition-colors"
                     >
                       <LogOut className="w-4 h-4" />
                       <span>Logout</span>

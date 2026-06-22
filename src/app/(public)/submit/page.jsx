@@ -444,9 +444,9 @@ export default function SubmitPage() {
         
         {/* Header */}
         <div className="text-center mb-12 flex flex-col items-center">
-          <div className="mb-5 flex items-center gap-2 px-4 py-1.5 bg-white/5 border border-white/10 rounded-full backdrop-blur-md animate-luxury-float">
-            <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
-            <span className="text-[10px] font-bold uppercase tracking-widest text-emerald-300">
+          <div className="mb-5 flex items-center gap-2 px-4 py-1.5 bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-full backdrop-blur-md animate-luxury-float">
+            <Sparkles className="w-3.5 h-3.5 text-emerald-500 dark:text-emerald-400" />
+            <span className="text-[10px] font-bold uppercase tracking-widest text-emerald-600 dark:text-emerald-300">
               Community Contributions
             </span>
           </div>
@@ -456,21 +456,21 @@ export default function SubmitPage() {
               Submit to the Archive
             </span>
           </h1>
-          <p className="text-sm sm:text-base text-white/50 font-light max-w-xl leading-relaxed">
+          <p className="text-sm sm:text-base text-slate-500 dark:text-white/50 font-light max-w-xl leading-relaxed">
             Contribute manuscripts, field audio/video recordings, and books to preserve Siloti cultural heritage. All contributions are curated before going public.
           </p>
         </div>
 
         {/* Tab Selection Switcher */}
         <div className="flex justify-center mb-8">
-          <div className="flex p-1 bg-white/5 border border-white/10 rounded-2xl backdrop-blur-md gap-1">
+          <div className="flex p-1 bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-2xl backdrop-blur-md gap-1">
             <button
               type="button"
               onClick={() => setActiveTab("submit")}
               className={`px-6 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all duration-300 cursor-pointer ${
                 activeTab === "submit"
                   ? "bg-emerald-500 text-slate-950 shadow-md font-bold"
-                  : "text-white/60 hover:text-white hover:bg-white/5"
+                  : "text-slate-650 hover:text-slate-900 dark:text-white/60 dark:hover:text-white dark:hover:bg-white/5"
               }`}
             >
               Submit New Item
@@ -481,7 +481,7 @@ export default function SubmitPage() {
               className={`px-6 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all duration-300 cursor-pointer ${
                 activeTab === "history"
                   ? "bg-emerald-500 text-slate-950 shadow-md font-bold"
-                  : "text-white/60 hover:text-white hover:bg-white/5"
+                  : "text-slate-650 hover:text-slate-900 dark:text-white/60 dark:hover:text-white dark:hover:bg-white/5"
               }`}
             >
               My Submissions
@@ -491,13 +491,13 @@ export default function SubmitPage() {
 
         {activeTab === "submit" ? (
           !user ? (
-            <div className="bg-white/[0.02] border border-white/10 rounded-[2rem] p-8 sm:p-10 backdrop-blur-md shadow-2xl min-h-[300px]">
+            <div className="bg-white dark:bg-white/[0.02] border border-slate-200 dark:border-white/10 rounded-[2rem] p-8 sm:p-10 backdrop-blur-md shadow-2xl min-h-[300px]">
               <div className="text-center py-12 flex flex-col items-center space-y-4">
-                <div className="w-12 h-12 bg-white/5 border border-white/10 rounded-2xl flex items-center justify-center text-white/40">
+                <div className="w-12 h-12 bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-2xl flex items-center justify-center text-slate-400 dark:text-white/40">
                   <Lock className="w-5 h-5" />
                 </div>
-                <h3 className="text-lg font-medium text-white">Archive Submission Lock</h3>
-                <p className="text-xs text-white/50 max-w-sm leading-relaxed">
+                <h3 className="text-lg font-medium text-slate-900 dark:text-white">Archive Submission Lock</h3>
+                <p className="text-xs text-slate-500 dark:text-white/50 max-w-sm leading-relaxed">
                   Please log in to submit items to the archive and track their curation process.
                 </p>
                 <button
@@ -510,44 +510,44 @@ export default function SubmitPage() {
               </div>
             </div>
           ) : user.role === "VIEWER" ? (
-            <div className="bg-white/[0.02] border border-white/10 rounded-[2rem] p-8 sm:p-10 backdrop-blur-md shadow-2xl min-h-[300px]">
+            <div className="bg-white dark:bg-white/[0.02] border border-slate-200 dark:border-white/10 rounded-[2rem] p-8 sm:p-10 backdrop-blur-md shadow-2xl min-h-[300px]">
               {fetchingRequest ? (
                 <div className="flex flex-col items-center justify-center py-16 gap-3">
                   <Loader2 className="w-8 h-8 text-emerald-400 animate-spin" />
-                  <span className="text-xs text-white/50">Checking contributor request status...</span>
+                  <span className="text-xs text-slate-500 dark:text-white/50">Checking contributor request status...</span>
                 </div>
               ) : contributorRequest && contributorRequest.status === "PENDING" ? (
                 <div className="text-center py-12 flex flex-col items-center space-y-6">
-                  <div className="w-14 h-14 bg-amber-500/10 border border-amber-500/20 text-amber-400 rounded-2xl flex items-center justify-center animate-pulse">
+                  <div className="w-14 h-14 bg-amber-500/10 border border-amber-500/20 text-amber-500 dark:text-amber-400 rounded-2xl flex items-center justify-center animate-pulse">
                     <Clock className="w-6 h-6" />
                   </div>
                   <div className="space-y-2">
-                    <h3 className="text-xl font-semibold text-white">Curation Access Request Pending</h3>
-                    <p className="text-xs text-white/50 max-w-md mx-auto leading-relaxed">
+                    <h3 className="text-xl font-semibold text-slate-900 dark:text-white">Curation Access Request Pending</h3>
+                    <p className="text-xs text-slate-500 dark:text-white/50 max-w-md mx-auto leading-relaxed">
                       Thank you! Your request to become a Contributor is currently being reviewed by our administrators. You will receive an in-app notification once a decision has been made.
                     </p>
                   </div>
                   {contributorRequest.message && (
-                    <div className="max-w-md w-full bg-white/5 border border-white/5 rounded-xl p-4 text-left">
-                      <span className="text-[9px] text-white/40 font-bold uppercase tracking-wider block mb-1">Your Request Message:</span>
-                      <p className="text-xs text-white/70 italic">"{contributorRequest.message}"</p>
+                    <div className="max-w-md w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/5 rounded-xl p-4 text-left">
+                      <span className="text-[9px] text-slate-500 dark:text-white/40 font-bold uppercase tracking-wider block mb-1">Your Request Message:</span>
+                      <p className="text-xs text-slate-700 dark:text-white/70 italic">"{contributorRequest.message}"</p>
                     </div>
                   )}
                   <button
                     type="button"
                     onClick={fetchRequestStatus}
-                    className="px-4 py-2 bg-white/10 hover:bg-white/15 border border-white/10 text-white text-xs font-semibold rounded-xl transition-colors cursor-pointer"
+                    className="px-4 py-2 bg-slate-100 hover:bg-slate-200 dark:bg-white/10 dark:hover:bg-white/15 border border-slate-200 dark:border-white/10 text-slate-800 dark:text-white text-xs font-semibold rounded-xl transition-colors cursor-pointer"
                   >
                     Refresh Status
                   </button>
                 </div>
               ) : (
                 <div className="space-y-6">
-                  <div className="flex items-start gap-4 p-5 bg-rose-500/10 border border-rose-500/20 rounded-2xl text-rose-400">
+                  <div className="flex items-start gap-4 p-5 bg-rose-500/10 border border-rose-500/20 dark:border-rose-500/20 rounded-2xl text-rose-600 dark:text-rose-400">
                     <ShieldAlert className="w-6 h-6 shrink-0 mt-0.5" />
                     <div className="space-y-1">
-                      <h4 className="text-sm font-semibold text-white">Contributor Role Required</h4>
-                      <p className="text-xs text-white/60 leading-relaxed">
+                      <h4 className="text-sm font-semibold text-rose-950 dark:text-white">Contributor Role Required</h4>
+                      <p className="text-xs text-rose-900/80 dark:text-white/60 leading-relaxed">
                         To maintain the integrity and curation standards of the Sylheti Archive, direct contributions are restricted to verified contributors. Submit a request to the archive curators to promote your account.
                       </p>
                     </div>
@@ -555,12 +555,12 @@ export default function SubmitPage() {
 
                   {contributorRequest && contributorRequest.status === "REJECTED" && (
                     <div className="bg-red-500/5 border border-red-500/15 rounded-xl p-4 text-xs space-y-1.5">
-                      <div className="flex items-center gap-2 text-red-400 font-bold uppercase tracking-wide text-[10px]">
+                      <div className="flex items-center gap-2 text-red-500 dark:text-red-400 font-bold uppercase tracking-wide text-[10px]">
                         <span>Previous Request Rejected</span>
                         <span>•</span>
                         <span>{new Date(contributorRequest.updatedAt).toLocaleDateString()}</span>
                       </div>
-                      <p className="text-white/80 font-light leading-relaxed">
+                      <p className="text-slate-800 dark:text-white/80 font-light leading-relaxed">
                         Feedback: <span className="italic font-normal">"{contributorRequest.feedback || "No feedback comments specified."}"</span>
                       </p>
                     </div>
@@ -568,7 +568,7 @@ export default function SubmitPage() {
 
                   <form onSubmit={handleRequestSubmit} className="space-y-4 pt-2">
                     <div className="space-y-1.5">
-                      <label className="text-[10px] uppercase tracking-wider text-white/55 block font-bold pl-1">
+                      <label className="text-[10px] uppercase tracking-wider text-slate-500 dark:text-white/55 block font-bold pl-1">
                         Why would you like to contribute?
                       </label>
                       <textarea
@@ -577,7 +577,7 @@ export default function SubmitPage() {
                         onChange={(e) => setRequestMessage(e.target.value)}
                         rows={4}
                         required
-                        className="w-full bg-white/5 border border-white/10 rounded-xl py-3.5 px-4 text-sm text-white placeholder-white/20 focus:outline-none focus:border-emerald-400 transition-colors resize-none"
+                        className="w-full bg-slate-50 dark:bg-white/5 border border-slate-250 dark:border-white/10 rounded-xl py-3.5 px-4 text-sm text-slate-800 dark:text-white placeholder-slate-400 dark:placeholder-white/20 focus:outline-none focus:border-emerald-400 transition-colors resize-none"
                       />
                     </div>
                     <button
@@ -599,26 +599,26 @@ export default function SubmitPage() {
               )}
             </div>
           ) : (
-            <div className="bg-white/[0.02] border border-white/10 rounded-[2rem] p-8 sm:p-10 backdrop-blur-md shadow-2xl relative overflow-hidden">
+            <div className="bg-white dark:bg-white/[0.02] border border-slate-200 dark:border-white/10 rounded-[2rem] p-8 sm:p-10 backdrop-blur-md shadow-2xl relative overflow-hidden">
               {isScraping && (
-              <div className="absolute inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex flex-col items-center justify-center space-y-4">
-                <Loader2 className="w-10 h-10 text-emerald-400 animate-spin" />
+              <div className="absolute inset-0 bg-slate-100/90 dark:bg-slate-950/80 backdrop-blur-md z-50 flex flex-col items-center justify-center space-y-4">
+                <Loader2 className="w-10 h-10 text-emerald-500 dark:text-emerald-400 animate-spin" />
                 <div className="text-center">
-                  <h3 className="text-sm font-semibold text-emerald-300">Fetching details... please wait...</h3>
-                  <p className="text-[11px] text-white/40 mt-1">Extracting page titles, cover thumbnails, and summaries</p>
+                  <h3 className="text-sm font-semibold text-emerald-600 dark:text-emerald-300">Fetching details... please wait...</h3>
+                  <p className="text-[11px] text-slate-500 dark:text-white/40 mt-1">Extracting page titles, cover thumbnails, and summaries</p>
                 </div>
               </div>
             )}
 
             {/* Submit Mode Switcher */}
-            <div className="grid grid-cols-3 gap-2 p-1 bg-white/5 border border-white/10 rounded-2xl mb-8">
+            <div className="grid grid-cols-3 gap-2 p-1 bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-2xl mb-8">
               <button
                 type="button"
                 onClick={() => setSubmitMode("media")}
                 className={`py-2.5 rounded-xl text-xs font-bold transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer ${
                   submitMode === "media"
                     ? "bg-gradient-to-r from-emerald-500 to-emerald-600 text-slate-950 shadow-lg"
-                    : "text-white/60 hover:text-white hover:bg-white/5"
+                    : "text-slate-650 hover:text-slate-900 hover:bg-slate-150 dark:text-white/60 dark:hover:text-white dark:hover:bg-white/5"
                 }`}
               >
                 <Sparkles className="w-3.5 h-3.5" />
@@ -630,7 +630,7 @@ export default function SubmitPage() {
                 className={`py-2.5 rounded-xl text-xs font-bold transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer ${
                   submitMode === "folder"
                     ? "bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg"
-                    : "text-white/60 hover:text-white hover:bg-white/5"
+                    : "text-slate-650 hover:text-slate-900 hover:bg-slate-150 dark:text-white/60 dark:hover:text-white dark:hover:bg-white/5"
                 }`}
               >
                 <Folder className="w-3.5 h-3.5" />
@@ -642,7 +642,7 @@ export default function SubmitPage() {
                 className={`py-2.5 rounded-xl text-xs font-bold transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer ${
                   submitMode === "blog"
                     ? "bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 shadow-lg"
-                    : "text-white/60 hover:text-white hover:bg-white/5"
+                    : "text-slate-650 hover:text-slate-900 hover:bg-slate-150 dark:text-white/60 dark:hover:text-white dark:hover:bg-white/5"
                 }`}
               >
                 <BookOpen className="w-3.5 h-3.5" />
@@ -656,10 +656,10 @@ export default function SubmitPage() {
                   {/* Media Upload / Source Section FIRST */}
                   <div className="space-y-3">
                     <div className="flex items-center justify-between">
-                      <label className="text-[10px] uppercase tracking-wider text-white/55 block font-bold pl-1">
+                      <label className="text-[10px] uppercase tracking-wider text-slate-500 dark:text-white/55 block font-bold pl-1">
                         Media Source
                       </label>
-                      <div className="flex p-1 bg-white/5 rounded-xl border border-white/5 gap-1">
+                      <div className="flex p-1 bg-slate-100 dark:bg-white/5 rounded-xl border border-slate-200 dark:border-white/5 gap-1">
                         <button
                           type="button"
                           onClick={() => {
@@ -669,7 +669,7 @@ export default function SubmitPage() {
                           className={`px-3 py-1 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
                             uploadSource === "file"
                               ? "bg-emerald-400 text-slate-950 font-bold"
-                              : "text-white/60 hover:text-white"
+                              : "text-slate-600 hover:text-slate-900 dark:text-white/60 dark:hover:text-white"
                           }`}
                         >
                           Upload File
@@ -683,7 +683,7 @@ export default function SubmitPage() {
                           className={`px-3 py-1 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
                             uploadSource === "link"
                               ? "bg-emerald-400 text-slate-950 font-bold"
-                              : "text-white/60 hover:text-white"
+                              : "text-slate-600 hover:text-slate-900 dark:text-white/60 dark:hover:text-white"
                           }`}
                         >
                           Provide Link
@@ -701,13 +701,13 @@ export default function SubmitPage() {
                           value={form.mediaUrl}
                           onChange={handleChange}
                           onBlur={() => fetchLinkMetadata(form.mediaUrl)}
-                          className="w-full bg-white/5 border border-white/10 rounded-xl py-3.5 px-4 text-sm text-white placeholder-white/20 focus:outline-none focus:border-emerald-400 transition-colors"
+                          className="w-full bg-slate-50 dark:bg-white/5 border border-slate-250 dark:border-white/10 rounded-xl py-3.5 px-4 text-sm text-slate-800 dark:text-white placeholder-slate-400 dark:placeholder-white/20 focus:outline-none focus:border-emerald-400 transition-colors"
                         />
                         <button
                           type="button"
                           onClick={() => fetchLinkMetadata(form.mediaUrl)}
                           disabled={isScraping || !form.mediaUrl.trim()}
-                          className="px-4 bg-white/10 hover:bg-white/15 text-white text-xs font-semibold rounded-xl border border-white/10 flex items-center gap-1.5 cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
+                          className="px-4 bg-slate-100 hover:bg-slate-200 dark:bg-white/10 dark:hover:bg-white/15 text-slate-800 dark:text-white text-xs font-semibold rounded-xl border border-slate-200 dark:border-white/10 flex items-center gap-1.5 cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
                         >
                           {isScraping ? (
                             <Loader2 className="w-3.5 h-3.5 animate-spin" />
@@ -717,7 +717,7 @@ export default function SubmitPage() {
                         </button>
                       </div>
                     ) : (
-                      <div className="p-6 border border-dashed border-white/10 rounded-2xl bg-white/[0.01] flex flex-col items-center justify-center text-center min-h-[140px] relative">
+                      <div className="p-6 border border-dashed border-slate-350 dark:border-white/10 rounded-2xl bg-slate-50 dark:bg-white/[0.01] flex flex-col items-center justify-center text-center min-h-[140px] relative">
                         {form.mediaUrl ? (
                           <div className="space-y-3 w-full">
                             <div className="inline-flex items-center gap-2 p-3 bg-emerald-400/10 border border-emerald-400/20 text-emerald-400 rounded-xl text-xs font-semibold max-w-full">
@@ -738,13 +738,13 @@ export default function SubmitPage() {
                           <div className="flex flex-col items-center justify-center space-y-3">
                             {isUploadingFile ? (
                               <>
-                                <Loader2 className="w-6 h-6 text-emerald-400 animate-spin" />
-                                <span className="text-xs text-white/50">Uploading media files...</span>
+                                <Loader2 className="w-6 h-6 text-emerald-500 dark:text-emerald-400 animate-spin" />
+                                <span className="text-xs text-slate-500 dark:text-white/50">Uploading media files...</span>
                               </>
                             ) : (
                               <>
-                                <Upload className="w-6 h-6 text-white/30" />
-                                <div className="text-xs text-white/50 text-center px-4">
+                                <Upload className="w-6 h-6 text-slate-400 dark:text-white/30" />
+                                <div className="text-xs text-slate-500 dark:text-white/50 text-center px-4">
                                   Upload PDF, Image, Audio (Max 5MB) or Video (Max 10MB)
                                 </div>
                                 <UploadButton
@@ -805,7 +805,7 @@ export default function SubmitPage() {
 
                   {/* Media Type Selector BELOW the upload/link input block */}
                   <div className="space-y-2">
-                    <label className="text-[10px] uppercase tracking-wider text-white/55 block font-bold pl-1">
+                    <label className="text-[10px] uppercase tracking-wider text-slate-500 dark:text-white/55 block font-bold pl-1">
                       Select Media Type
                     </label>
                     <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
@@ -819,8 +819,8 @@ export default function SubmitPage() {
                             onClick={() => handleMediaTypeChange(type.value)}
                             className={`flex flex-col items-center justify-center p-3 rounded-2xl border text-center transition-all duration-300 cursor-pointer ${
                               isSelected
-                                ? "border-emerald-400 bg-emerald-400/10 text-emerald-400 scale-[1.02]"
-                                : "border-white/5 bg-white/[0.01] text-white/60 hover:bg-white/5 hover:text-white"
+                                ? "border-emerald-400 bg-emerald-400/10 text-emerald-500 dark:text-emerald-400 scale-[1.02]"
+                                : "border-slate-200 dark:border-white/5 bg-slate-50 dark:bg-white/[0.01] text-slate-600 dark:text-white/60 hover:bg-slate-100 dark:hover:bg-white/5 hover:text-slate-800 dark:hover:text-white"
                             }`}
                           >
                             <Icon className="w-5 h-5 mb-2" />
@@ -833,7 +833,7 @@ export default function SubmitPage() {
 
                   {/* Title field */}
                   <div className="space-y-1.5">
-                    <label className="text-[10px] uppercase tracking-wider text-white/55 block font-bold pl-1">
+                    <label className="text-[10px] uppercase tracking-wider text-slate-500 dark:text-white/55 block font-bold pl-1">
                       Item Title
                     </label>
                     <input
@@ -843,13 +843,13 @@ export default function SubmitPage() {
                       value={form.title}
                       onChange={handleChange}
                       required
-                      className="w-full bg-white/5 border border-white/10 rounded-xl py-3.5 px-4 text-sm text-white placeholder-white/20 focus:outline-none focus:border-emerald-400 transition-colors"
+                      className="w-full bg-slate-50 dark:bg-white/5 border border-slate-250 dark:border-white/10 rounded-xl py-3.5 px-4 text-sm text-slate-800 dark:text-white placeholder-slate-400 dark:placeholder-white/20 focus:outline-none focus:border-emerald-400 transition-colors"
                     />
                   </div>
 
                   {/* Author / Creator field */}
                   <div className="space-y-1.5">
-                    <label className="text-[10px] uppercase tracking-wider text-white/55 block font-bold pl-1">
+                    <label className="text-[10px] uppercase tracking-wider text-slate-500 dark:text-white/55 block font-bold pl-1">
                       Author / Creator Name (optional)
                     </label>
                     <input
@@ -858,13 +858,13 @@ export default function SubmitPage() {
                       placeholder="e.g. Radharaman Dutta, Hason Raja (if known)"
                       value={form.author}
                       onChange={handleChange}
-                      className="w-full bg-white/5 border border-white/10 rounded-xl py-3.5 px-4 text-sm text-white placeholder-white/20 focus:outline-none focus:border-emerald-400 transition-colors"
+                      className="w-full bg-slate-50 dark:bg-white/5 border border-slate-250 dark:border-white/10 rounded-xl py-3.5 px-4 text-sm text-slate-800 dark:text-white placeholder-slate-400 dark:placeholder-white/20 focus:outline-none focus:border-emerald-400 transition-colors"
                     />
                   </div>
 
                   {/* Description field */}
                   <div className="space-y-1.5">
-                    <label className="text-[10px] uppercase tracking-wider text-white/55 block font-bold pl-1">
+                    <label className="text-[10px] uppercase tracking-wider text-slate-500 dark:text-white/55 block font-bold pl-1">
                       Description / Context
                     </label>
                     <textarea
@@ -874,13 +874,13 @@ export default function SubmitPage() {
                       onChange={handleChange}
                       rows={4}
                       required
-                      className="w-full bg-white/5 border border-white/10 rounded-xl py-3.5 px-4 text-sm text-white placeholder-white/20 focus:outline-none focus:border-emerald-400 transition-colors resize-none"
+                      className="w-full bg-slate-50 dark:bg-white/5 border border-slate-250 dark:border-white/10 rounded-xl py-3.5 px-4 text-sm text-slate-800 dark:text-white placeholder-slate-400 dark:placeholder-white/20 focus:outline-none focus:border-emerald-400 transition-colors resize-none"
                     />
                   </div>
 
                   {/* Language Field */}
                   <div className="space-y-1.5">
-                    <label className="text-[10px] uppercase tracking-wider text-white/55 block font-bold pl-1">
+                    <label className="text-[10px] uppercase tracking-wider text-slate-500 dark:text-white/55 block font-bold pl-1">
                       Language (if applicable)
                     </label>
                     <div className="relative">
@@ -890,9 +890,9 @@ export default function SubmitPage() {
                         placeholder="e.g. Siloti / Sylheti, Nagri, English"
                         value={form.language}
                         onChange={handleChange}
-                        className="w-full bg-white/5 border border-white/10 rounded-xl py-3.5 pl-10 pr-4 text-sm text-white placeholder-white/20 focus:outline-none focus:border-emerald-400 transition-colors"
+                        className="w-full bg-slate-50 dark:bg-white/5 border border-slate-250 dark:border-white/10 rounded-xl py-3.5 pl-10 pr-4 text-sm text-slate-800 dark:text-white placeholder-slate-400 dark:placeholder-white/20 focus:outline-none focus:border-emerald-400 transition-colors"
                       />
-                      <span className="absolute left-4 top-1/2 -translate-y-1/2 text-white/30 pointer-events-none">
+                      <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 dark:text-white/30 pointer-events-none">
                         <Globe className="w-4 h-4" />
                       </span>
                     </div>
@@ -900,17 +900,17 @@ export default function SubmitPage() {
 
                   {/* Optional Cover Image / Thumbnail */}
                   {form.mediaType !== "IMAGE" && (
-                    <div className="space-y-3 border-t border-white/5 pt-5">
-                      <label className="text-[10px] uppercase tracking-wider text-white/55 block font-bold pl-1">
+                    <div className="space-y-3 border-t border-slate-200 dark:border-white/5 pt-5">
+                      <label className="text-[10px] uppercase tracking-wider text-slate-500 dark:text-white/55 block font-bold pl-1">
                         Optional Cover Image / Thumbnail
                       </label>
                       
-                      <div className="p-4 border border-dashed border-white/10 rounded-2xl bg-white/[0.01] flex flex-col items-center justify-center text-center min-h-[110px] relative">
+                      <div className="p-4 border border-dashed border-slate-350 dark:border-white/10 rounded-2xl bg-slate-50 dark:bg-white/[0.01] flex flex-col items-center justify-center text-center min-h-[110px] relative">
                         {form.image ? (
                           <div className="flex items-center justify-between gap-4 w-full">
                             <div className="flex items-center gap-3">
-                              <img src={form.image} alt="Thumbnail Preview" className="w-12 h-12 object-cover rounded-lg border border-white/10" />
-                              <span className="text-xs text-white/60 truncate max-w-[200px]">{form.image.split("/").pop()}</span>
+                              <img src={form.image} alt="Thumbnail Preview" className="w-12 h-12 object-cover rounded-lg border border-slate-250 dark:border-white/10" />
+                              <span className="text-xs text-slate-650 dark:text-white/60 truncate max-w-[200px]">{form.image.split("/").pop()}</span>
                             </div>
                             <button
                               type="button"
@@ -924,16 +924,16 @@ export default function SubmitPage() {
                           <div className="flex flex-col items-center justify-center space-y-2">
                             {isUploadingThumb ? (
                               <>
-                                <Loader2 className="w-5 h-5 text-emerald-400 animate-spin" />
-                                <span className="text-xs text-white/50">Uploading cover image...</span>
+                                <Loader2 className="w-5 h-5 text-emerald-500 dark:text-emerald-400 animate-spin" />
+                                <span className="text-xs text-slate-500 dark:text-white/50">Uploading cover image...</span>
                               </>
                             ) : (
                               <>
-                                <div className="text-xs text-white/40 mb-1">Upload a JPG/PNG thumbnail to preview the item</div>
+                                <div className="text-xs text-slate-400 dark:text-white/40 mb-1">Upload a JPG/PNG thumbnail to preview the item</div>
                                 <UploadButton
                                   endpoint="folderImageUploader"
                                   appearance={{
-                                    button: "bg-white/10 hover:bg-white/15 text-white border border-white/15 text-xs font-semibold py-2 px-3 rounded-lg cursor-pointer transition-colors duration-200",
+                                    button: "bg-slate-100 hover:bg-slate-200 dark:bg-white/10 dark:hover:bg-white/15 text-slate-800 dark:text-white border border-slate-200 dark:border-white/15 text-xs font-semibold py-2 px-3 rounded-lg cursor-pointer transition-colors duration-200",
                                     allowedContent: "hidden"
                                   }}
                                   onUploadBegin={() => setIsUploadingThumb(true)}
@@ -963,7 +963,7 @@ export default function SubmitPage() {
                 <>
                   {/* Folder Name */}
                   <div className="space-y-1.5">
-                    <label className="text-[10px] uppercase tracking-wider text-white/55 block font-bold pl-1">
+                    <label className="text-[10px] uppercase tracking-wider text-slate-500 dark:text-white/55 block font-bold pl-1">
                       Folder Name
                     </label>
                     <input
@@ -973,13 +973,13 @@ export default function SubmitPage() {
                       value={folderForm.name}
                       onChange={handleFolderChange}
                       required
-                      className="w-full bg-white/5 border border-white/10 rounded-xl py-3.5 px-4 text-sm text-white placeholder-white/20 focus:outline-none focus:border-blue-400 transition-colors"
+                      className="w-full bg-slate-50 dark:bg-white/5 border border-slate-250 dark:border-white/10 rounded-xl py-3.5 px-4 text-sm text-slate-800 dark:text-white placeholder-slate-400 dark:placeholder-white/20 focus:outline-none focus:border-blue-400 transition-colors"
                     />
                   </div>
 
                   {/* Folder Description */}
                   <div className="space-y-1.5">
-                    <label className="text-[10px] uppercase tracking-wider text-white/55 block font-bold pl-1">
+                    <label className="text-[10px] uppercase tracking-wider text-slate-500 dark:text-white/55 block font-bold pl-1">
                       Description / Context
                     </label>
                     <textarea
@@ -988,22 +988,22 @@ export default function SubmitPage() {
                       value={folderForm.description}
                       onChange={handleFolderChange}
                       rows={4}
-                      className="w-full bg-white/5 border border-white/10 rounded-xl py-3.5 px-4 text-sm text-white placeholder-white/20 focus:outline-none focus:border-blue-400 transition-colors resize-none"
+                      className="w-full bg-slate-50 dark:bg-white/5 border border-slate-250 dark:border-white/10 rounded-xl py-3.5 px-4 text-sm text-slate-800 dark:text-white placeholder-slate-400 dark:placeholder-white/20 focus:outline-none focus:border-blue-400 transition-colors resize-none"
                     />
                   </div>
 
                   {/* Folder Cover Image Upload */}
-                  <div className="space-y-3 border-t border-white/5 pt-5">
-                    <label className="text-[10px] uppercase tracking-wider text-white/55 block font-bold pl-1">
+                  <div className="space-y-3 border-t border-slate-200 dark:border-white/5 pt-5">
+                    <label className="text-[10px] uppercase tracking-wider text-slate-500 dark:text-white/55 block font-bold pl-1">
                       Folder Cover Image
                     </label>
                     
-                    <div className="p-4 border border-dashed border-white/10 rounded-2xl bg-white/[0.01] flex flex-col items-center justify-center text-center min-h-[110px] relative">
+                    <div className="p-4 border border-dashed border-slate-350 dark:border-white/10 rounded-2xl bg-slate-50 dark:bg-white/[0.01] flex flex-col items-center justify-center text-center min-h-[110px] relative">
                       {folderForm.image ? (
                         <div className="flex items-center justify-between gap-4 w-full">
                           <div className="flex items-center gap-3">
-                            <img src={folderForm.image} alt="Folder Preview" className="w-12 h-12 object-cover rounded-lg border border-white/10" />
-                            <span className="text-xs text-white/60 truncate max-w-[200px]">{folderForm.image.split("/").pop()}</span>
+                            <img src={folderForm.image} alt="Folder Preview" className="w-12 h-12 object-cover rounded-lg border border-slate-250 dark:border-white/10" />
+                            <span className="text-xs text-slate-650 dark:text-white/60 truncate max-w-[200px]">{folderForm.image.split("/").pop()}</span>
                           </div>
                           <button
                             type="button"
@@ -1017,12 +1017,12 @@ export default function SubmitPage() {
                         <div className="flex flex-col items-center justify-center space-y-2">
                           {isUploadingThumb ? (
                             <>
-                              <Loader2 className="w-5 h-5 text-blue-400 animate-spin" />
-                              <span className="text-xs text-white/50">Uploading cover image...</span>
+                              <Loader2 className="w-5 h-5 text-blue-500 dark:text-blue-400 animate-spin" />
+                              <span className="text-xs text-slate-500 dark:text-white/50">Uploading cover image...</span>
                             </>
                           ) : (
                             <>
-                              <div className="text-xs text-white/40 mb-1">Upload a cover banner for this folder</div>
+                              <div className="text-xs text-slate-450 dark:text-white/40 mb-1">Upload a cover banner for this folder</div>
                               <UploadButton
                                 endpoint="folderImageUploader"
                                 appearance={{
@@ -1055,7 +1055,7 @@ export default function SubmitPage() {
                 <>
                   {/* Blog Title */}
                   <div className="space-y-1.5">
-                    <label className="text-[10px] uppercase tracking-wider text-white/55 block font-bold pl-1">
+                    <label className="text-[10px] uppercase tracking-wider text-slate-500 dark:text-white/55 block font-bold pl-1">
                       Blog Title
                     </label>
                     <input
@@ -1065,13 +1065,13 @@ export default function SubmitPage() {
                       value={blogForm.title}
                       onChange={handleBlogChange}
                       required
-                      className="w-full bg-white/5 border border-white/10 rounded-xl py-3.5 px-4 text-sm text-white placeholder-white/20 focus:outline-none focus:border-amber-400 transition-colors"
+                      className="w-full bg-slate-50 dark:bg-white/5 border border-slate-250 dark:border-white/10 rounded-xl py-3.5 px-4 text-sm text-slate-800 dark:text-white placeholder-slate-400 dark:placeholder-white/20 focus:outline-none focus:border-amber-400 transition-colors"
                     />
                   </div>
 
                   {/* Blog Author */}
                   <div className="space-y-1.5">
-                    <label className="text-[10px] uppercase tracking-wider text-white/55 block font-bold pl-1">
+                    <label className="text-[10px] uppercase tracking-wider text-slate-500 dark:text-white/55 block font-bold pl-1">
                       Author Name
                     </label>
                     <input
@@ -1080,22 +1080,22 @@ export default function SubmitPage() {
                       placeholder="e.g. Dr. J. Ali (leave blank to use your name)"
                       value={blogForm.author}
                       onChange={handleBlogChange}
-                      className="w-full bg-white/5 border border-white/10 rounded-xl py-3.5 px-4 text-sm text-white placeholder-white/20 focus:outline-none focus:border-amber-400 transition-colors"
+                      className="w-full bg-slate-50 dark:bg-white/5 border border-slate-250 dark:border-white/10 rounded-xl py-3.5 px-4 text-sm text-slate-800 dark:text-white placeholder-slate-400 dark:placeholder-white/20 focus:outline-none focus:border-amber-400 transition-colors"
                     />
                   </div>
 
                   {/* Blog Banner Image Upload */}
-                  <div className="space-y-3 border-t border-white/5 pt-5">
-                    <label className="text-[10px] uppercase tracking-wider text-white/55 block font-bold pl-1">
+                  <div className="space-y-3 border-t border-slate-200 dark:border-white/5 pt-5">
+                    <label className="text-[10px] uppercase tracking-wider text-slate-500 dark:text-white/55 block font-bold pl-1">
                       Blog Banner Image
                     </label>
                     
-                    <div className="p-4 border border-dashed border-white/10 rounded-2xl bg-white/[0.01] flex flex-col items-center justify-center text-center min-h-[110px] relative">
+                    <div className="p-4 border border-dashed border-slate-350 dark:border-white/10 rounded-2xl bg-slate-50 dark:bg-white/[0.01] flex flex-col items-center justify-center text-center min-h-[110px] relative">
                       {blogForm.bannerUrl ? (
                         <div className="flex items-center justify-between gap-4 w-full">
                           <div className="flex items-center gap-3">
-                            <img src={blogForm.bannerUrl} alt="Blog Preview" className="w-12 h-12 object-cover rounded-lg border border-white/10" />
-                            <span className="text-xs text-white/60 truncate max-w-[200px]">{blogForm.bannerUrl.split("/").pop()}</span>
+                            <img src={blogForm.bannerUrl} alt="Blog Preview" className="w-12 h-12 object-cover rounded-lg border border-slate-250 dark:border-white/10" />
+                            <span className="text-xs text-slate-650 dark:text-white/60 truncate max-w-[200px]">{blogForm.bannerUrl.split("/").pop()}</span>
                           </div>
                           <button
                             type="button"
@@ -1109,12 +1109,12 @@ export default function SubmitPage() {
                         <div className="flex flex-col items-center justify-center space-y-2">
                           {isUploadingThumb ? (
                             <>
-                              <Loader2 className="w-5 h-5 text-amber-400 animate-spin" />
-                              <span className="text-xs text-white/50">Uploading banner image...</span>
+                              <Loader2 className="w-5 h-5 text-amber-500 dark:text-amber-400 animate-spin" />
+                              <span className="text-xs text-slate-500 dark:text-white/50">Uploading banner image...</span>
                             </>
                           ) : (
                             <>
-                              <div className="text-xs text-white/40 mb-1">Upload a header image for your blog post</div>
+                              <div className="text-xs text-slate-455 dark:text-white/40 mb-1">Upload a header image for your blog post</div>
                               <UploadButton
                                 endpoint="folderImageUploader"
                                 appearance={{
@@ -1142,8 +1142,8 @@ export default function SubmitPage() {
                   </div>
 
                   {/* Blog Content */}
-                  <div className="space-y-1.5 border-t border-white/5 pt-5">
-                    <label className="text-[10px] uppercase tracking-wider text-white/55 block font-bold pl-1">
+                  <div className="space-y-1.5 border-t border-slate-200 dark:border-white/5 pt-5">
+                    <label className="text-[10px] uppercase tracking-wider text-slate-500 dark:text-white/55 block font-bold pl-1">
                       Blog Article Content (Markdown supported)
                     </label>
                     <textarea
@@ -1153,7 +1153,7 @@ export default function SubmitPage() {
                       onChange={handleBlogChange}
                       rows={12}
                       required
-                      className="w-full bg-white/5 border border-white/10 rounded-xl py-3.5 px-4 text-sm text-white placeholder-white/20 focus:outline-none focus:border-amber-400 font-mono transition-colors resize-y"
+                      className="w-full bg-slate-50 dark:bg-white/5 border border-slate-250 dark:border-white/10 rounded-xl py-3.5 px-4 text-sm text-slate-800 dark:text-white placeholder-slate-400 dark:placeholder-white/20 focus:outline-none focus:border-amber-400 font-mono transition-colors resize-y"
                     />
                   </div>
                 </>
@@ -1181,14 +1181,14 @@ export default function SubmitPage() {
           )
         ) : (
           /* History Container */
-          <div className="bg-white/[0.02] border border-white/10 rounded-[2rem] p-8 sm:p-10 backdrop-blur-md shadow-2xl min-h-[300px]">
+          <div className="bg-white dark:bg-white/[0.02] border border-slate-200 dark:border-white/10 rounded-[2rem] p-8 sm:p-10 backdrop-blur-md shadow-2xl min-h-[300px]">
             {!user ? (
               <div className="text-center py-12 flex flex-col items-center space-y-4">
-                <div className="w-12 h-12 bg-white/5 border border-white/10 rounded-2xl flex items-center justify-center text-white/40">
+                <div className="w-12 h-12 bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-2xl flex items-center justify-center text-slate-400 dark:text-white/40">
                   <Lock className="w-5 h-5" />
                 </div>
-                <h3 className="text-lg font-medium text-white">Track Your Submissions</h3>
-                <p className="text-xs text-white/50 max-w-sm leading-relaxed">
+                <h3 className="text-lg font-medium text-slate-900 dark:text-white">Track Your Submissions</h3>
+                <p className="text-xs text-slate-500 dark:text-white/50 max-w-sm leading-relaxed">
                   Please log in to see all your previous contributions, track review statuses, and read curator feedback comments.
                 </p>
                 <button
@@ -1202,29 +1202,29 @@ export default function SubmitPage() {
             ) : loadingHistory ? (
               <div className="flex flex-col items-center justify-center py-16 gap-3">
                 <div className="w-10 h-10 border-4 border-emerald-400/20 border-t-emerald-400 rounded-full animate-spin"></div>
-                <span className="text-xs text-white/50">Fetching your submissions...</span>
+                <span className="text-xs text-slate-500 dark:text-white/50">Fetching your submissions...</span>
               </div>
             ) : submissions.length === 0 ? (
               <div className="text-center py-16 flex flex-col items-center space-y-3">
-                <h3 className="text-lg font-light text-white">No Submissions Found</h3>
-                <p className="text-xs text-white/40 max-w-sm">
+                <h3 className="text-lg font-light text-slate-900 dark:text-white">No Submissions Found</h3>
+                <p className="text-xs text-slate-400 dark:text-white/40 max-w-sm">
                   You haven't submitted any items yet. Contribute artifacts to get started!
                 </p>
                 <button
                   type="button"
                   onClick={() => setActiveTab("submit")}
-                  className="text-xs text-emerald-400 hover:text-emerald-300 font-bold underline transition-colors"
+                  className="text-xs text-emerald-500 dark:text-emerald-400 hover:text-emerald-600 dark:hover:text-emerald-300 font-bold underline transition-colors"
                 >
                   Submit your first item
                 </button>
               </div>
             ) : (
               <div className="space-y-6">
-                <div className="flex items-center justify-between pb-4 border-b border-white/5">
-                  <h3 className="text-lg font-medium text-white">Submission History</h3>
-                  <span className="text-[10px] text-white/40 font-mono">{submissions.length} Total items</span>
+                <div className="flex items-center justify-between pb-4 border-b border-slate-200 dark:border-white/5">
+                  <h3 className="text-lg font-medium text-slate-900 dark:text-white">Submission History</h3>
+                  <span className="text-[10px] text-slate-450 dark:text-white/40 font-mono">{submissions.length} Total items</span>
                 </div>
-                <div className="space-y-4 max-h-[550px] overflow-y-auto pr-1 scrollbar-thin scrollbar-thumb-white/10 scrollbar-track-transparent">
+                <div className="space-y-4 max-h-[550px] overflow-y-auto pr-1 scrollbar-thin scrollbar-thumb-slate-200 dark:scrollbar-thumb-white/10 scrollbar-track-transparent">
                   {submissions.map((item) => {
                     let typeConfig = MEDIA_TYPES.find(t => t.value === item.mediaType);
                     if (item.submissionType === "FOLDER") {
@@ -1239,19 +1239,19 @@ export default function SubmitPage() {
                     
                     // Status badge styling
                     let statusLabel = "Pending";
-                    let statusStyle = "bg-yellow-500/10 border-yellow-500/25 text-yellow-400";
+                    let statusStyle = "bg-yellow-500/10 border-yellow-500/25 text-yellow-600 dark:text-yellow-400";
                     if (item.status === "PUBLISHED") {
                       statusLabel = "Approved";
-                      statusStyle = "bg-emerald-500/10 border-emerald-500/25 text-emerald-400";
+                      statusStyle = "bg-emerald-500/10 border-emerald-500/25 text-emerald-600 dark:text-emerald-400";
                     } else if (item.status === "REJECTED") {
                       statusLabel = "Rejected";
-                      statusStyle = "bg-red-500/10 border-red-500/25 text-red-400";
+                      statusStyle = "bg-red-500/10 border-red-500/25 text-red-600 dark:text-red-400";
                     }
 
                     return (
                       <div 
                         key={item.id}
-                        className="border border-white/5 bg-white/[0.01] rounded-2xl p-4 sm:p-5 space-y-3 transition-colors hover:border-white/10"
+                        className="border border-slate-200 dark:border-white/5 bg-slate-50/50 dark:bg-white/[0.01] rounded-2xl p-4 sm:p-5 space-y-3 transition-colors hover:border-slate-300 dark:hover:border-white/10"
                       >
                         <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
                           <div className="flex items-start gap-3 min-w-0">
@@ -1259,15 +1259,15 @@ export default function SubmitPage() {
                               <Icon className="w-4 h-4" />
                             </div>
                             <div className="min-w-0">
-                              <h4 className="text-sm font-semibold text-white truncate pr-2" title={item.title}>
+                              <h4 className="text-sm font-semibold text-slate-900 dark:text-white truncate pr-2" title={item.title}>
                                 {item.title}
                               </h4>
                               <div className="flex flex-wrap gap-2 items-center mt-1">
-                                <span className="text-[10px] text-white/40 font-bold uppercase tracking-wider bg-white/5 px-2 py-0.5 rounded-md">
+                                <span className="text-[10px] text-slate-500 dark:text-white/40 font-bold uppercase tracking-wider bg-slate-100 dark:bg-white/5 px-2 py-0.5 rounded-md">
                                   {item.submissionType === "MEDIA" ? `Media (${typeConfig.label.split(" / ")[0]})` : item.submissionType}
                                 </span>
-                                <span className="text-[10px] text-white/20">•</span>
-                                <span className="text-[10px] text-white/40 font-light">
+                                <span className="text-[10px] text-slate-300 dark:text-white/20">•</span>
+                                <span className="text-[10px] text-slate-500 dark:text-white/40 font-light">
                                   Submitted on {new Date(item.createdAt).toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" })}
                                 </span>
                               </div>
@@ -1281,7 +1281,7 @@ export default function SubmitPage() {
                               <button
                                 type="button"
                                 onClick={() => handleDeleteSubmission(item.id, item.submissionType)}
-                                className="p-1.5 text-white/40 hover:text-red-400 hover:bg-red-500/10 border border-transparent hover:border-red-500/20 rounded-lg transition-all cursor-pointer"
+                                className="p-1.5 text-slate-400 dark:text-white/40 hover:text-red-500 hover:bg-red-500/10 border border-transparent hover:border-red-500/20 rounded-lg transition-all cursor-pointer"
                                 title="Delete Submission"
                               >
                                 <Trash2 className="w-3.5 h-3.5" />
@@ -1290,7 +1290,7 @@ export default function SubmitPage() {
                           </div>
                         </div>
 
-                        <p className="text-xs text-white/60 font-light line-clamp-2 pl-0 sm:pl-12">
+                        <p className="text-xs text-slate-650 dark:text-white/60 font-light line-clamp-2 pl-0 sm:pl-12">
                           {item.submissionType === "BLOG"
                             ? (item.content ? (item.content.length > 150 ? item.content.substring(0, 150) + "..." : item.content) : "No content provided.")
                             : (item.description || "No description provided.")}
@@ -1299,8 +1299,8 @@ export default function SubmitPage() {
                         {/* Display Curator Rejection Feedback */}
                         {item.status === "REJECTED" && (
                           <div className="bg-red-500/5 border border-red-500/15 rounded-xl p-3 text-[11px] sm:pl-12 pl-3 space-y-1 mt-2">
-                            <span className="font-bold text-red-400 uppercase tracking-wide text-[9px]">Feedback from Curator:</span>
-                            <p className="text-white/80 font-light leading-relaxed">
+                            <span className="font-bold text-red-500 dark:text-red-400 uppercase tracking-wide text-[9px]">Feedback from Curator:</span>
+                            <p className="text-slate-800 dark:text-white/80 font-light leading-relaxed">
                               {item.rejectionReason || "No feedback comments specified by reviewer."}
                             </p>
                           </div>
