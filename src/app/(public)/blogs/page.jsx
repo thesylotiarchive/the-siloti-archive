@@ -33,13 +33,13 @@ export default function PublicBlogsPage() {
 
   function Skeleton({ className }) {
     return (
-      <div className={`animate-pulse bg-slate-800 rounded-md ${className}`} />
+      <div className={`animate-pulse bg-slate-200 dark:bg-slate-800 rounded-md ${className}`} />
     );
   }
   
   function BlogCardSkeleton() {
     return (
-      <div className="flex items-start gap-4 border border-white/5 rounded-2xl p-5 bg-white/[0.02] w-full animate-pulse">
+      <div className="flex items-start gap-4 border border-slate-200 dark:border-white/5 rounded-2xl p-5 bg-slate-100/50 dark:bg-white/[0.02] w-full animate-pulse transition-colors duration-300">
         <Skeleton className="w-32 h-24 flex-shrink-0" />
         <div className="flex-1 space-y-2">
           <Skeleton className="h-6 w-3/4" />
@@ -67,7 +67,7 @@ export default function PublicBlogsPage() {
   );
 
   return (
-    <main className="min-h-screen bg-slate-950 text-white relative overflow-hidden selection:bg-emerald-400 selection:text-slate-950 pt-28 pb-20">
+    <main className="min-h-screen bg-background text-foreground relative overflow-hidden selection:bg-emerald-400 selection:text-slate-950 pt-28 pb-20 transition-colors duration-300">
       {/* Background glows */}
       <div className="absolute top-0 left-1/4 w-[500px] h-[300px] bg-emerald-400/5 blur-[150px] rounded-full pointer-events-none"></div>
       <div className="absolute bottom-0 right-1/4 w-[500px] h-[300px] bg-blue-500/5 blur-[150px] rounded-full pointer-events-none"></div>
@@ -75,9 +75,9 @@ export default function PublicBlogsPage() {
       <div className="max-w-4xl mx-auto px-6 relative z-10">
         {/* Header */}
         <div className="text-center max-w-3xl mx-auto mb-16 flex flex-col items-center">
-          <div className="mb-6 flex items-center gap-2 px-4 py-1.5 bg-white/5 border border-white/10 rounded-full backdrop-blur-md animate-luxury-float">
-            <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
-            <span className="text-[10px] font-bold uppercase tracking-widest text-emerald-300">
+          <div className="mb-6 flex items-center gap-2 px-4 py-1.5 bg-slate-100/50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-full backdrop-blur-md animate-luxury-float">
+            <Sparkles className="w-3.5 h-3.5 text-emerald-500 dark:text-emerald-400" />
+            <span className="text-[10px] font-bold uppercase tracking-widest text-emerald-650 dark:text-emerald-300">
               Essays, Research & Updates
             </span>
           </div>
@@ -87,7 +87,7 @@ export default function PublicBlogsPage() {
               Archive Blogs
             </span>
           </h1>
-          <p className="text-sm sm:text-base text-white/50 font-light max-w-xl font-sans">
+          <p className="text-sm sm:text-base text-muted-foreground font-light max-w-xl font-sans">
             Read stories, updates, and research findings about the Siloti community, literature, and history.
           </p>
         </div>
@@ -96,9 +96,9 @@ export default function PublicBlogsPage() {
         {blogs.map((blog, i) => (
           <div key={blog.id} ref={i === blogs.length - 1 ? lastBlogRef : null}>
               <Link href={`/blogs/${blog.slug}`} className="cursor-pointer">
-                  <div className="flex flex-col sm:flex-row border border-white/10 p-5 shadow-lg bg-white/[0.02] items-start sm:items-center gap-5 hover:shadow-emerald-400/5 hover:border-emerald-400/30 hover:bg-white/[0.04] transition-all duration-300 rounded-2xl group cursor-pointer backdrop-blur-md">
+                  <div className="flex flex-col sm:flex-row border border-slate-200 dark:border-white/10 p-5 shadow-lg bg-slate-100/50 dark:bg-white/[0.02] items-start sm:items-center gap-5 hover:shadow-emerald-400/5 hover:border-emerald-400/30 hover:bg-slate-200/50 dark:hover:bg-white/[0.04] transition-all duration-300 rounded-2xl group cursor-pointer backdrop-blur-md">
                   {/* Banner */}
-                  <div className="w-full sm:w-44 h-32 relative overflow-hidden rounded-xl bg-slate-900 border border-white/5 shrink-0">
+                  <div className="w-full sm:w-44 h-32 relative overflow-hidden rounded-xl bg-slate-200 dark:bg-slate-900 border border-slate-300 dark:border-white/5 shrink-0">
                     {blog.bannerUrl ? (
                         <img
                         src={blog.bannerUrl}
@@ -116,15 +116,15 @@ export default function PublicBlogsPage() {
                   <div className="flex-1 w-full space-y-2">
                       <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5 text-[10px] font-bold text-emerald-400 tracking-widest uppercase">
                         <span>{blog.author || "Unknown Author"}</span>
-                        <span className="text-white/20">•</span>
+                        <span className="text-slate-300 dark:text-white/20">•</span>
                         <span>{format(new Date(blog.publishedAt), "PPP")}</span>
                       </div>
 
-                      <h2 className="text-lg font-bold text-white/95 leading-snug tracking-wide group-hover:text-emerald-300 transition-colors duration-300 line-clamp-2 font-serif italic">
+                      <h2 className="text-lg font-bold text-slate-800 dark:text-white/95 leading-snug tracking-wide group-hover:text-emerald-600 dark:group-hover:text-emerald-300 transition-colors duration-300 line-clamp-2 font-serif italic">
                         {blog.title}
                       </h2>
-
-                      <p className="text-sm text-white/60 line-clamp-2 leading-relaxed pt-0.5 font-light font-sans">
+                      
+                      <p className="text-sm text-slate-650 dark:text-white/60 line-clamp-2 leading-relaxed pt-0.5 font-light font-sans">
                         {blog.content
                         ? removeMarkdown(blog.content).slice(0, 140)
                         : "No preview available..."}
@@ -143,7 +143,7 @@ export default function PublicBlogsPage() {
         )}
 
         {!hasMore && !loading && blogs.length === 0 && (
-          <div className="text-center mt-12 text-white/40 font-light font-sans">No blogs found.</div>
+          <div className="text-center mt-12 text-slate-500 dark:text-white/40 font-light font-sans">No blogs found.</div>
         )}
       </div>
     </main>

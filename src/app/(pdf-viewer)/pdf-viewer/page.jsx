@@ -15,7 +15,7 @@ function PdfViewerInner() {
   }
 
   return (
-    <div className="w-full h-screen bg-gray-100">
+    <div className="w-full h-screen bg-slate-50 dark:bg-slate-900 transition-colors duration-300">
       <PdfReader fileUrl={fileUrl} initialMode="scroll" className="h-full" />
     </div>
   );

@@ -57,7 +57,7 @@ export default function ContactPage() {
   };
 
   return (
-    <main className="min-h-screen bg-slate-950 text-white relative overflow-hidden selection:bg-emerald-400 selection:text-slate-950 pt-28 pb-20">
+    <main className="min-h-screen bg-background text-foreground relative overflow-hidden selection:bg-emerald-400 selection:text-slate-950 pt-28 pb-20 transition-colors duration-300">
       {/* Background glows */}
       <div className="absolute top-0 left-1/4 w-[500px] h-[300px] bg-emerald-400/5 blur-[150px] rounded-full pointer-events-none"></div>
       <div className="absolute bottom-0 right-1/4 w-[500px] h-[300px] bg-blue-500/5 blur-[150px] rounded-full pointer-events-none"></div>
@@ -65,9 +65,9 @@ export default function ContactPage() {
       <div className="max-w-4xl mx-auto px-6 relative z-10 flex flex-col items-center">
         {/* Header */}
         <div className="text-center max-w-3xl mx-auto mb-12 flex flex-col items-center">
-          <div className="mb-6 flex items-center gap-2 px-4 py-1.5 bg-white/5 border border-white/10 rounded-full backdrop-blur-md animate-luxury-float">
-            <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
-            <span className="text-[10px] font-bold uppercase tracking-widest text-emerald-300">
+          <div className="mb-6 flex items-center gap-2 px-4 py-1.5 bg-slate-100/50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-full backdrop-blur-md animate-luxury-float">
+            <Sparkles className="w-3.5 h-3.5 text-emerald-500 dark:text-emerald-400" />
+            <span className="text-[10px] font-bold uppercase tracking-widest text-emerald-650 dark:text-emerald-300">
               Get In Touch
             </span>
           </div>
@@ -77,7 +77,7 @@ export default function ContactPage() {
               Contact Us
             </span>
           </h1>
-          <p className="text-sm sm:text-base text-white/50 font-light max-w-xl leading-relaxed font-sans">
+          <p className="text-sm sm:text-base text-muted-foreground font-light max-w-xl leading-relaxed font-sans">
             Have questions, feedback, or want to contribute to the archive? We'd love to hear from you.
           </p>
         </div>
@@ -86,69 +86,69 @@ export default function ContactPage() {
         <div className="flex flex-col sm:flex-row gap-4 mb-10 w-full max-w-xl justify-center">
           <a
             href="mailto:silotiarchivercc@gmail.com"
-            className="flex-1 bg-white/[0.02] border border-white/10 hover:border-emerald-400/30 rounded-2xl p-4 flex items-center gap-3 transition-all duration-300 hover:bg-white/[0.04]"
+            className="flex-1 bg-slate-100/50 dark:bg-white/[0.02] border border-slate-200 dark:border-white/10 hover:border-emerald-400/30 rounded-2xl p-4 flex items-center gap-3 transition-all duration-300 hover:bg-slate-200/50 dark:hover:bg-white/[0.04]"
           >
             <div className="w-10 h-10 rounded-xl bg-emerald-400/10 border border-emerald-400/20 flex items-center justify-center text-emerald-400">
               <Mail className="w-4 h-4" />
             </div>
             <div className="flex flex-col text-left">
-              <span className="text-[9px] uppercase tracking-wider text-white/40 font-semibold font-sans">Email Us</span>
-              <span className="text-xs font-semibold text-white/80 font-mono">silotiarchivercc@gmail.com</span>
+              <span className="text-[9px] uppercase tracking-wider text-slate-500 dark:text-white/40 font-semibold font-sans">Email Us</span>
+              <span className="text-xs font-semibold text-slate-805 dark:text-white/80 font-mono">silotiarchivercc@gmail.com</span>
             </div>
           </a>
 
           <a
             href="tel:+919957116126"
-            className="flex-1 bg-white/[0.02] border border-white/10 hover:border-emerald-400/30 rounded-2xl p-4 flex items-center gap-3 transition-all duration-300 hover:bg-white/[0.04]"
+            className="flex-1 bg-slate-100/50 dark:bg-white/[0.02] border border-slate-200 dark:border-white/10 hover:border-emerald-400/30 rounded-2xl p-4 flex items-center gap-3 transition-all duration-300 hover:bg-slate-200/50 dark:hover:bg-white/[0.04]"
           >
             <div className="w-10 h-10 rounded-xl bg-emerald-400/10 border border-emerald-400/20 flex items-center justify-center text-emerald-400">
               <Phone className="w-4 h-4" />
             </div>
             <div className="flex flex-col text-left">
-              <span className="text-[9px] uppercase tracking-wider text-white/40 font-semibold font-sans">Call Us</span>
-              <span className="text-xs font-semibold text-white/80 font-mono">+91 99571 16126</span>
+              <span className="text-[9px] uppercase tracking-wider text-slate-500 dark:text-white/40 font-semibold font-sans">Call Us</span>
+              <span className="text-xs font-semibold text-slate-805 dark:text-white/80 font-mono">+91 99571 16126</span>
             </div>
           </a>
         </div>
 
         {/* Contact Form */}
-        <div className="w-full max-w-xl bg-white/[0.02] border border-white/10 rounded-[2rem] p-8 sm:p-10 backdrop-blur-md shadow-2xl">
+        <div className="w-full max-w-xl bg-slate-100/50 dark:bg-white/[0.02] border border-slate-200 dark:border-white/10 rounded-[2rem] p-8 sm:p-10 backdrop-blur-md shadow-2xl transition-colors duration-300">
           <form onSubmit={handleSubmit} className="space-y-5">
             <div>
-              <label className="text-[10px] uppercase tracking-widest text-white/50 block mb-2 font-semibold font-sans">Your Name</label>
+              <label className="text-[10px] uppercase tracking-widest text-slate-500 dark:text-white/50 block mb-2 font-semibold font-sans">Your Name</label>
               <input
                 type="text"
                 name="name"
                 placeholder="John Doe"
                 value={formData.name}
                 onChange={handleChange}
-                className="w-full bg-white/5 border border-white/10 rounded-xl py-3.5 px-4 text-sm text-white placeholder-white/20 focus:outline-none focus:border-emerald-400 transition-colors font-sans"
+                className="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl py-3.5 px-4 text-sm text-slate-800 dark:text-white placeholder-slate-400 dark:placeholder-white/20 focus:outline-none focus:border-emerald-500 focus:dark:border-emerald-400 transition-colors font-sans"
                 required
               />
             </div>
 
             <div>
-              <label className="text-[10px] uppercase tracking-widest text-white/50 block mb-2 font-semibold font-sans">Your Email</label>
+              <label className="text-[10px] uppercase tracking-widest text-slate-500 dark:text-white/50 block mb-2 font-semibold font-sans">Your Email</label>
               <input
                 type="email"
                 name="email"
                 placeholder="name@example.com"
                 value={formData.email}
                 onChange={handleChange}
-                className="w-full bg-white/5 border border-white/10 rounded-xl py-3.5 px-4 text-sm text-white placeholder-white/20 focus:outline-none focus:border-emerald-400 transition-colors font-sans"
+                className="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl py-3.5 px-4 text-sm text-slate-800 dark:text-white placeholder-slate-400 dark:placeholder-white/20 focus:outline-none focus:border-emerald-500 focus:dark:border-emerald-400 transition-colors font-sans"
                 required
               />
             </div>
 
             <div>
-              <label className="text-[10px] uppercase tracking-widest text-white/50 block mb-2 font-semibold font-sans">Your Message</label>
+              <label className="text-[10px] uppercase tracking-widest text-slate-500 dark:text-white/50 block mb-2 font-semibold font-sans">Your Message</label>
               <textarea
                 name="message"
                 placeholder="Write your message here..."
                 rows={5}
                 value={formData.message}
                 onChange={handleChange}
-                className="w-full bg-white/5 border border-white/10 rounded-xl py-3.5 px-4 text-sm text-white placeholder-white/20 focus:outline-none focus:border-emerald-400 transition-colors resize-none font-sans"
+                className="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl py-3.5 px-4 text-sm text-slate-800 dark:text-white placeholder-slate-400 dark:placeholder-white/20 focus:outline-none focus:border-emerald-500 focus:dark:border-emerald-400 transition-colors resize-none font-sans"
                 required
               />
             </div>

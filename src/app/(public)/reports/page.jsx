@@ -24,16 +24,16 @@ export default function ReportsPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-slate-950 text-white flex flex-col items-center justify-center gap-4">
+      <div className="min-h-screen bg-background text-foreground flex flex-col items-center justify-center gap-4 transition-colors duration-300">
         <div className="w-10 h-10 border-4 border-emerald-400/30 border-t-emerald-400 rounded-full animate-spin"></div>
-        <span className="text-xs text-white/55 font-light tracking-widest uppercase font-sans">Loading Reports...</span>
+        <span className="text-xs text-muted-foreground font-light tracking-widest uppercase font-sans">Loading Reports...</span>
       </div>
     );
   }
 
   if (!page || !page.sections) {
     return (
-      <div className="min-h-screen bg-slate-950 text-white flex flex-col items-center justify-center font-sans">
+      <div className="min-h-screen bg-background text-foreground flex flex-col items-center justify-center font-sans transition-colors duration-300">
         <p className="text-red-400 font-semibold uppercase tracking-wider">Reports content not found</p>
       </div>
     );
@@ -46,7 +46,7 @@ export default function ReportsPage() {
   };
 
   return (
-    <main className="min-h-screen bg-slate-950 text-white relative overflow-hidden selection:bg-emerald-400 selection:text-slate-950">
+    <main className="min-h-screen bg-background text-foreground relative overflow-hidden selection:bg-emerald-400 selection:text-slate-950 transition-colors duration-300">
       {/* Background glows */}
       <div className="absolute top-0 left-1/4 w-[500px] h-[300px] bg-emerald-400/5 blur-[150px] rounded-full pointer-events-none"></div>
       <div className="absolute bottom-0 right-1/4 w-[500px] h-[300px] bg-blue-500/5 blur-[150px] rounded-full pointer-events-none"></div>
@@ -54,9 +54,9 @@ export default function ReportsPage() {
       {/* Hero */}
       <section className="w-full min-h-screen flex flex-col items-center justify-center px-6 relative z-10 text-center">
         <div className="max-w-4xl flex flex-col items-center">
-          <div className="mb-6 flex items-center gap-2 px-4 py-1.5 bg-white/5 border border-white/10 rounded-full backdrop-blur-md animate-luxury-float">
-            <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
-            <span className="text-[10px] font-bold uppercase tracking-widest text-emerald-300 font-sans">
+          <div className="mb-6 flex items-center gap-2 px-4 py-1.5 bg-slate-100/50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-full backdrop-blur-md animate-luxury-float">
+            <Sparkles className="w-3.5 h-3.5 text-emerald-500 dark:text-emerald-400" />
+            <span className="text-[10px] font-bold uppercase tracking-widest text-emerald-650 dark:text-emerald-300 font-sans">
               Publications & Reports
             </span>
           </div>
@@ -67,13 +67,13 @@ export default function ReportsPage() {
             </span>
           </h1>
           {intro && (
-            <p className="text-lg md:text-xl text-white/60 mb-10 leading-relaxed max-w-2xl mx-auto font-light font-sans">
+            <p className="text-lg md:text-xl text-slate-650 dark:text-white/60 mb-10 leading-relaxed max-w-2xl mx-auto font-light font-sans">
               {intro}
             </p>
           )}
           <button
             onClick={scrollToReports}
-            className="cursor-pointer group relative inline-flex items-center justify-center gap-2 font-semibold px-8 py-4 text-base rounded-full transition-all duration-300 ease-in-out transform hover:scale-[1.03] active:scale-95 bg-white text-slate-950 hover:bg-emerald-400 shadow-xl shadow-emerald-400/10 font-sans"
+            className="cursor-pointer group relative inline-flex items-center justify-center gap-2 font-semibold px-8 py-4 text-base rounded-full transition-all duration-300 ease-in-out transform hover:scale-[1.03] active:scale-95 bg-slate-900 text-white dark:bg-white dark:text-slate-950 hover:bg-emerald-500 shadow-xl shadow-emerald-400/10 font-sans"
           >
             <span>View Reports</span>
             <ChevronDown className="w-4 h-4 transition-transform group-hover:translate-y-0.5" />
@@ -81,44 +81,41 @@ export default function ReportsPage() {
         </div>
       </section>
 
-      {/* Report Sections */}
-      <section
-        ref={reportSectionRef}
-        className="relative z-10 py-24 px-6 max-w-5xl mx-auto space-y-20"
-      >
+      {/* Reports Section */}
+      <section id="reports-section" className="max-w-4xl mx-auto px-6 py-24 relative z-10 space-y-20">
         {sections.map((section, sIndex) => (
           <div key={sIndex} className="space-y-8">
             <div className="text-center">
-              <h2 className="text-3xl sm:text-4xl font-serif italic font-bold bg-gradient-to-r from-emerald-400 to-blue-400 bg-clip-text text-transparent">
+              <h2 className="text-3xl sm:text-4xl font-serif italic font-bold bg-gradient-to-r from-emerald-500 dark:from-emerald-400 to-blue-650 dark:to-blue-400 bg-clip-text text-transparent">
                 {section.title}
               </h2>
               {section.description && (
-                <p className="text-sm text-white/50 mt-3 max-w-2xl mx-auto leading-relaxed font-sans font-light">
+                <p className="text-sm text-slate-500 dark:text-white/50 mt-3 max-w-2xl mx-auto leading-relaxed font-sans font-light">
                   {section.description}
                 </p>
               )}
             </div>
 
             {/* Reports list */}
-            <div className="divide-y divide-white/5 bg-white/[0.02] border border-white/10 rounded-[2rem] overflow-hidden shadow-2xl backdrop-blur-md">
+            <div className="divide-y divide-slate-200 dark:divide-white/5 bg-slate-100/50 dark:bg-white/[0.02] border border-slate-200 dark:border-white/10 rounded-[2rem] overflow-hidden shadow-2xl backdrop-blur-md transition-colors duration-300">
               {section.reports.map((report) => {
                 const downloadUrl = report.fileUrl || report.externalUrl;
 
                 return (
                   <div
                     key={report.id}
-                    className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 px-8 py-6 hover:bg-white/[0.01] transition-all duration-300"
+                    className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 px-8 py-6 hover:bg-slate-200/50 dark:hover:bg-white/[0.01] transition-all duration-300"
                   >
                     <div className="flex items-start gap-4">
                       <div className="w-10 h-10 rounded-xl bg-emerald-400/10 border border-emerald-400/20 flex items-center justify-center text-emerald-400 shrink-0">
                         <FileText className="w-5 h-5" />
                       </div>
                       <div>
-                        <h3 className="text-base sm:text-lg font-bold text-white/95 font-sans leading-tight">
+                        <h3 className="text-base sm:text-lg font-bold text-slate-805 dark:text-white/95 font-sans leading-tight">
                           {report.title}
                         </h3>
                         {report.year && (
-                          <p className="text-xs text-white/40 mt-1 font-sans">{report.year}</p>
+                          <p className="text-xs text-slate-500 dark:text-white/40 mt-1 font-sans">{report.year}</p>
                         )}
                       </div>
                     </div>
@@ -134,7 +131,7 @@ export default function ReportsPage() {
                         Download PDF
                       </a>
                     ) : (
-                      <span className="text-xs text-white/30 font-sans italic">
+                      <span className="text-xs text-slate-500 dark:text-white/30 font-sans italic">
                         File not available
                       </span>
                     )}

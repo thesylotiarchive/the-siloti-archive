@@ -47,7 +47,7 @@ export default function PersonDetailPage() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.3, duration: 0.6 }}
-        className="text-gray-700 text-lg leading-relaxed whitespace-pre-line text-justify"
+        className="text-slate-700 dark:text-slate-300 text-lg leading-relaxed whitespace-pre-line text-justify transition-colors duration-300"
       >
         {data.description}
       </motion.p>

@@ -131,6 +131,12 @@ Basir has upgraded the archive into a premium, performance-optimized curation pl
 * **Targeted size boundaries**: Implemented limits in `uploadthing.config.js` restricting video uploads to `10MB` and audio, PDF, and image uploads to `5MB`. Updated all frontend helper texts.
 * **Client-side Cache Telemetry**: Injected server cache performance logs into response headers (`x-cache-log`). Built a global interceptor in `layout.js` that intercepts headers and prints formatted Hit/Miss metrics and latencies directly in the browser console.
 
+#### 9. Site-wide Light/Dark Theme System (Unified CSS Variables & Tailwind)
+* **Objective**: To build a dynamic, theme-responsive interface across all public pathways, eliminating locked colors and ensuring perfect readability.
+* **Theme Provider & Tailwind integration**: Configured a React provider that toggles `.dark` class names dynamically on the html root and syncs the preference with client-side localStorage. All main color scales in `globals.css` map to standard variables (`bg-background`, `text-foreground`, `border-border`, etc.).
+* **Refactored Routes**: Converted **10 public routes** that were locked to dark/light-only modes (`/pdf-viewer`, `/about`, `/blogs`, `/contact`, `/donate`, `/people`, `/people/[id]`, `/profile`, `/reports`, `/what-we-do`). 
+* **Details Adaptation**: Presets picker grids, upload panels, UPI QR Lightbox zoom dialogs, currency switches, copy buttons, skeleton loading cards, and bullet lists now render off-white/dark borders and fonts based on the selected theme.
+
 ---
 
 ## 🚀 Getting Started

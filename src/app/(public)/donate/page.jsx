@@ -185,7 +185,7 @@ export default function DonationPage() {
   };
 
   return (
-    <section className="py-22 bg-slate-950 text-white min-h-screen relative overflow-hidden selection:bg-emerald-400 selection:text-slate-950">
+    <section className="py-22 bg-background text-foreground min-h-screen relative overflow-hidden selection:bg-emerald-400 selection:text-slate-950 transition-colors duration-300">
       {/* Background glows */}
       <div className="absolute top-0 left-1/4 w-[500px] h-[300px] bg-emerald-400/5 blur-[150px] rounded-full pointer-events-none"></div>
       <div className="absolute bottom-0 right-1/4 w-[500px] h-[300px] bg-blue-500/5 blur-[150px] rounded-full pointer-events-none"></div>
@@ -194,14 +194,14 @@ export default function DonationPage() {
         
         {/* Header Section */}
         <div className="text-center max-w-3xl mx-auto mb-16">
-          <div className="inline-flex items-center gap-2 px-3 py-1 bg-white/5 border border-white/10 rounded-full mb-6">
-            <ShieldCheck className="w-4 h-4 text-emerald-400" />
-            <span className="text-[10px] font-bold uppercase tracking-widest text-emerald-300">Secure Contribution</span>
+          <div className="inline-flex items-center gap-2 px-3 py-1 bg-slate-100/50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-full mb-6">
+            <ShieldCheck className="w-4 h-4 text-emerald-500 dark:text-emerald-400" />
+            <span className="text-[10px] font-bold uppercase tracking-widest text-emerald-650 dark:text-emerald-300">Secure Contribution</span>
           </div>
-          <h2 className="text-4xl sm:text-6xl font-light tracking-tight mb-6">
+          <h2 className="text-4xl sm:text-6xl font-light tracking-tight text-slate-800 dark:text-white mb-6">
             Preserve Our <span className="font-serif italic font-semibold bg-gradient-to-r from-emerald-400 via-blue-400 to-amber-300 bg-clip-text text-transparent">Shared History</span>
           </h2>
-          <p className="text-white/60 leading-relaxed font-light text-base sm:text-lg">
+          <p className="text-slate-650 dark:text-white/60 leading-relaxed font-light text-base sm:text-lg">
             Your contributions directly support the digitization of rare manuscripts, field recordings of traditional folk music, and free open public access to historical collections.
           </p>
         </div>
@@ -258,7 +258,7 @@ export default function DonationPage() {
                   "flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold transition-all duration-300 cursor-pointer",
                   isActive
                     ? 'bg-emerald-400 text-slate-950 shadow-lg shadow-emerald-400/10'
-                    : 'bg-white/5 border border-white/5 hover:bg-white/10 text-white/70'
+                    : 'bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/5 hover:bg-slate-250 dark:hover:bg-white/10 text-slate-700 dark:text-white/70'
                 )}
               >
                 {tab.icon(isActive)}
@@ -276,7 +276,7 @@ export default function DonationPage() {
             
             {/* 1. BANK DETAILS TAB */}
             {activeTab === 'bank' && (
-              <div className="bg-white/[0.01] border border-white/10 rounded-[2rem] p-8 sm:p-10 backdrop-blur-md animate-fadeIn">
+              <div className="bg-slate-100/50 dark:bg-white/[0.01] border border-slate-200 dark:border-white/10 rounded-[2rem] p-8 sm:p-10 backdrop-blur-md animate-fadeIn transition-colors duration-300">
                 <div className="flex items-center gap-4 mb-6">
                   <div className="w-12 h-12 rounded-2xl bg-emerald-400/10 border border-emerald-400/20 flex items-center justify-center">
                     <Image 
@@ -289,7 +289,7 @@ export default function DonationPage() {
                   </div>
                   <div>
                     <h3 className="text-xl font-semibold">Direct Bank Transfer</h3>
-                    <p className="text-xs text-white/55">For domestic and international bank transfers</p>
+                    <p className="text-xs text-slate-500 dark:text-white/55">For domestic and international bank transfers</p>
                   </div>
                 </div>
 
@@ -305,21 +305,21 @@ export default function DonationPage() {
                   ].map((item, idx) => (
                     <div 
                       key={idx} 
-                      className={`p-5 rounded-2xl border bg-white/[0.01] transition-all ${
-                        item.copyable ? 'border-white/10 hover:border-white/20' : 'border-white/5'
+                      className={`p-5 rounded-2xl border bg-slate-150/50 dark:bg-white/[0.01] transition-all duration-300 ${
+                        item.copyable ? 'border-slate-200 dark:border-white/10 hover:border-slate-350 dark:hover:border-white/20' : 'border-slate-200/50 dark:border-white/5'
                       }`}
                     >
-                      <span className="text-[10px] uppercase tracking-wider text-white/40 block mb-1">
+                      <span className="text-[10px] uppercase tracking-wider text-slate-500 dark:text-white/40 block mb-1">
                         {item.label}
                       </span>
                       <div className="flex items-center justify-between gap-3">
-                        <span className="text-sm font-semibold text-white/90 leading-tight">
+                        <span className="text-sm font-semibold text-slate-805 dark:text-white/90 leading-tight">
                           {item.value}
                         </span>
                         {item.copyable && (
                           <button
                             onClick={() => handleCopy(item.value, item.field)}
-                            className="p-2 hover:bg-white/10 rounded-lg text-white/60 hover:text-white transition-colors cursor-pointer"
+                            className="p-2 hover:bg-slate-200 dark:hover:bg-white/10 rounded-lg text-slate-500 dark:text-white/60 hover:text-slate-800 dark:hover:text-white transition-colors cursor-pointer"
                             title={`Copy ${item.label}`}
                           >
                             {copiedField === item.field ? (
@@ -338,8 +338,8 @@ export default function DonationPage() {
 
             {/* 2. UPI DETAILS TAB */}
             {activeTab === 'upi' && (
-              <div className="bg-white/[0.01] border border-white/10 rounded-[2rem] p-8 sm:p-10 backdrop-blur-md animate-fadeIn">
-                <div className="flex items-center justify-between flex-wrap gap-4 mb-6 border-b border-white/5 pb-4">
+              <div className="bg-slate-100/50 dark:bg-white/[0.01] border border-slate-200 dark:border-white/10 rounded-[2rem] p-8 sm:p-10 backdrop-blur-md animate-fadeIn transition-colors duration-300">
+                <div className="flex items-center justify-between flex-wrap gap-4 mb-6 border-b border-slate-200 dark:border-white/5 pb-4">
                   <div className="flex items-center gap-4">
                     <div className="w-12 h-12 rounded-2xl bg-emerald-400/10 border border-emerald-400/20 flex items-center justify-center">
                       <Image 
@@ -347,23 +347,23 @@ export default function DonationPage() {
                         alt="UPI QR Logo" 
                         width={20} 
                         height={20} 
-                        className="w-5 h-5 object-contain brightness-0 invert" 
+                        className="w-5 h-5 object-contain brightness-0 dark:invert" 
                       />
                     </div>
                     <div>
                       <h3 className="text-xl font-semibold">Scan UPI QR Code</h3>
-                      <p className="text-xs text-white/55">Instant transfer from any Indian UPI app</p>
+                      <p className="text-xs text-slate-500 dark:text-white/55">Instant transfer from any Indian UPI app</p>
                     </div>
                   </div>
                   {/* QR Toggle Switch */}
-                  <div className="flex p-1 bg-white/5 rounded-xl border border-white/5 gap-1">
+                  <div className="flex p-1 bg-slate-100 dark:bg-white/5 rounded-xl border border-slate-200 dark:border-white/5 gap-1">
                     <button
                       type="button"
                       onClick={() => setActiveQr('general')}
                       className={`px-4 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
                         activeQr === 'general'
                           ? 'bg-emerald-400 text-slate-950 font-bold shadow-md shadow-emerald-400/10'
-                          : 'text-white/60 hover:text-white'
+                          : 'text-slate-600 dark:text-white/60 hover:text-slate-800 dark:hover:text-white'
                       }`}
                     >
                       General UPI QR
@@ -374,7 +374,7 @@ export default function DonationPage() {
                       className={`px-4 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
                         activeQr === 'gpay'
                           ? 'bg-emerald-400 text-slate-950 font-bold shadow-md shadow-emerald-400/10'
-                          : 'text-white/60 hover:text-white'
+                          : 'text-slate-600 dark:text-white/60 hover:text-slate-800 dark:hover:text-white'
                       }`}
                     >
                       Google Pay QR
@@ -409,38 +409,38 @@ export default function DonationPage() {
 
                   {/* Instructions */}
                   <div className="space-y-6 flex-grow w-full">
-                    <div className="p-5 rounded-2xl border border-white/10 bg-white/[0.01]">
-                      <span className="text-[10px] uppercase tracking-wider text-white/40 block mb-1">
+                    <div className="p-5 rounded-2xl border border-slate-200 dark:border-white/10 bg-slate-100/30 dark:bg-white/[0.01]">
+                      <span className="text-[10px] uppercase tracking-wider text-slate-500 dark:text-white/40 block mb-1">
                         Payee Name
                       </span>
-                      <span className="text-sm font-semibold text-white/90">
+                      <span className="text-sm font-semibold text-slate-800 dark:text-white/90">
                         {upiDetails.payeeName}
                       </span>
                     </div>
-
-                    <div className="p-5 rounded-2xl border border-white/10 bg-white/[0.01] flex items-center justify-between gap-3">
+ 
+                    <div className="p-5 rounded-2xl border border-slate-200 dark:border-white/10 bg-slate-100/30 dark:bg-white/[0.01] flex items-center justify-between gap-3">
                       <div>
-                        <span className="text-[10px] uppercase tracking-wider text-white/40 block mb-1">
+                        <span className="text-[10px] uppercase tracking-wider text-slate-500 dark:text-white/40 block mb-1">
                           UPI ID / VPA
                         </span>
-                        <span className="text-sm font-semibold text-emerald-400 font-mono">
+                        <span className="text-sm font-semibold text-emerald-500 dark:text-emerald-400 font-mono">
                           {upiDetails.upiId}
                         </span>
                       </div>
                       <button
                         onClick={() => handleCopy(upiDetails.upiId, 'upiId')}
-                        className="p-3 bg-white/5 hover:bg-white/10 rounded-xl text-white/60 hover:text-white transition-colors cursor-pointer"
+                        className="p-3 bg-slate-100 dark:bg-white/5 hover:bg-slate-200 dark:hover:bg-white/10 rounded-xl text-slate-500 dark:text-white/60 hover:text-slate-800 dark:hover:text-white transition-colors cursor-pointer"
                         title="Copy UPI ID"
                       >
                         {copiedField === 'upiId' ? (
-                          <Check className="w-4 h-4 text-emerald-400" />
+                          <Check className="w-4 h-4 text-emerald-500 dark:text-emerald-400" />
                         ) : (
                           <Copy className="w-4 h-4" />
                         )}
                       </button>
                     </div>
-
-                    <div className="text-xs text-white/40 flex items-start gap-2 leading-relaxed">
+ 
+                    <div className="text-xs text-slate-500 dark:text-white/40 flex items-start gap-2 leading-relaxed">
                       <Info className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
                       <span>Simply open your preferred UPI application (BHIM, Google Pay, PhonePe, Paytm) and scan the QR code, or transfer directly using the VPA listed above.</span>
                     </div>
@@ -461,7 +461,7 @@ export default function DonationPage() {
 
             {/* 3. PAYPAL TAB */}
             {activeTab === 'paypal' && (
-              <div className="bg-white/[0.01] border border-white/10 rounded-[2rem] p-8 sm:p-10 backdrop-blur-md animate-fadeIn">
+              <div className="bg-slate-100/50 dark:bg-white/[0.01] border border-slate-200 dark:border-white/10 rounded-[2rem] p-8 sm:p-10 backdrop-blur-md animate-fadeIn transition-colors duration-300">
                 <div className="flex items-center gap-4 mb-6">
                   <div className="w-12 h-12 rounded-2xl bg-emerald-400/10 border border-emerald-400/20 flex items-center justify-center">
                     <Image 
@@ -474,7 +474,7 @@ export default function DonationPage() {
                   </div>
                   <div>
                     <h3 className="text-xl font-semibold">PayPal Checkout</h3>
-                    <p className="text-xs text-white/55">For international contributors supporting from outside India</p>
+                    <p className="text-xs text-slate-500 dark:text-white/55">For international contributors supporting from outside India</p>
                   </div>
                 </div>
 
@@ -482,7 +482,7 @@ export default function DonationPage() {
                   
                   {/* Select currency */}
                   <div>
-                    <label className="text-xs uppercase tracking-widest text-white/50 block mb-3 font-semibold">
+                    <label className="text-xs uppercase tracking-widest text-slate-500 dark:text-white/50 block mb-3 font-semibold">
                       Select Currency
                     </label>
                     <div className="grid grid-cols-4 gap-3">
@@ -499,7 +499,7 @@ export default function DonationPage() {
                           className={`py-2 rounded-xl text-sm font-semibold transition-all cursor-pointer ${
                             paypalCurrency === curr.code
                               ? 'bg-emerald-400 text-slate-950 shadow-md shadow-emerald-400/10'
-                              : 'bg-white/5 border border-white/5 hover:bg-white/10 text-white/80'
+                              : 'bg-slate-100 dark:bg-white/5 border border-slate-250 dark:border-white/5 hover:bg-slate-200 dark:hover:bg-white/10 text-slate-700 dark:text-white/80'
                           }`}
                         >
                           {curr.code} ({curr.symbol})
@@ -510,7 +510,7 @@ export default function DonationPage() {
 
                   {/* Select amount */}
                   <div>
-                    <label className="text-xs uppercase tracking-widest text-white/50 block mb-3 font-semibold">
+                    <label className="text-xs uppercase tracking-widest text-slate-500 dark:text-white/50 block mb-3 font-semibold">
                       Select Amount ({paypalCurrency})
                     </label>
                     <div className="grid grid-cols-4 gap-3">
@@ -522,7 +522,7 @@ export default function DonationPage() {
                           className={`py-3 rounded-xl text-sm font-semibold transition-all cursor-pointer ${
                             paypalAmount === amt
                               ? 'bg-emerald-400 text-slate-950 shadow-md shadow-emerald-400/10'
-                              : 'bg-white/5 border border-white/5 hover:bg-white/10 text-white/80'
+                              : 'bg-slate-100 dark:bg-white/5 border border-slate-250 dark:border-white/5 hover:bg-slate-200 dark:hover:bg-white/10 text-slate-700 dark:text-white/80'
                           }`}
                         >
                           {paypalCurrency === 'USD' ? '$' : paypalCurrency === 'EUR' ? '€' : paypalCurrency === 'GBP' ? '£' : 'C$'}{amt}
@@ -533,7 +533,7 @@ export default function DonationPage() {
 
                   {/* Custom amount input */}
                   <div className="relative">
-                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-white/40 font-semibold">
+                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 dark:text-white/40 font-semibold">
                       {paypalCurrency === 'USD' ? '$' : paypalCurrency === 'EUR' ? '€' : paypalCurrency === 'GBP' ? '£' : 'C$'}
                     </span>
                     <input
@@ -541,13 +541,13 @@ export default function DonationPage() {
                       placeholder="Other Amount"
                       value={paypalAmount}
                       onChange={(e) => setPaypalAmount(e.target.value)}
-                      className="w-full bg-white/5 border border-white/10 rounded-xl py-3.5 pl-8 pr-4 text-sm text-white placeholder-white/35 focus:outline-none focus:border-emerald-400 transition-colors"
+                      className="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl py-3.5 pl-8 pr-4 text-sm text-slate-800 dark:text-white placeholder-slate-400 dark:placeholder-white/35 focus:outline-none focus:border-emerald-500 focus:dark:border-emerald-400 transition-colors"
                     />
                   </div>
 
                   {/* Email contact input */}
                   <div>
-                    <label className="text-xs uppercase tracking-widest text-white/50 block mb-2 font-semibold">
+                    <label className="text-xs uppercase tracking-widest text-slate-500 dark:text-white/5 block mb-2 font-semibold">
                       Your Email Address (For Receipt)
                     </label>
                     <input
@@ -555,16 +555,16 @@ export default function DonationPage() {
                       placeholder="name@example.com"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
-                      className="w-full bg-white/5 border border-white/10 rounded-xl py-3.5 px-4 text-sm text-white placeholder-white/35 focus:outline-none focus:border-emerald-400 transition-colors"
+                      className="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl py-3.5 px-4 text-sm text-slate-800 dark:text-white placeholder-slate-400 dark:placeholder-white/35 focus:outline-none focus:border-emerald-500 focus:dark:border-emerald-400 transition-colors"
                     />
                   </div>
 
                   {/* PayPal SDK rendering container */}
                   <div className="pt-4 min-h-[150px] flex flex-col justify-center relative w-full">
                     {!paypalLoaded && !paypalError && (
-                      <div className="flex flex-col items-center justify-center gap-3 py-6 absolute inset-0 bg-slate-950/50 z-10 rounded-xl">
+                      <div className="flex flex-col items-center justify-center gap-3 py-6 absolute inset-0 bg-slate-100/85 dark:bg-slate-950/50 z-10 rounded-xl transition-colors duration-300">
                         <div className="w-8 h-8 border-4 border-emerald-400/30 border-t-emerald-400 rounded-full animate-spin"></div>
-                        <span className="text-xs text-white/55">Loading PayPal Checkout...</span>
+                        <span className="text-xs text-slate-500 dark:text-white/55">Loading PayPal Checkout...</span>
                       </div>
                     )}
 
@@ -581,8 +581,8 @@ export default function DonationPage() {
                     />
                   </div>
 
-                  <div className="flex items-center justify-center gap-2 text-white/40 text-[10px] uppercase tracking-wider mt-4">
-                    <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
+                  <div className="flex items-center justify-center gap-2 text-slate-500 dark:text-white/40 text-[10px] uppercase tracking-wider mt-4">
+                    <ShieldCheck className="w-3.5 h-3.5 text-emerald-500 dark:text-emerald-400" />
                     <span>Transactions are secured by end-to-end PayPal encryption</span>
                   </div>
 
@@ -597,9 +597,9 @@ export default function DonationPage() {
           <div className="lg:col-span-4 space-y-6">
             
             {/* Impact card */}
-            <div className="bg-white/[0.02] border border-white/10 rounded-3xl p-6 relative overflow-hidden">
+            <div className="bg-slate-100/50 dark:bg-white/[0.02] border border-slate-200 dark:border-white/10 rounded-3xl p-6 relative overflow-hidden transition-colors duration-300">
               <div className="absolute top-0 right-0 w-20 h-20 bg-emerald-400/5 blur-xl rounded-full"></div>
-              <h4 className="font-bold text-emerald-400 text-sm uppercase tracking-widest mb-4">How it helps</h4>
+              <h4 className="font-bold text-emerald-500 dark:text-emerald-400 text-sm uppercase tracking-widest mb-4">How it helps</h4>
               
               <ul className="space-y-4">
                 {[
@@ -608,10 +608,10 @@ export default function DonationPage() {
                   { title: 'Oral Traditions', desc: 'Enables recordists to capture rare folk music and Dhamail.' }
                 ].map((item, i) => (
                   <li key={i} className="flex gap-3">
-                    <span className="text-emerald-400 font-serif italic font-bold">0{i+1}.</span>
+                    <span className="text-emerald-500 dark:text-emerald-400 font-serif italic font-bold">0{i+1}.</span>
                     <div>
-                      <h5 className="text-sm font-semibold text-white/95">{item.title}</h5>
-                      <p className="text-xs text-white/55 mt-0.5">{item.desc}</p>
+                      <h5 className="text-sm font-semibold text-slate-805 dark:text-white/95">{item.title}</h5>
+                      <p className="text-xs text-slate-500 dark:text-white/55 mt-0.5">{item.desc}</p>
                     </div>
                   </li>
                 ))}
@@ -619,13 +619,13 @@ export default function DonationPage() {
             </div>
 
             {/* Need Help card */}
-            <div className="bg-white/[0.02] border border-white/5 rounded-3xl p-6 text-center space-y-4">
-              <p className="text-xs text-white/55">
+            <div className="bg-slate-100/50 dark:bg-white/[0.02] border border-slate-200 dark:border-white/5 rounded-3xl p-6 text-center space-y-4 transition-colors duration-300">
+              <p className="text-xs text-slate-500 dark:text-white/55">
                 Have questions about sponsorships, donations, or international support?
               </p>
               <a 
                 href="/contact"
-                className="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-400 hover:text-emerald-300 uppercase tracking-widest cursor-pointer"
+                className="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-widest cursor-pointer"
               >
                 <span>Contact Curators</span>
                 <ChevronRight className="w-3.5 h-3.5" />
@@ -645,19 +645,19 @@ export default function DonationPage() {
           onClick={() => setQrModalOpen(false)}
         >
           <div 
-            className="relative bg-slate-900 border border-white/10 max-w-sm w-full rounded-3xl p-6 shadow-2xl flex flex-col items-center gap-4"
+            className="relative bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 max-w-sm w-full rounded-3xl p-6 shadow-2xl flex flex-col items-center gap-4 transition-colors duration-300"
             onClick={(e) => e.stopPropagation()}
           >
             <button
               onClick={() => setQrModalOpen(false)}
-              className="absolute top-4 right-4 p-2 bg-white/5 hover:bg-white/10 rounded-full text-white/70 hover:text-white transition-colors cursor-pointer"
+              className="absolute top-4 right-4 p-2 bg-slate-100 hover:bg-slate-200 dark:bg-white/5 dark:hover:bg-white/10 rounded-full text-slate-700 dark:text-white/70 hover:text-slate-805 dark:hover:text-white transition-colors cursor-pointer"
             >
               <X className="w-5 h-5" />
             </button>
-            <h4 className="text-base font-bold text-center mt-2">
+            <h4 className="text-base font-bold text-center mt-2 text-slate-805 dark:text-white">
               {activeQr === 'general' ? 'General UPI QR Code' : 'Google Pay QR Code'}
             </h4>
-            <p className="text-[11px] text-white/50 text-center -mt-2">
+            <p className="text-[11px] text-slate-500 dark:text-white/50 text-center -mt-2">
               Scan this code using any UPI app to complete your donation
             </p>
             <div className={`bg-white p-3 rounded-2xl relative flex items-center justify-center overflow-hidden transition-all duration-300 ${
@@ -672,13 +672,13 @@ export default function DonationPage() {
               />
             </div>
             <div className="w-full flex flex-col gap-2">
-              <div className="p-3 bg-white/5 border border-white/5 rounded-xl text-center">
-                <span className="text-[9px] uppercase tracking-wider text-white/40 block mb-1">Payee Name</span>
-                <span className="text-xs font-semibold">{upiDetails.payeeName}</span>
+              <div className="p-3 bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/5 rounded-xl text-center">
+                <span className="text-[9px] uppercase tracking-wider text-slate-500 dark:text-white/40 block mb-1">Payee Name</span>
+                <span className="text-xs font-semibold text-slate-805 dark:text-white">{upiDetails.payeeName}</span>
               </div>
-              <div className="p-3 bg-white/5 border border-white/5 rounded-xl text-center">
-                <span className="text-[9px] uppercase tracking-wider text-white/40 block mb-1">UPI ID / VPA</span>
-                <span className="text-xs font-semibold text-emerald-400 font-mono">{upiDetails.upiId}</span>
+              <div className="p-3 bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/5 rounded-xl text-center">
+                <span className="text-[9px] uppercase tracking-wider text-slate-500 dark:text-white/40 block mb-1">UPI ID / VPA</span>
+                <span className="text-xs font-semibold text-emerald-500 dark:text-emerald-400 font-mono">{upiDetails.upiId}</span>
               </div>
             </div>
           </div>
