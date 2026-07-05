@@ -1,8 +1,64 @@
 import { MediaDetailRenderer } from "@/components/public/MediaDetailRenderer";
 import MediaViewPing from "@/components/public/MediaViewPing";
+import ShareButtonSection from "@/components/public/ShareButtonSection";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowLeft, Eye, Calendar, Tag } from "lucide-react";
+import { ArrowLeft, Eye, Tag } from "lucide-react";
+
+export async function generateMetadata({ params }) {
+  const { id } = await params;
+  try {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/public/media/${id}`);
+    if (!res.ok) return {};
+    const media = await res.json();
+    if (!media || media.error) return {};
+
+    const title = `${media.title} | Sylheti Archive`;
+    const description = media.description || "Digital repository preserving the rich cultural, historical, and linguistic heritage of the Sylheti language.";
+    
+    let imageSrc = "/collection_card_bg.png";
+    if (media.mediaType === "IMAGE") {
+      imageSrc = media.image || media.fileUrl || imageSrc;
+    } else if (media.image) {
+      imageSrc = media.image;
+    }
+    
+    let imageUrl = imageSrc;
+    if (imageSrc.startsWith("/")) {
+      imageUrl = `${process.env.NEXT_PUBLIC_SITE_URL}${imageSrc}`;
+    }
+
+    return {
+      title,
+      description,
+      openGraph: {
+        title,
+        description,
+        url: `${process.env.NEXT_PUBLIC_SITE_URL}/media/${id}`,
+        siteName: "The Sylheti Archive",
+        images: [
+          {
+            url: imageUrl,
+            width: 800,
+            height: 600,
+            alt: media.title,
+          },
+        ],
+        locale: "en_US",
+        type: "website",
+      },
+      twitter: {
+        card: "summary_large_image",
+        title,
+        description,
+        images: [imageUrl],
+      },
+    };
+  } catch (err) {
+    console.error("Error generating metadata", err);
+    return {};
+  }
+}
 
 export default async function MediaDetailPage({ params }) {
   const { id } = await params;
@@ -87,6 +143,7 @@ export default async function MediaDetailPage({ params }) {
                   <Eye className="w-3 h-3 text-emerald-500 dark:text-emerald-400" />
                   {media.views || 0} views
                 </span>
+                <ShareButtonSection mediaTitle={media.title} mediaId={media.id} />
               </div>
 
               <h1 className="text-2xl sm:text-3xl font-light tracking-tight text-slate-800 dark:text-white mb-4 leading-tight">
