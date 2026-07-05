@@ -5,10 +5,14 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowLeft, Eye, Tag } from "lucide-react";
 
+const SITE_URL = (process.env.VERCEL_URL && process.env.VERCEL_ENV !== 'production')
+  ? `https://${process.env.VERCEL_URL}`
+  : (process.env.NEXT_PUBLIC_SITE_URL || 'https://the-siloti-archive.org');
+
 export async function generateMetadata({ params }) {
   const { id } = await params;
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/public/media/${id}`);
+    const res = await fetch(`${SITE_URL}/api/public/media/${id}`);
     if (!res.ok) return {};
     const media = await res.json();
     if (!media || media.error) return {};
@@ -25,7 +29,7 @@ export async function generateMetadata({ params }) {
     
     let imageUrl = imageSrc;
     if (imageSrc.startsWith("/")) {
-      imageUrl = `${process.env.NEXT_PUBLIC_SITE_URL}${imageSrc}`;
+      imageUrl = `${SITE_URL}${imageSrc}`;
     }
 
     return {
@@ -34,7 +38,7 @@ export async function generateMetadata({ params }) {
       openGraph: {
         title,
         description,
-        url: `${process.env.NEXT_PUBLIC_SITE_URL}/media/${id}`,
+        url: `${SITE_URL}/media/${id}`,
         siteName: "The Sylheti Archive",
         images: [
           {
@@ -62,7 +66,7 @@ export async function generateMetadata({ params }) {
 
 export default async function MediaDetailPage({ params }) {
   const { id } = await params;
-  const res = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/public/media/${id}`);
+  const res = await fetch(`${SITE_URL}/api/public/media/${id}`);
   const media = await res.json();
 
   if (!media || media.error) {
