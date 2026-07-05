@@ -4,18 +4,19 @@ import ShareButtonSection from "@/components/public/ShareButtonSection";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowLeft, Eye, Tag } from "lucide-react";
-
-const SITE_URL = (process.env.VERCEL_URL && process.env.VERCEL_ENV !== 'production')
-  ? `https://${process.env.VERCEL_URL}`
-  : (process.env.NEXT_PUBLIC_SITE_URL || 'https://the-siloti-archive.org');
+import prisma from "@/lib/prisma";
+import { headers } from "next/headers";
 
 export async function generateMetadata({ params }) {
   const { id } = await params;
+  const host = (await headers()).get("host") || "the-siloti-archive.org";
+  const SITE_URL = `https://${host}`;
+
   try {
-    const res = await fetch(`${SITE_URL}/api/public/media/${id}`);
-    if (!res.ok) return {};
-    const media = await res.json();
-    if (!media || media.error) return {};
+    const media = await prisma.mediaItem.findUnique({
+      where: { id }
+    });
+    if (!media) return {};
 
     const title = `${media.title} | Sylheti Archive`;
     const description = media.description || "Digital repository preserving the rich cultural, historical, and linguistic heritage of the Sylheti language.";
@@ -66,8 +67,9 @@ export async function generateMetadata({ params }) {
 
 export default async function MediaDetailPage({ params }) {
   const { id } = await params;
-  const res = await fetch(`${SITE_URL}/api/public/media/${id}`);
-  const media = await res.json();
+  const media = await prisma.mediaItem.findUnique({
+    where: { id }
+  });
 
   if (!media || media.error) {
     return (

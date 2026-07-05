@@ -4,7 +4,7 @@ import CardWrapper from "@/components/public/CardWrapper";
 import { CollectionCard } from "@/components/public/CollectionCard";
 import FilterSidebar from "@/components/public/FilterBar";
 import { MediaCard } from "@/components/public/MediaCard";
-import ShareModal from "@/components/public/ShareModal";
+import { toast } from "react-hot-toast";
 import ArchiveViewManager from "@/components/public/ArchiveViewManager";
 import { useSearch } from "@/lib/hooks/useSearch";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -31,7 +31,7 @@ function SkeletonCard() {
 export default function SearchPageInner({ initialQuery }) {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [shareUrl, setShareUrl] = useState(null);
+
   const [filtersOpen, setFiltersOpen] = useState(false); // mobile sidebar toggle
 
   // ✅ Initial query
@@ -85,8 +85,28 @@ export default function SearchPageInner({ initialQuery }) {
     router.push(`/search?q=${encodeURIComponent(inputValue.trim())}`);
   };
 
-  const handleShare = (url) => setShareUrl(url);
-  const closeShareModal = () => setShareUrl(null);
+  const handleShare = async (url) => {
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: "Preserving Siloti Culture",
+          text: "Check out this item on the Sylheti Archive:",
+          url: url,
+        });
+        return;
+      } catch (err) {
+        console.warn("Native share failed, falling back to copy", err);
+      }
+    }
+
+    try {
+      await navigator.clipboard.writeText(url);
+      toast.success("Link copied to clipboard!");
+    } catch (err) {
+      console.error("Failed to copy link:", err);
+      toast.error("Failed to copy link");
+    }
+  };
 
   // ✅ Sync input field if URL changes
   useEffect(() => {
@@ -208,7 +228,7 @@ export default function SearchPageInner({ initialQuery }) {
         </div>
       )}
 
-      {shareUrl && <ShareModal url={shareUrl} onClose={closeShareModal} />}
+
     </div>
   );
 }

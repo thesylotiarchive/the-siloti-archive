@@ -6,7 +6,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { MediaCard } from "@/components/public/MediaCard";
 import { CollectionCard } from "@/components/public/CollectionCard";
-import ShareModal from "@/components/public/ShareModal";
+import { toast } from "react-hot-toast";
 import FilterSidebar from "@/components/public/FilterBar";
 import ArchiveViewManager from "@/components/public/ArchiveViewManager";
 import { useSearch } from "@/lib/hooks/useSearch";
@@ -38,7 +38,7 @@ export default function CollectionViewPage() {
   const [mediaItems, setMediaItems] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const [shareUrl, setShareUrl] = useState(null);
+
 
   const [filtersOpen, setFiltersOpen] = useState(false);
 
@@ -106,8 +106,28 @@ export default function CollectionViewPage() {
     setSubmittedQuery("");
   };
 
-  const handleShare = (url) => setShareUrl(url);
-  const closeShareModal = () => setShareUrl(null);
+  const handleShare = async (url) => {
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: "Preserving Siloti Culture",
+          text: "Check out this collection on the Sylheti Archive:",
+          url: url,
+        });
+        return;
+      } catch (err) {
+        console.warn("Native share failed, falling back to copy", err);
+      }
+    }
+
+    try {
+      await navigator.clipboard.writeText(url);
+      toast.success("Link copied to clipboard!");
+    } catch (err) {
+      console.error("Failed to copy link:", err);
+      toast.error("Failed to copy link");
+    }
+  };
 
   // ✅ Fetch default collection data
   const fetchData = async () => {
@@ -379,7 +399,7 @@ export default function CollectionViewPage() {
         </div>
       )}
 
-      {shareUrl && <ShareModal url={shareUrl} onClose={closeShareModal} />}
+
     </main>
   );
 }
