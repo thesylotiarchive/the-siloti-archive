@@ -69,7 +69,7 @@ export default function PublicSidebar({ isOpen, onClose }) {
     const timeout = setTimeout(() => {
       router.push(href);
       onClose();
-    }, 2000); // 1-second (1000ms) delay to navigate only when hovering an option deliberately
+    }, 1000); // 1-second (1000ms) delay to navigate only when hovering an option deliberately
     setHoverTimeout(timeout);
   };
 
