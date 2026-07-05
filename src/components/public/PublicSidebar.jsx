@@ -65,7 +65,7 @@ export default function PublicSidebar({ isOpen, onClose }) {
     const timeout = setTimeout(() => {
       router.push(href);
       onClose();
-    }, 180); // 180ms delay prevents accidental navigation during quick sweeps
+    }, 2000); // 2-second (2000ms) delay to ensure deliberate navigation
     setHoverTimeout(timeout);
   };
 
