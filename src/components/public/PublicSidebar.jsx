@@ -53,19 +53,23 @@ export default function PublicSidebar({ isOpen, onClose }) {
       .finally(() => setLoading(false));
   }, [isOpen]);
 
-  // Clean up hover timeout on unmount
+  // Clean up hover timeout on unmount or sidebar close
   useEffect(() => {
+    if (!isOpen && hoverTimeout) {
+      clearTimeout(hoverTimeout);
+      setHoverTimeout(null);
+    }
     return () => {
       if (hoverTimeout) clearTimeout(hoverTimeout);
     };
-  }, [hoverTimeout]);
+  }, [hoverTimeout, isOpen]);
 
   const handleMouseEnter = (href) => {
     if (hoverTimeout) clearTimeout(hoverTimeout);
     const timeout = setTimeout(() => {
       router.push(href);
       onClose();
-    }, 2000); // 2-second (2000ms) delay to ensure deliberate navigation
+    }, 1000); // 1-second (1000ms) delay to navigate only when hovering an option deliberately
     setHoverTimeout(timeout);
   };
 
